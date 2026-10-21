@@ -65,3 +65,31 @@ class WovenMaterial(Base):
     unit: Mapped[str | None] = mapped_column(String(40))
     colorways: Mapped[list] = mapped_column(JSONB, default=list, nullable=False)
     source_pages: Mapped[list] = mapped_column(JSONB, default=list, nullable=False)
+
+
+class PurchaseOrderDocument(Base):
+    """An independently processed PO, optionally uploaded alongside a Tech Pack."""
+    __tablename__ = 'purchase_order_documents'
+    id: Mapped[str] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uid)
+    tech_pack_id: Mapped[str | None] = mapped_column(UUID(as_uuid=True), ForeignKey('tech_packs.id', ondelete='SET NULL'))
+    original_filename: Mapped[str] = mapped_column(String(255), nullable=False)
+    minio_key: Mapped[str] = mapped_column(String(512), nullable=False)
+    sha256: Mapped[str] = mapped_column(String(64), nullable=False)
+    status: Mapped[str] = mapped_column(String(24), default='queued', nullable=False)
+    error_message: Mapped[str | None] = mapped_column(Text)
+    page_count: Mapped[int | None] = mapped_column(Integer)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+    extraction: Mapped['PurchaseOrderExtraction | None'] = relationship(
+        back_populates='document', uselist=False, cascade='all, delete-orphan')
+
+
+class PurchaseOrderExtraction(Base):
+    __tablename__ = 'purchase_order_extractions'
+    id: Mapped[str] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uid)
+    document_id: Mapped[str] = mapped_column(UUID(as_uuid=True), ForeignKey('purchase_order_documents.id', ondelete='CASCADE'), unique=True, nullable=False)
+    model_name: Mapped[str] = mapped_column(String(128), nullable=False)
+    extracted_json: Mapped[dict] = mapped_column(JSONB, nullable=False)
+    raw_page_results: Mapped[list] = mapped_column(JSONB, default=list, nullable=False)
+    warnings: Mapped[list] = mapped_column(JSONB, default=list, nullable=False)
+    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+    document: Mapped[PurchaseOrderDocument] = relationship(back_populates='extraction')
