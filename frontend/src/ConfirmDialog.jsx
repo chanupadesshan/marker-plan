@@ -3,8 +3,13 @@ import { ShieldCheck, Trash2 } from 'lucide-react';
 
 const ICONS = { primary: ShieldCheck, danger: Trash2 };
 
-// In-page replacement for window.confirm. The safe choice (Cancel) is focused for destructive
-// actions so a stray Enter cannot delete anything; Escape and a backdrop click also cancel.
+/**
+ * Purpose: In-page replacement for the browser's confirm box. The safe choice (Cancel) is focused for
+ * destructive actions so a stray Enter cannot delete anything; Escape and a backdrop click also cancel.
+ * Input: props - open (show it or not), title, message, detail (e.g. a file name), confirmLabel,
+ * cancelLabel, tone ('primary' or 'danger'), busy (disables the buttons), onConfirm, onCancel.
+ * Output: the dialog element, or nothing when open is false.
+ */
 export default function ConfirmDialog({ open, title, message, detail, confirmLabel = 'Confirm', cancelLabel = 'Cancel',
   tone = 'primary', busy = false, onConfirm, onCancel }) {
   const card = useRef(null);
@@ -18,6 +23,11 @@ export default function ConfirmDialog({ open, title, message, detail, confirmLab
   }, [open, tone]);
   if (!open) return null;
   const Icon = ICONS[tone] || ICONS.primary;
+  /**
+   * Purpose: Handle the keyboard inside the dialog: Escape cancels, Tab stays within the dialog's buttons.
+   * Input: event - the keydown event.
+   * Output: nothing.
+   */
   function onKeyDown(event) {
     if (event.key === 'Escape') { event.stopPropagation(); onCancel?.(); return; }
     if (event.key !== 'Tab') return;

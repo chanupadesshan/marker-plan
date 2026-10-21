@@ -17,6 +17,7 @@ from sqlalchemy.orm import selectinload
 from .config import get_settings
 from .database import Base, SessionLocal, engine
 from .models import TechPack, BomExtraction
+from .ply_lookup import ply_info_for
 from .storage import delete_prefix, ensure_bucket, get_bytes, put_bytes
 from .techpack_pipeline import process_document, write_material_rows
 from .techpack_schema import DocumentExtraction
@@ -25,6 +26,12 @@ from .techpack_merge import canonicalize_corrections
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    """
+    Purpose: Run start-up work before the API accepts requests: create any missing database tables
+    and wait (up to about 40 seconds) for the MinIO bucket to be ready.
+    Input: app - the FastAPI application.
+    Output: yields once start-up is done; raises if storage never becomes available.
+    """
     import time
     Base.metadata.create_all(engine)
     # MinIO can still be starting even when the Docker service has launched.
@@ -42,9 +49,16 @@ async def lifespan(app: FastAPI):
 app = FastAPI(title="Wovens BOM Extraction API", version="0.1.0", lifespan=lifespan)
 from .po_routes import router as po_router
 app.include_router(po_router)
+from .ply_routes import router as ply_router
+app.include_router(ply_router)
 
 
 def record_summary(row: TechPack):
+    """
+    Purpose: Build the short description of a Tech Pack that the list and detail endpoints return.
+    Input: row - a TechPack.
+    Output: a dict with id, filename, status, error, page_count, selected_pages and created_at.
+    """
     return {"id": str(row.id), "filename": row.original_filename,
             "status": row.status, "error": row.error_message,
             "page_count": row.page_count, "selected_pages": row.selected_pages,
@@ -53,11 +67,21 @@ def record_summary(row: TechPack):
 
 @app.get("/api/health")
 def health():
+    """
+    Purpose: Let a monitor or a person check that the API is running.
+    Input: none.
+    Output: {'status': 'ok'}.
+    """
     return {"status": "ok"}
 
 
 @app.post("/api/documents/upload", status_code=202)
 async def upload_document(background_tasks: BackgroundTasks, file: UploadFile = File(...)):
+    """
+    Purpose: Upload a Tech Pack PDF, store it, and queue its Wovens extraction in the background.
+    Input: file - the PDF (multipart field 'file', within the size limit).
+    Output: the Tech Pack's summary (HTTP 202). Raises 400 if it is not a PDF, 413 if too large, 503 if storage fails.
+    """
     size = get_settings().max_upload_mb * 1024 * 1024
     payload = await file.read(size + 1)
     if len(payload) > size:
@@ -83,6 +107,12 @@ async def upload_document(background_tasks: BackgroundTasks, file: UploadFile = 
 
 @app.get("/api/documents")
 def list_documents():
+    """
+    Purpose: List the most recent Tech Packs, with the identifiers the sidebar searches on.
+    Input: none.
+    Output: up to 100 summaries, newest first, each with style_number and tech_pack_number
+    (the full extraction is not included).
+    """
     with SessionLocal() as session:
         rows = session.scalars(select(TechPack).options(selectinload(TechPack.extraction))
                                .order_by(TechPack.created_at.desc()).limit(100)).all()
@@ -99,6 +129,13 @@ def list_documents():
 
 @app.get("/api/documents/{doc_id}")
 def get_document(doc_id: uuid.UUID):
+    """
+    Purpose: Return one Tech Pack with its full extraction for review.
+    Input: doc_id - the Tech Pack's id.
+    Output: the summary plus extraction, model name, request_usage and ply_info (each material's related
+    plies rows and maximum ply, looked up fresh from the plies table; kept outside the extraction so it
+    is never saved back with corrections). Raises 404 if not found.
+    """
     with SessionLocal() as session:
         row = session.get(TechPack, doc_id)
         if row is None:
@@ -107,12 +144,17 @@ def get_document(doc_id: uuid.UUID):
         item["extraction"] = row.extraction.extracted_json if row.extraction else None
         item["model"] = row.extraction.model_name if row.extraction else None
         item['request_usage'] = row.extraction.extracted_json.get('request_usage', []) if row.extraction else []
+        item['ply_info'] = ply_info_for(session, row.extraction.extracted_json) if row.extraction else {}
         return item
 
 
 @app.delete("/api/documents/{doc_id}")
 def delete_document(doc_id: uuid.UUID):
-    """Permanently remove a Tech Pack: its row, extraction and Wovens rows (cascade), then its stored files."""
+    """
+    Purpose: Permanently remove a Tech Pack: its row, extraction and Wovens rows (cascade), then its stored files.
+    Input: doc_id - the Tech Pack's id.
+    Output: {'ok': True}. Raises 404 if not found, and 409 while it is queued or processing.
+    """
     with SessionLocal() as session:
         row = session.get(TechPack, doc_id)
         if row is None:
@@ -128,6 +170,11 @@ def delete_document(doc_id: uuid.UUID):
 
 @app.get("/api/documents/{doc_id}/pdf")
 def download_original(doc_id: uuid.UUID):
+    """
+    Purpose: Serve the Tech Pack's original PDF for viewing.
+    Input: doc_id - the Tech Pack's id.
+    Output: the PDF file (application/pdf). Raises 404 if not found, 503 if storage cannot return it.
+    """
     with SessionLocal() as session:
         row = session.get(TechPack, doc_id)
         if row is None:
@@ -142,6 +189,11 @@ def download_original(doc_id: uuid.UUID):
 
 @app.get("/api/documents/{doc_id}/json")
 def download_json(doc_id: uuid.UUID):
+    """
+    Purpose: Download the Tech Pack's extracted Wovens data as a JSON file.
+    Input: doc_id - the Tech Pack's id.
+    Output: the extraction JSON as an attachment. Raises 404 if the document or its extraction is missing.
+    """
     with SessionLocal() as session:
         row = session.get(TechPack, doc_id)
         if row is None or row.extraction is None:
@@ -152,6 +204,13 @@ def download_json(doc_id: uuid.UUID):
 
 @app.put("/api/documents/{doc_id}/extraction")
 def save_corrections(doc_id: uuid.UUID, payload: DocumentExtraction):
+    """
+    Purpose: Save manually corrected Wovens data, keeping the combined materials and page tables
+    consistent and rewriting the material rows.
+    Input: doc_id - the Tech Pack's id; payload - the corrected DocumentExtraction (category must be Wovens).
+    Output: {'ok': True, 'status': <new status>}. Raises 400 for a non-Wovens category or conflicting data,
+    404 if not found, 409 while processing.
+    """
     if payload.category.casefold() != "wovens":
         raise HTTPException(400, "Only Wovens BOM data is supported")
     try:
@@ -176,6 +235,12 @@ def save_corrections(doc_id: uuid.UUID, payload: DocumentExtraction):
 
 @app.post("/api/documents/{doc_id}/approve")
 def approve_document(doc_id: uuid.UUID):
+    """
+    Purpose: Mark a Tech Pack's extraction as approved after the user has checked it against the PDF.
+    Input: doc_id - the Tech Pack's id.
+    Output: {'ok': True, 'status': 'approved'}. Raises 400 if processing is incomplete or there are no
+    materials, 404 if not found.
+    """
     with SessionLocal() as session:
         row = session.get(TechPack, doc_id)
         if row is None or row.extraction is None:

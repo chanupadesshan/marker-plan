@@ -8,10 +8,12 @@ HEADER_FIELDS = tuple(name for name in PurchaseOrder.model_fields
 
 
 def number(value):
-    """Accept a decimal with either comma or dot; reject ambiguous comma/dot grouping.
-
-    A space (or no-break space) between groups of exactly three digits, as in '1 002',
-    is an unambiguous thousands separator and is accepted for whole numbers.
+    """
+    Purpose: Convert a printed quantity into a number. Accepts a decimal with comma or dot, and a
+    space (or no-break space) between groups of exactly three digits, as in '1 002'. Ambiguous
+    comma/dot grouping such as '1,234.50' is rejected.
+    Input: value - the quantity text, or None.
+    Output: a Decimal, or None when the value is empty, not numeric, or ambiguous.
     """
     if value is None:
         return None
@@ -24,6 +26,12 @@ def number(value):
 
 
 def validate_totals(order):
+    """
+    Purpose: Check that an order's size quantities add up to its printed total quantity.
+    Input: order - a PurchaseOrder.
+    Output: nothing. A warning is added to order.warnings when quantities are missing or
+    unreadable, or when their sum differs from the total.
+    """
     total = number(order.total_quantity)
     quantities = [number(row.quantity) for row in order.size_rows]
     if total is None or not quantities or any(q is None for q in quantities):
@@ -33,6 +41,14 @@ def validate_totals(order):
 
 
 def combine_po_pages(pages):
+    """
+    Purpose: Combine the per-page PO results into one list of orders. A contract that continues
+    on a later page is merged into one order only when its identity and headers are compatible;
+    ambiguous or conflicting ones stay separate with a warning. Repeated size rows are kept.
+    Input: pages - a list of (page_number, POPageResult) pairs.
+    Output: a POExtraction with the combined orders, the page results and warnings; every
+    order's quantities are validated against its total.
+    """
     result = POExtraction()
     for page_number, page in pages:
         result.page_results.append(POPageTable(page_number=page_number, result=page.model_copy(deep=True)))

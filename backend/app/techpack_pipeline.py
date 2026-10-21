@@ -20,7 +20,11 @@ from copy import deepcopy
 
 def write_material_rows(session, document_id, document: DocumentExtraction):
     """
-    writes individual material records to postgres for a given document_id and DocumentExtraction object.
+    Purpose: Save the extracted materials as searchable rows in the woven_materials table,
+    replacing any rows saved earlier for the same document.
+    Input: session - an open database session; document_id - the Tech Pack's id;
+    document - the DocumentExtraction whose materials are written.
+    Output: nothing. The rows are added to the session; the caller commits.
     """
     session.execute(delete(WovenMaterial).where(WovenMaterial.document_id == document_id))
     for item in document.materials:
@@ -39,7 +43,12 @@ def write_material_rows(session, document_id, document: DocumentExtraction):
 
 def process_document(document_id: str):
     """
-    processes a PDF document by extracting the BOM data and saving it to the database.
+    Purpose: Background job that reads a Tech Pack PDF, finds the Wovens BOM pages, extracts
+    their materials with the model, and saves the result for review. Progress is saved after
+    each group of rows; on any error the document is marked failed with a short message.
+    Input: document_id - the Tech Pack's id as a string.
+    Output: nothing. The outcome is stored on the document: status 'needs_review' (success)
+    or 'failed', plus the extraction JSON, material rows, page images and token usage.
     """
     doc_uuid = UUID(document_id)
     vlm = None
@@ -54,6 +63,11 @@ def process_document(document_id: str):
         extracted_pages = []
 
         def save_snapshot(combined):
+            """
+            Purpose: Save the partial result so far, so completed work survives a later failure.
+            Input: combined - the DocumentExtraction built from the pages finished so far.
+            Output: nothing. The extraction row is created or updated and committed.
+            """
             combined.request_usage = list(vlm.request_usage) if vlm else []
             extraction = document.extraction
             if extraction is None:
@@ -81,6 +95,11 @@ def process_document(document_id: str):
                 entry = {'page': index + 1, 'image_key': key, 'groups': [], 'result': None, 'status': 'processing'}
                 raw_pages.append(entry)
                 def progress(partial):
+                    """
+                    Purpose: Callback run after each group of rows is extracted; records it and saves a snapshot.
+                    Input: partial - the PageResult for the groups finished on the current page.
+                    Output: nothing.
+                    """
                     partial = normalize_wovens_page(partial, text)
                     entry['result'] = partial.model_dump(mode='json')
                     save_snapshot(combine_pages(extracted_pages + [(index + 1, partial)]))

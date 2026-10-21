@@ -22,7 +22,11 @@ NEXT_SECTION = re.compile(
 
 def section_lines(text):
     """
-    split the text into lines and find the start and end indexes of the Wovens section.
+    Purpose: Split page text into lines and find where the Wovens section starts and ends.
+    Input: text - the page's text layer.
+    Output: a tuple (lines, start, end): the list of lines, the index of the Wovens heading
+    (None if there is none), and the index of the next category heading such as Knits
+    (the number of lines when no later heading exists).
     """
     lines = text.splitlines()
     start = next((i for i, line in enumerate(lines) if WOVENS_HEADING.fullmatch(line)), None)
@@ -32,7 +36,9 @@ def section_lines(text):
 
 def scope_wovens_text(text: str) -> str:
     """
-    extract the text of the wovens section from the full page text, so that the VLM doesn't see unrelated content.
+    Purpose: Cut the page text off at the end of the Wovens section, so the model does not see later categories.
+    Input: text - the page's full text layer.
+    Output: the text up to the next category heading, or the original text if no Wovens heading is found.
     """
     lines, start, end = section_lines(text)
     return '\n'.join(lines[:end]) if start is not None else text
@@ -40,7 +46,10 @@ def scope_wovens_text(text: str) -> str:
 
 def printed_headers(text):
     """
-    extract the colorway headers from the source PDF text, so that the VLM doesn't have to guess them.
+    Purpose: Read the colorway column headers (4-digit code plus name) printed above the Wovens heading,
+    so the model does not have to guess them.
+    Input: text - the page's text layer.
+    Output: a list of ColorwayHeader objects, or an empty list when the layout is not recognized.
     """
     lines, start, _ = section_lines(text)
     if start is None:
@@ -63,7 +72,11 @@ def printed_headers(text):
 
 def normalize_wovens_page(page: PageResult, source_text: str) -> PageResult:
     """
-    Check Wovens boundaries and colorway headers against the source PDF text, and normalize the extracted page data accordingly.
+    Purpose: Check a model-extracted page against the PDF's own text: drop rows that belong to a later
+    category, and replace colorway names with the printed headers.
+    Input: page - the PageResult from the model; source_text - the page's text layer.
+    Output: a corrected copy of the PageResult, with warnings added for rows removed or colorways that
+    do not match any column header. The input is not modified.
     """
     page = page.model_copy(deep=True)
     if not page.section_found:

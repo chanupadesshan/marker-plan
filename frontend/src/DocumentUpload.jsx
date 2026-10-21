@@ -1,6 +1,12 @@
 import React, { useRef, useState } from 'react';
 import { FileText, FileUp, Link2, ScanText, X } from 'lucide-react';
 
+/**
+ * Purpose: One file picker (Tech Pack or PO) with the chosen file's name and a remove button.
+ * Input: props - title, label, inputLabel: texts; file: the chosen File or null; onChoose(file) and onRemove():
+ * callbacks; disabled: block changes.
+ * Output: the picker element.
+ */
 function FileSlot({ title, label, file, onChoose, onRemove, disabled, inputLabel }) {
   const input = useRef(null);
   return <div className={`upload-slot ${file ? 'has-file' : ''}`}>
@@ -19,6 +25,12 @@ function FileSlot({ title, label, file, onChoose, onRemove, disabled, inputLabel
   </div>;
 }
 
+/**
+ * Purpose: The old combined upload panel for a Tech Pack and a related PO. (No longer used by the app;
+ * the sidebar has an upload on each tab. Kept in case the combined panel is wanted again.)
+ * Input: props - busy: an upload is running; onUpload({ techPack, po }): called with the chosen files.
+ * Output: the panel with two pickers and an Extract button.
+ */
 export default function DocumentUpload({ busy = false, onUpload }) {
   const [techPack, setTechPack] = useState(null);
   const [po, setPO] = useState(null);

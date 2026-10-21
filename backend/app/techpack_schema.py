@@ -5,6 +5,9 @@ import re
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 
+# Purpose: Base class for every data shape in the app. It rejects unexpected fields and strips whitespace from text.
+# Input: the data to validate, as a dict or keyword arguments.
+# Output: a validated model instance; raises a validation error when a field is unknown or invalid.
 class StrictModel(BaseModel):
     """
     Base model that forbids extra fields and strips whitespace from string fields.
@@ -12,6 +15,9 @@ class StrictModel(BaseModel):
     model_config = ConfigDict(extra="forbid", str_strip_whitespace=True)
 
 
+# Purpose: One colorway entry of a material: which garment colorway it belongs to and the material colour used there.
+# Input: code and name of the garment colorway, material_color_code and material_color_name, fabric_reference (all optional text).
+# Output: a validated Colorway; missing values stay None, never guessed.
 class Colorway(StrictModel):
     """
     colorways table contains the extracted colorway data from the BOM
@@ -23,6 +29,9 @@ class Colorway(StrictModel):
     fabric_reference: str | None = None
 
 
+# Purpose: One row of the Wovens bill of materials: a material with its quantity, unit and per-colorway details.
+# Input: material_code, description, composition, placement, quantity (exact text), unit, a list of Colorway items and source_pages.
+# Output: a validated Material. A quantity printed with its unit, such as '0.95 m', is split into quantity and unit automatically.
 class Material(StrictModel):
     """
     materials table contains the extracted material data from the BOM
@@ -37,13 +46,16 @@ class Material(StrictModel):
     source_pages: list[int] = Field(default_factory=list)
 
 
-    """
-    that funtion is a model validator that is used to separate the quantity and unit from a single string field into 2 separate fields.
-    it will run before the model is created 
-    """
     @model_validator(mode="before")
     @classmethod
     def separate_quantity_unit(cls, value):
+        """
+        Purpose: Validator that runs before a Material is created. It splits a quantity printed with
+        its unit, such as '0.95 m', into quantity '0.95' and unit 'm'.
+        Input: value - the raw data for the Material (normally a dict).
+        Output: the data with quantity and unit separated, or unchanged when the quantity has no
+        recognized unit or the printed unit conflicts with the unit already given.
+        """
         if isinstance(value, dict) and isinstance(value.get("quantity"), str):
             match = re.fullmatch(
                 r"\s*([+-]?\d+(?:[.,]\d+)?)\s*(mm|cm|m|kg|g|pcs|pc|yd|yards?)\s*",
@@ -54,6 +66,9 @@ class Material(StrictModel):
         return value
 
 
+# Purpose: A colorway column heading printed above the BOM table (a 4-digit code and its name).
+# Input: code and name (optional text).
+# Output: a validated ColorwayHeader, used to give every row's colorways the same names.
 class ColorwayHeader(StrictModel):
     """
     colorway_headers table contains the extracted colorway header data from the BOM
@@ -62,6 +77,9 @@ class ColorwayHeader(StrictModel):
     name: str | None = None
 
 
+# Purpose: What the model returns for one Tech Pack page: whether it has a Wovens BOM, and the rows found.
+# Input: section_found (required), style_number, tech_pack_number, materials, colorway_headers and warnings.
+# Output: a validated PageResult. This class is also sent to the model as the required reply format.
 class PageResult(StrictModel):
     """
     page_results table contains the extracted BOM data for each page of the techpack document.
@@ -74,6 +92,9 @@ class PageResult(StrictModel):
     colorway_headers: list[ColorwayHeader] = Field(default_factory=list)
 
 
+# Purpose: The model's yes/no answer to "does this page contain a Wovens BOM table?".
+# Input: has_wovens_bom (true or false).
+# Output: a validated PageClassify, used to decide which unclear pages to extract.
 class PageClassify(StrictModel):
     """
     page_classifications table contains the classification of each page of the techpack document.
@@ -81,6 +102,9 @@ class PageClassify(StrictModel):
     has_wovens_bom: bool
 
 
+# Purpose: The Wovens table of one PDF page, kept as its own table for display and correction.
+# Input: page_number, materials and colorway_headers.
+# Output: a validated WovensPageTable.
 class WovensPageTable(StrictModel):
     """
     that represents the wovens bom table from one page of the techpack document. 
@@ -91,6 +115,9 @@ class WovensPageTable(StrictModel):
     colorway_headers: list[ColorwayHeader] = Field(default_factory=list)
 
 
+# Purpose: The complete extracted result for one Tech Pack: combined materials, per-page tables, warnings and token usage.
+# Input: style_number, tech_pack_number, category, materials, source_pages, warnings, page_tables and request_usage.
+# Output: a validated DocumentExtraction, which is what gets saved in the database and edited by the user.
 class DocumentExtraction(StrictModel):
     """
     represents the complete extracted BOM result for a single techpack document

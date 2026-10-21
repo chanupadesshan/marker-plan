@@ -1,6 +1,12 @@
 import React, { useRef, useState } from 'react';
 import { FileUp, FileText, X } from 'lucide-react';
 
+/**
+ * Purpose: A small button for choosing a PO PDF, showing the chosen file name with a remove button.
+ * (No longer used by the app; the sidebar has its own upload. Kept for its tests.)
+ * Input: none.
+ * Output: the upload button and, once a file is chosen, a status line with its name.
+ */
 export default function POUpload() {
   const [file, setFile] = useState(null);
   const input = useRef(null);

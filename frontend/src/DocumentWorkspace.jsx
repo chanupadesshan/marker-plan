@@ -3,6 +3,13 @@ import { FileText, ExternalLink, Download, Check, AlertTriangle, ChevronDown, Co
 import WovensTable from './WovensTable.jsx';
 import TokenUsage from './TokenUsage.jsx';
 
+/**
+ * Purpose: Show a Tech Pack for review: its status, the extracted Wovens table, warnings, an Approve BOM
+ * button, and technical details with token usage and a JSON editor.
+ * Input: props - current: the Tech Pack object; busy: an action is running; showEditor and editor: the JSON
+ * editor state; onApprove, onToggleEditor, onEditorChange, onSave: callbacks for the buttons.
+ * Output: the Tech Pack review view.
+ */
 export default function DocumentWorkspace({ current, busy = false, showEditor = false, editor = '',
   onApprove, onToggleEditor, onEditorChange, onSave }) {
   const extraction = current.extraction;
@@ -50,7 +57,7 @@ export default function DocumentWorkspace({ current, busy = false, showEditor = 
         <summary><AlertTriangle size={16}/>{extraction.warnings.length} extraction {extraction.warnings.length === 1 ? 'note' : 'notes'} to review<ChevronDown size={15}/></summary>
         <ul>{extraction.warnings.map((warning, index) => <li key={index}>{warning}</li>)}</ul>
       </details>}
-      <WovensTable extraction={extraction}/>
+      <WovensTable extraction={extraction} plyInfo={current.ply_info}/>
       <p className="review-reminder"><Check size={14}/> Check material values against the source PDF before approval.</p>
     </> : <section className="empty-result">
       <span className="empty-icon"><ScanText size={29}/></span><h2>No material rows to review</h2>

@@ -49,6 +49,51 @@ needed, then approve each result manually. A purchase order has an **Approve PO*
 button both at the top and after its last contract. Approving asks for confirmation
 in an in-page dialog.
 
+## Plies dashboard
+
+A separate page at **http://localhost:5173/plies** (also linked as **Plies** in the top bar) for
+the `plies` table. It lists every row with its id and three values, and lets you:
+
+- **Search** across id, Column B, Column C and Column D (every word must match).
+- **Add** a row with **Add ply**, **edit** it with the pencil button, or **delete** it with the
+  trash button (after a confirmation dialog). Changes are saved to the database immediately.
+- Page through the rows (25 per page). A newly added or edited row is highlighted.
+
+Column B must be a whole number, Column C is required (up to 100 characters) and Column D is
+optional; a blank Column D is stored as no value (NULL). The same rules are enforced by the server.
+
+The columns keep neutral names (`col_b`, `col_c`, `col_d`) because the source CSV had no header.
+To show different headings, edit `PLY_COLUMNS` in `frontend/src/plies.js`; to rename the database
+columns, use `ALTER TABLE plies RENAME COLUMN ... TO ...` and update `Ply` in `backend/app/models.py`.
+The table also has an auto-generated `id` primary key so a single row can be edited or deleted.
+
+API (`backend/app/ply_routes.py`):
+
+- `GET /api/plies` — all rows, ordered by id
+- `POST /api/plies` — add a row (`{col_b, col_c, col_d}`), returns it with its id
+- `PUT /api/plies/{id}` — replace a row's values
+- `DELETE /api/plies/{id}` — delete a row
+
+On an existing database the table must already exist with its `id` column. A fresh database
+gets the table from `Base.metadata.create_all` (empty).
+
+### Max ply in the Wovens table
+
+After a Tech Pack is extracted, its Wovens table has a **Max ply** column (after Qty). For each
+material it looks up the related rows of the `plies` table and shows the largest Column D number:
+
+- A material is related to every plies row with the same code in Column C, ignoring a leading
+  `R` and any colour suffix, so `R1371` matches `1371`, `R1371` and `R1371-9800`.
+- Column D values count as their upper end: `70-75` is 75, `90-100` is 100, `80` is 80. With
+  several related rows, the largest number wins (for example `R1936` with `50-60`, `80` and `60`
+  shows 80). Column B is not used for matching.
+- Under the number you see the related range (one row) or how many entries were used. Hover to
+  list every related row. A dash means there is no related row, or it has no Column D value.
+- The lookup runs each time the Tech Pack is loaded (`ply_info` in `GET /api/documents/{id}`,
+  built by `backend/app/ply_lookup.py`), so edits made on the Plies dashboard show up right away.
+  It is never saved inside the extraction or the exported JSON. A failing lookup (for example a
+  missing `plies` table) shows dashes and never stops the Tech Pack from loading.
+
 ## Components
 
 ### Backend filenames

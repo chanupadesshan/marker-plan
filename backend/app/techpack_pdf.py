@@ -25,7 +25,10 @@ FABRIC = re.compile(r"\b(fabrics?|materials?|shell|composition|qty|quantity)\b",
 
 def page_image(page: pymupdf.Page, dpi: int = 220, clip=None) -> bytes:
     """
-    convert a PDF pages into a JPEG image
+    Purpose: Render one PDF page (or part of it) as a JPEG image.
+    Input: page - a PyMuPDF page; dpi - resolution, limited to 100-300 (default 220);
+    clip - optional rectangle in PDF points to render instead of the whole page.
+    Output: the JPEG file contents as bytes.
     """
     dpi = min(max(dpi, 100), 300)
     pixmap = page.get_pixmap(dpi=dpi, alpha=False, clip=clip)
@@ -36,7 +39,12 @@ def page_image(page: pymupdf.Page, dpi: int = 220, clip=None) -> bytes:
 
 
 def content_clip(page: pymupdf.Page, margin: float = 18, probe_dpi: int = 72):
-    """Bounding box (PDF points) of the visible ink on a page, or None for a blank page."""
+    """
+    Purpose: Find the area of a page that has printed content, ignoring white margins.
+    Input: page - a PyMuPDF page; margin - extra space in PDF points kept around the content;
+    probe_dpi - the low resolution used for the scan.
+    Output: a pymupdf.Rect in PDF points inside the page, or None for a blank page.
+    """
     pixmap = page.get_pixmap(dpi=probe_dpi, alpha=False)
     gray = Image.frombytes("RGB", [pixmap.width, pixmap.height], pixmap.samples).convert("L")
     box = gray.point(lambda value: 255 if value < 240 else 0).getbbox()
@@ -49,13 +57,22 @@ def content_clip(page: pymupdf.Page, margin: float = 18, probe_dpi: int = 72):
 
 
 def trimmed_page_image(page: pymupdf.Page, dpi: int = 300) -> bytes:
-    """Render only the printed content, so sparse pages give the model larger text."""
+    """
+    Purpose: Render only the printed content of a page, so sparse pages give the model larger text.
+    Input: page - a PyMuPDF page; dpi - resolution (default 300).
+    Output: the cropped JPEG as bytes (the whole page if it is blank).
+    """
     return page_image(page, dpi, clip=content_clip(page))
 
 
 def locate_pages(pdf_bytes: bytes, vlm=None) -> tuple[list[int], int]:
     """
-    identify which pages contain Wovens BOM table, so the system doesn't try extracting materials from every page
+    Purpose: Find which pages contain a Wovens BOM table, so materials are not extracted from every page.
+    Pages with both a Wovens and a BOM keyword count at once; unclear or image-only pages are
+    checked visually with the model when that setting is on.
+    Input: pdf_bytes - the PDF file contents; vlm - the model client used for the visual check (optional).
+    Output: a tuple (page_indexes, total_pages): zero-based indexes of the Wovens pages in order,
+    and the PDF's page count.
     """
     hits, ambiguous = set(), []
     with pymupdf.open(stream=pdf_bytes, filetype="pdf") as pdf:
@@ -79,8 +96,10 @@ def locate_pages(pdf_bytes: bytes, vlm=None) -> tuple[list[int], int]:
 
 def render_page(pdf_bytes: bytes, page_index: int):
     """
-    takes a PDF and a page index, then prepares that page for BOM extraction 
-    It read the page's text, find the wovens section, and render an image of the page with the wovens section highlighted.
+    Purpose: Prepare one page for extraction: render its image, cut off everything below the
+    Wovens section when a following category heading is found, and limit the text layer the same way.
+    Input: pdf_bytes - the PDF file contents; page_index - zero-based page number.
+    Output: a tuple (jpeg_bytes, wovens_text): the page image and the Wovens-scoped text.
     """
     with pymupdf.open(stream=pdf_bytes, filetype="pdf") as pdf:
         page = pdf[page_index]

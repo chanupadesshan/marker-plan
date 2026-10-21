@@ -1,10 +1,18 @@
 import React from 'react';
 import TokenUsage from './TokenUsage.jsx';
 
+/** Purpose: Show a field value. Input: item - any value. Output: the value, or '—' when it is missing or empty. */
 const value = item => item == null || item === '' ? '—' : item;
 const fields = [['tech_pack_reference', 'Tech Pack ID'], ['model_id', 'Model ID'], ['quality_id', 'Quality ID'],
   ['color_id', 'Color ID'], ['total_quantity', 'Total quantity']];
 
+/**
+ * Purpose: Show a purchase order for review: its status, each contract's IDs and size/quantity table,
+ * warnings, an Approve PO button at the top and after the last contract, and technical details with a JSON editor.
+ * Input: props - current: the PO object; busy: an action is running; showEditor and editor: the JSON editor state;
+ * onApprove, onToggleEditor, onEditorChange, onSave, onRetry: callbacks for the buttons.
+ * Output: the PO review view.
+ */
 export default function PurchaseOrderWorkspace({ current, busy = false, showEditor = false, editor = '',
   onApprove, onToggleEditor, onEditorChange, onSave, onRetry }) {
   const extraction = current.extraction;

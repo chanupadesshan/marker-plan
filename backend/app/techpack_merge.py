@@ -16,14 +16,18 @@ from .techpack_schema import PageResult, DocumentExtraction, Material, WovensPag
 
 def canonical(text: str | None) -> str:
     """
-    prepares a string for comparison by lowercasing and removing non-alphanumeric characters.
+    Purpose: Prepare a string for comparison by lowercasing it and removing everything except letters and digits.
+    Input: text - any string, or None.
+    Output: the normalized string ('' when the input is None or empty).
     """
     return re.sub(r"[^a-z0-9]+", "", (text or "").casefold())
 
 
 def parse_quantity(value: str | None):
     """
-    converts a quantity string to a Decimal, or returns None if the value is empty or invalid.
+    Purpose: Convert a printed quantity such as '0.95' or '1,5' into a number.
+    Input: value - the quantity text, or None.
+    Output: a Decimal, or None when the value is empty or not numeric.
     """
     if not value:
         return None
@@ -35,11 +39,12 @@ def parse_quantity(value: str | None):
 
 def canonicalize_corrections(payload: DocumentExtraction) -> DocumentExtraction:
     """
-    synchronizes manually edited results 
-    extraction has 2 representations:
-               page_tables: list of page-level results
-               materials: combined list of all materials across pages
-    this function ensures that the materials list is consistent with the page_tables list, and raises an error if there is a conflict.
+    Purpose: Keep a manually edited extraction consistent. An extraction has two views of the
+    same data: page_tables (per page) and materials (combined across pages). The page tables
+    are the source of truth, so the combined list is rebuilt from them.
+    Input: payload - the corrected DocumentExtraction submitted by the user.
+    Output: a DocumentExtraction with materials, page_tables, source_pages and warnings rebuilt
+    from the page tables. Raises ValueError if the submitted materials contradict the page tables.
     """
     if not payload.page_tables:
         return payload
@@ -59,8 +64,11 @@ def canonicalize_corrections(payload: DocumentExtraction) -> DocumentExtraction:
 
 def combine_pages(results: list[tuple[int, PageResult]]) -> DocumentExtraction:
     """
-    combines the extracted results from multiple pages into a single DocumentExtraction object.
-    it also checks for conflicts in style numbers, tech-pack numbers, and material codes across pages
+    Purpose: Combine the Wovens results of several PDF pages into one document result, merging
+    matching rows, collecting colorways and source pages, and warning about conflicts or gaps
+    (different style or Tech Pack numbers, missing codes, quantities or units).
+    Input: results - a list of (page_number, PageResult) pairs.
+    Output: one DocumentExtraction with the merged materials, per-page tables, source pages and warnings.
     """
     warnings: list[str] = []
     merged: dict[tuple, Material] = {}

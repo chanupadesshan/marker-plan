@@ -18,6 +18,11 @@ router = APIRouter(prefix='/api/purchase-orders', tags=['Purchase orders'])
 
 
 def summary(row):
+    """
+    Purpose: Build the short description of a PO that the list and detail endpoints return.
+    Input: row - a PurchaseOrderDocument.
+    Output: a dict with id, filename, status, error, page_count, tech_pack_id and created_at.
+    """
     return {'id': str(row.id), 'filename': row.original_filename, 'status': row.status,
             'error': row.error_message, 'page_count': row.page_count,
             'tech_pack_id': str(row.tech_pack_id) if row.tech_pack_id else None,
@@ -25,6 +30,12 @@ def summary(row):
 
 
 def find(session, doc_id, require_extraction=False):
+    """
+    Purpose: Load a PO document or stop the request with a 404.
+    Input: session - a database session; doc_id - the PO's id; require_extraction - also require
+    that an extraction exists.
+    Output: the PurchaseOrderDocument. Raises HTTP 404 when it (or its required extraction) is missing.
+    """
     row = session.get(PurchaseOrderDocument, doc_id)
     if row is None or (require_extraction and row.extraction is None):
         raise HTTPException(404, 'Purchase order or extraction not found')
@@ -32,6 +43,12 @@ def find(session, doc_id, require_extraction=False):
 
 
 def source_complete(row):
+    """
+    Purpose: Decide whether every PDF page was extracted successfully, which is required before approval.
+    Input: row - a PurchaseOrderDocument.
+    Output: True only when the status is needs_review or approved, processing finished, and every
+    page from 1 to page_count has a completed result; otherwise False.
+    """
     if row.status not in ('needs_review', 'approved') or not row.extraction or not row.page_count:
         return False
     raw = row.extraction.raw_page_results
@@ -42,7 +59,12 @@ def source_complete(row):
 
 
 def review_data(session, row):
-    """Refresh links that may have finished extracting after this PO did."""
+    """
+    Purpose: Prepare a PO's saved extraction for display, refreshing the Tech Pack link warnings
+    because the linked Tech Pack may have finished extracting after this PO did.
+    Input: session - a database session; row - a PurchaseOrderDocument that has an extraction.
+    Output: the extraction as a dict, with up-to-date warnings.
+    """
     data = load_saved_extraction(row.extraction.extracted_json).model_dump(mode='json')
     data['warnings'] = [warning for warning in data['warnings']
         if warning != 'Uploaded alongside a Tech Pack; business-reference matching requires review'
@@ -55,6 +77,12 @@ def review_data(session, row):
 @router.post('/upload', status_code=202)
 async def upload(background_tasks: BackgroundTasks, file: UploadFile = File(...),
                  tech_pack_id: UUID | None = Form(None)):
+    """
+    Purpose: Upload a PO PDF, store it, and queue its extraction in the background.
+    Input: file - the PDF (multipart field 'file', within the size limit); tech_pack_id - optional id of a Tech Pack to link.
+    Output: the PO's summary (HTTP 202). Raises 400 if it is not a PDF, 413 if too large, 404 if the linked Tech Pack
+    does not exist, 503 if storage fails.
+    """
     limit = get_settings().max_upload_mb * 1024 * 1024
     data = await file.read(limit + 1)
     if len(data) > limit:
@@ -82,6 +110,12 @@ async def upload(background_tasks: BackgroundTasks, file: UploadFile = File(...)
 
 @router.get('')
 def list_purchase_orders():
+    """
+    Purpose: List the most recent purchase orders, with the identifiers the sidebar searches on.
+    Input: none.
+    Output: up to 100 summaries, newest first, each with contract_count, contract_numbers and
+    tech_pack_references (the full extraction is not included).
+    """
     with SessionLocal() as session:
         rows = session.scalars(select(PurchaseOrderDocument).options(selectinload(PurchaseOrderDocument.extraction))
                                .order_by(PurchaseOrderDocument.created_at.desc()).limit(100)).all()
@@ -100,6 +134,12 @@ def list_purchase_orders():
 
 @router.get('/{doc_id}')
 def details(doc_id: UUID):
+    """
+    Purpose: Return one PO with its full extraction for review.
+    Input: doc_id - the PO's id.
+    Output: the summary plus extraction, model name, request_usage and approval_ready (true when every
+    page completed). Raises 404 if not found.
+    """
     with SessionLocal() as session:
         row = find(session, doc_id)
         result = summary(row)
@@ -112,7 +152,11 @@ def details(doc_id: UUID):
 
 @router.delete('/{doc_id}')
 def delete_purchase_order(doc_id: UUID):
-    """Permanently remove a PO: its row and extraction (cascade), then its stored PDF and page images."""
+    """
+    Purpose: Permanently remove a PO: its row and extraction (cascade), then its stored PDF and page images.
+    Input: doc_id - the PO's id.
+    Output: {'ok': True}. Raises 404 if not found, and 409 while the PO is queued or processing.
+    """
     with SessionLocal() as session:
         row = find(session, doc_id)
         if row.status in ('queued', 'processing'):
@@ -125,6 +169,11 @@ def delete_purchase_order(doc_id: UUID):
 
 @router.get('/{doc_id}/pdf')
 def original(doc_id: UUID):
+    """
+    Purpose: Serve the PO's original PDF for viewing.
+    Input: doc_id - the PO's id.
+    Output: the PDF file (application/pdf). Raises 404 if not found, 503 if storage cannot return it.
+    """
     with SessionLocal() as session:
         row = find(session, doc_id)
         try:
@@ -136,6 +185,11 @@ def original(doc_id: UUID):
 
 @router.get('/{doc_id}/json')
 def export(doc_id: UUID):
+    """
+    Purpose: Download the PO's complete extraction as a JSON file.
+    Input: doc_id - the PO's id.
+    Output: the extraction JSON as an attachment. Raises 404 if the PO or its extraction is missing.
+    """
     with SessionLocal() as session:
         row = find(session, doc_id, True)
         return JSONResponse(review_data(session, row),
@@ -144,6 +198,12 @@ def export(doc_id: UUID):
 
 @router.put('/{doc_id}/extraction')
 def corrections(doc_id: UUID, payload: POCorrections):
+    """
+    Purpose: Save manual corrections to a PO's orders and recalculate the quantity warnings.
+    Input: doc_id - the PO's id; payload - the corrected orders as {'orders': [...]}, whose
+    source pages must refer to completed PDF pages.
+    Output: {'ok': True, 'status': <new status>}. Raises 404 if not found, 409 while processing, 400 for invalid source pages.
+    """
     with SessionLocal() as session:
         row = find(session, doc_id, True)
         if row.status in ('queued', 'processing'):
@@ -171,6 +231,11 @@ def corrections(doc_id: UUID, payload: POCorrections):
 
 @router.post('/{doc_id}/approve')
 def approve(doc_id: UUID):
+    """
+    Purpose: Mark a PO as approved after the user has checked it against the PDF.
+    Input: doc_id - the PO's id.
+    Output: {'ok': True, 'status': 'approved'}. Raises 400 if any page is incomplete or there are no orders, 404 if not found.
+    """
     with SessionLocal() as session:
         row = find(session, doc_id, True)
         if not source_complete(row) or not row.extraction.extracted_json.get('orders'):
@@ -182,6 +247,12 @@ def approve(doc_id: UUID):
 
 @router.post('/{doc_id}/retry', status_code=202)
 def retry_failed(doc_id: UUID, background_tasks: BackgroundTasks):
+    """
+    Purpose: Queue a retry of a failed PO that continues from its unfinished pages, keeping completed ones.
+    Input: doc_id - the PO's id.
+    Output: the PO's summary (HTTP 202). Raises 404 if not found, 409 if it is not failed or has manual corrections
+    that a retry would overwrite.
+    """
     with SessionLocal() as session:
         # Serialize retry requests so two clicks cannot schedule the same failed PO.
         row = session.get(PurchaseOrderDocument, doc_id, with_for_update=True)

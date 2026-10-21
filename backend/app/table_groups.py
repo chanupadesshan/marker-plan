@@ -15,6 +15,12 @@ from .po_merge import combine_po_pages
 
 @dataclass(frozen=True)
 class RowGroup:
+    """
+    Purpose: A horizontal band of a page's table rows that is sent to the model in one request.
+    Input: top and bottom - the band's pixel positions; cuts - the row separators inside it;
+    band_start and band_end - the numbers of the first and last separator bands it covers.
+    Output: an immutable RowGroup; split() divides it in two when a reply was truncated.
+    """
     top: int
     bottom: int
     cuts: tuple[int, ...]
@@ -22,6 +28,12 @@ class RowGroup:
     band_end: int
 
     def split(self):
+        """
+        Purpose: Divide this group in two at its middle separator, used when a reply was truncated.
+        Input: none (uses the group's own cut positions).
+        Output: a pair of two smaller RowGroups that together cover the same rows, or None
+        when the group has no separator left to split at.
+        """
         if not self.cuts:
             return None
         index = len(self.cuts) // 2
@@ -32,7 +44,13 @@ class RowGroup:
 
 
 def _rule_positions(image):
-    """Use pixel geometry, so invalid PDF text mappings do not affect split points."""
+    """
+    Purpose: Find the horizontal ruled lines that separate table rows, using pixel geometry so
+    invalid PDF text mappings do not affect split points. Only thin lines spanning the full content
+    width count; partial cell borders and filled dark panels are ignored.
+    Input: image - a PIL image of the page.
+    Output: a sorted list of y positions (pixels from the top) of the separator lines.
+    """
     # Inspect original pixels: shrinking can erase one-pixel rules entirely.
     width = image.width
     gray = image.convert('L')
@@ -61,7 +79,13 @@ def _rule_positions(image):
 
 
 def _layout_cuts(image_bytes, proposed, group):
-    """Validate model-proposed logical row gaps against actual whitespace pixels."""
+    """
+    Purpose: Check row boundaries proposed by the model against the actual image, keeping only those
+    that fall in a blank horizontal corridor of whitespace (so a split never cuts through text).
+    Input: image_bytes - the page image; proposed - positions as integers from 0 to 1000 (fractions
+    of the page height); group - the RowGroup being split.
+    Output: a sorted list of safe cut positions in pixels, possibly empty.
+    """
     with Image.open(BytesIO(image_bytes)) as image:
         gray = image.convert('L')
         pixels = gray.tobytes()
@@ -84,6 +108,12 @@ def _layout_cuts(image_bytes, proposed, group):
 
 
 def plan_groups(image_bytes, max_bands=6):
+    """
+    Purpose: Divide a page into bands of table rows at the visible ruled lines, so large tables
+    are extracted in smaller requests. A page without ruled lines stays whole.
+    Input: image_bytes - the page image; max_bands - the most separator bands in one group (default 6).
+    Output: a list of RowGroups covering the page from top to bottom.
+    """
     with Image.open(BytesIO(image_bytes)) as image:
         cuts = _rule_positions(image)
         # A page without a grid remains whole; never guess a midpoint through text.
@@ -96,7 +126,12 @@ def plan_groups(image_bytes, max_bands=6):
 
 
 def group_image(image_bytes, group):
-    """Put full-page header context above a full-width crop with exclusive row ownership."""
+    """
+    Purpose: Build the image for one row group: a small full-page panel (outlined in red) above
+    the full-width crop of the group, so the model sees the headers but extracts only the crop's rows.
+    Input: image_bytes - the page image; group - the RowGroup to crop.
+    Output: the combined JPEG as bytes.
+    """
     with Image.open(BytesIO(image_bytes)) as original:
         original = original.convert('RGB')
         context = original.copy()
@@ -118,6 +153,13 @@ def group_image(image_bytes, group):
 
 
 def _combine(results, workflow, page_number):
+    """
+    Purpose: Merge the results of a page's row groups into one page result.
+    Input: results - the per-group results (POPageResult for 'po', PageResult for 'techpack');
+    workflow - 'po' or 'techpack'; page_number - the page they came from.
+    Output: one page result. Raises RuntimeError for a Tech Pack when groups disagree on the style
+    number, Tech Pack number or a colorway header name.
+    """
     if workflow == 'po':
         combined = combine_po_pages([(page_number, result) for result in results])
         # Validate totals at the page/document level, not on incomplete row groups.
@@ -149,7 +191,17 @@ def _combine(results, workflow, page_number):
 
 def extract_grouped(vlm, image_bytes, workflow, text='', *, groups_log=None, on_progress=None,
                     max_bands=6, max_calls=32):
-    """Bounded splitting on output truncation; keep genuine repeated rows in order."""
+    """
+    Purpose: Extract one page with the model, splitting large tables into row groups. When a
+    reply is cut off, that group is split in two at a row separator and retried (a layout request
+    may propose more separators). Genuine repeated rows are kept in order.
+    Input: vlm - the model client; image_bytes - the page image; workflow - 'techpack' or 'po';
+    text - the page text (Tech Pack only); groups_log - a list that records each group's status;
+    on_progress - callback given the combined result after each group; max_bands - bands per
+    group; max_calls - the request cap per page (default 32).
+    Output: the combined page result (PageResult or POPageResult). Raises RuntimeError when the cap
+    is reached or no safe row boundary remains, and ValueError for an unknown workflow.
+    """
     if workflow not in ('techpack', 'po'):
         raise ValueError('Unknown extraction workflow')
     groups = plan_groups(image_bytes, max_bands)
@@ -160,6 +212,12 @@ def extract_grouped(vlm, image_bytes, workflow, text='', *, groups_log=None, on_
     previous = getattr(vlm, 'current_group', None)
 
     def visit(group, identity, cropped):
+        """
+        Purpose: Extract one row group, and split it into two child groups if the reply was truncated.
+        Input: group - the RowGroup; identity - its id such as '2.1'; cropped - True to send the
+        context-plus-crop image, False to send the whole page.
+        Output: nothing. Results are added to the shared list, and the log records the outcome.
+        """
         nonlocal calls, layout_tried
         if calls >= max_calls:
             raise RuntimeError(f'Row-group request cap reached ({max_calls}); extraction is incomplete')

@@ -11,7 +11,9 @@ from .config import get_settings
 
 def client():
     """
-    Create a MinIO client using the settings from the .env file.
+    Purpose: Create a MinIO client using the settings from the .env file.
+    Input: none.
+    Output: a connected Minio client.
     """
     c = get_settings()
     return Minio(c.minio_endpoint, access_key=c.minio_access_key,
@@ -20,7 +22,9 @@ def client():
 
 def ensure_bucket():
     """
-    Ensure that the MinIO bucket exists, and create it if it does not.
+    Purpose: Make sure the storage bucket exists, creating it if it does not.
+    Input: none (the bucket name comes from the settings).
+    Output: nothing.
     """
     c = client()
     bucket = get_settings().minio_bucket
@@ -30,7 +34,9 @@ def ensure_bucket():
 
 def put_bytes(key: str, payload: bytes, mime: str):
     """
-    Store a file in MinIO object storage with the given key, payload, and MIME type.
+    Purpose: Store a file in MinIO object storage.
+    Input: key - the object path; payload - the file contents as bytes; mime - the content type, e.g. 'application/pdf'.
+    Output: nothing.
     """
     c = client()
     c.put_object(get_settings().minio_bucket, key, BytesIO(payload),
@@ -39,10 +45,11 @@ def put_bytes(key: str, payload: bytes, mime: str):
 
 def delete_prefix(prefix: str) -> bool:
     """
-    Remove every object under a key prefix (a document's PDF and page images).
-
+    Purpose: Remove every object under a key prefix (a document's PDF and page images).
     Best effort: the database row is already gone when this runs, so a storage failure
     leaves orphaned files to clean up later instead of failing the user's delete.
+    Input: prefix - the key prefix ending in '/', e.g. '<document id>/'.
+    Output: True when everything was removed, False if storage failed (the error is logged).
     """
     try:
         c = client()
@@ -57,7 +64,9 @@ def delete_prefix(prefix: str) -> bool:
 
 def get_bytes(key: str) -> bytes:
     """
-    Retrieve a file from MinIO object storage with the given key and return its bytes.
+    Purpose: Read a file from MinIO object storage.
+    Input: key - the object path.
+    Output: the file contents as bytes. Raises if the object does not exist or storage is unreachable.
     """
     c = client()
     obj = c.get_object(get_settings().minio_bucket, key)

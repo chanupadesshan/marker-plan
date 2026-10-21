@@ -13,8 +13,14 @@ const TABS = {
 };
 const PLAN_LABEL = 'Marker Plan';
 
+/** Purpose: Make a status readable. Input: status - e.g. 'needs_review'. Output: the text with spaces, e.g. 'needs review'. */
 const statusText = status => (status || '').replaceAll('_', ' ');
 
+/**
+ * Purpose: Build the small line under a document's name in the list.
+ * Input: kind - 'techpack' or 'po'; item - the list entry.
+ * Output: text such as 'needs review · Style 1555' for a Tech Pack, or 'approved · 33 contracts' for a PO.
+ */
 function subtitle(kind, item) {
   if (kind === 'po') {
     if (!item.contract_count) return statusText(item.status);
@@ -24,11 +30,21 @@ function subtitle(kind, item) {
   return [statusText(item.status), reference].filter(Boolean).join(' · ');
 }
 
+/**
+ * Purpose: Format an upload time for the list.
+ * Input: value - an ISO date string, or nothing.
+ * Output: a short local date and time, or '' when missing or invalid.
+ */
 function dateLabel(value) {
   const date = value ? new Date(value) : null;
   return date && !Number.isNaN(date.getTime()) ? date.toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' }) : '';
 }
 
+/**
+ * Purpose: A search field with a clear button.
+ * Input: props - value: the text; onChange(text): called on every change; label: the accessible name; placeholder.
+ * Output: the search field element.
+ */
 function SearchBox({ value, onChange, label, placeholder }) {
   return <label className="side-search"><Search size={15} aria-hidden="true"/>
     <input type="search" value={value} onChange={event => onChange(event.target.value)} placeholder={placeholder} aria-label={label}/>
@@ -36,6 +52,13 @@ function SearchBox({ value, onChange, label, placeholder }) {
   </label>;
 }
 
+/**
+ * Purpose: One document in a list: a button to open it and a trash button to delete it. Delete is
+ * disabled while the document is queued or processing, because the extraction is still writing to it.
+ * Input: props - kind: 'techpack' or 'po'; item: the list entry; selected: it is the open one; busy: disable
+ * the delete button; onSelect(kind, id) and onDelete(kind, item): callbacks.
+ * Output: the row element.
+ */
 function DocumentRow({ kind, item, selected, busy, onSelect, onDelete }) {
   // A running extraction still writes to its row, so it cannot be deleted until it finishes.
   const running = ['queued', 'processing'].includes(item.status);
@@ -53,12 +76,20 @@ function DocumentRow({ kind, item, selected, busy, onSelect, onDelete }) {
   </div>;
 }
 
+/**
+ * Purpose: The content of the Tech Pack or Purchase Order tab: choose a PDF, extract it, search the
+ * extracted documents and open or delete one.
+ * Input: props - kind: 'techpack' or 'po'; hidden: this tab is not active; items: that type's list;
+ * selectedId: the open document; busy: an upload is running; onSelect, onUpload(kind, file), onDelete: callbacks.
+ * Output: the tab panel element.
+ */
 function TabPanel({ kind, hidden, items, selectedId, busy, onSelect, onUpload, onDelete }) {
   const config = TABS[kind];
   const input = useRef(null);
   const [file, setFile] = useState(null);
   const [query, setQuery] = useState('');
   const visible = filterDocuments(items, query);
+  /** Purpose: Upload the chosen file, and clear the choice if it was accepted. Input: none. Output: a promise that finishes when done. */
   async function extract() {
     if (!file) return;
     const accepted = await onUpload(kind, file);
@@ -93,7 +124,13 @@ function TabPanel({ kind, hidden, items, selectedId, busy, onSelect, onUpload, o
   </div>;
 }
 
-// One search box over every Tech Pack and purchase order, results grouped by type.
+/**
+ * Purpose: The content of the Marker Plan tab: one search box over every Tech Pack and purchase order,
+ * with results grouped by type. It has no upload.
+ * Input: props - hidden: this tab is not active; techPacks and purchaseOrders: the two lists; selected: the
+ * open document id per type; busy; onSelect(kind, id) and onDelete(kind, item): callbacks.
+ * Output: the tab panel element.
+ */
 function PlanPanel({ hidden, techPacks, purchaseOrders, selected, busy, onSelect, onDelete }) {
   const [query, setQuery] = useState('');
   const groups = [
@@ -117,6 +154,13 @@ function PlanPanel({ hidden, techPacks, purchaseOrders, selected, busy, onSelect
   </div>;
 }
 
+/**
+ * Purpose: The left sidebar: the tab bar (Tech Pack, Purchase Order, Marker Plan) and all three panels,
+ * which stay mounted so each keeps its own search text and chosen file.
+ * Input: props - tab: the active tab ('techpack', 'po' or 'plan'); onTabChange(tab); techPacks and purchaseOrders:
+ * the lists; selected: the open document id per type; busy; onSelect, onUpload, onDelete: callbacks.
+ * Output: the sidebar element.
+ */
 export default function Sidebar({ tab, onTabChange, techPacks = [], purchaseOrders = [], selected = {}, busy = false, onSelect, onUpload, onDelete }) {
   const lists = { techpack: techPacks, po: purchaseOrders };
   const tabs = [...Object.entries(TABS).map(([kind, config]) => [kind, config.label, lists[kind].length]), ['plan', PLAN_LABEL, null]];

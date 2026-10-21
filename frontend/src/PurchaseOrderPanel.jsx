@@ -3,7 +3,12 @@ import { poApi } from './api.js';
 import PurchaseOrderWorkspace from './PurchaseOrderWorkspace.jsx';
 import { useConfirm } from './useConfirm.jsx';
 
-// Keyed by document ID in App: cleanup prevents late responses replacing a new PO.
+/**
+ * Purpose: Load one purchase order and handle its actions (approve, save corrections, retry), polling
+ * while it is still being extracted. Keyed by document id in App, so a late response cannot replace a newer PO.
+ * Input: props - id: the PO to show; refreshKey: a value whose change triggers a reload.
+ * Output: the PO review screen, or a loading message.
+ */
 export default function PurchaseOrderPanel({ id, refreshKey }) {
   const [current, setCurrent] = useState(null);
   const [error, setError] = useState('');
@@ -16,6 +21,7 @@ export default function PurchaseOrderPanel({ id, refreshKey }) {
   useEffect(() => {
     let cancelled = false;
     let timer;
+    /** Purpose: Fetch the PO and schedule another check while it is queued or processing (or after an error). Input: none. Output: nothing. */
     async function load() {
       try {
         const row = await poApi.get(id);
@@ -29,6 +35,11 @@ export default function PurchaseOrderPanel({ id, refreshKey }) {
     load();
     return () => { cancelled = true; clearTimeout(timer); };
   }, [id, refreshKey, reloadKey]);
+  /**
+   * Purpose: Run a PO action. Approving first asks the user to confirm in a dialog.
+   * Input: kind - 'approve', 'save' (the edited JSON) or 'retry' (continue a failed extraction).
+   * Output: a promise that finishes when done; the result or error is shown on screen.
+   */
   async function action(kind) {
     if (kind === 'approve' && !await confirm({ title: 'Approve this purchase order?', confirmLabel: 'Approve PO', detail: current?.filename,
       message: 'Confirm you have checked the contracts, IDs and size quantities against the original PDF.' })) return;

@@ -1,5 +1,6 @@
 import React from 'react';
 
+/** Purpose: Format a token count. Input: value - a number or missing. Output: the number with separators, or 'Unavailable'. */
 const number = value => typeof value === 'number' ? value.toLocaleString() : 'Unavailable';
 const statusText = {
   success: 'Completed', token_limit: 'Token limit reached', empty_result: 'No material rows returned',
@@ -7,6 +8,12 @@ const statusText = {
   request_error: 'Request failed', invalid_response: 'Invalid response', content_filter: 'Content filtered', error: 'Provider error',
 };
 
+/**
+ * Purpose: Show the model requests made for an extraction (page, row group, tokens used, result), with a total.
+ * Missing counts are shown as unavailable, never as zero.
+ * Input: props - entries: the list of request_usage records.
+ * Output: a panel with the summary line and a table of requests.
+ */
 export default function TokenUsage({ entries = [] }) {
   const knownTotals = entries.filter(entry => typeof entry.total_tokens === 'number');
   return <section className="panel">

@@ -14,4 +14,9 @@ SessionLocal = sessionmaker(bind=engine, expire_on_commit=False)
 
 
 class Base(DeclarativeBase):
+    """
+    Purpose: Base class that every database table class (in models.py) inherits from.
+    Input: none (subclasses declare their columns).
+    Output: the shared table registry used to create the tables.
+    """
     pass

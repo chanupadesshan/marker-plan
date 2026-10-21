@@ -5,12 +5,18 @@ from pydantic import Field, model_validator
 from .techpack_schema import StrictModel
 
 
+# Purpose: One size line of a purchase order, kept exactly as printed (for example size '-C52', quantity '32').
+# Input: size and quantity (text) and source_page (set by the backend, never by the model).
+# Output: a validated POSizeRow; missing values stay None.
 class POSizeRow(StrictModel):
     size: str | None = None
     quantity: str | None = None
     source_page: int | None = None
 
 
+# Purpose: One purchase-order contract: its identifiers, total quantity and size breakdown.
+# Input: contract_number, tech_pack_reference, model_id, quality_id, color_id, total_quantity, size_rows, source_pages and warnings.
+# Output: a validated PurchaseOrder. Prices, dates and signatures are deliberately not part of it.
 class PurchaseOrder(StrictModel):
     contract_number: str | None = None
     tech_pack_reference: str | None = None
@@ -23,6 +29,9 @@ class PurchaseOrder(StrictModel):
     warnings: list[str] = Field(default_factory=list)
 
 
+# Purpose: What the model returns for one PO page: the kind of page and any contracts found on it.
+# Input: page_kind ('purchase_order', 'empty' or 'other'), orders and warnings.
+# Output: a validated POPageResult. Only a 'purchase_order' page may contain orders.
 class POPageResult(StrictModel):
     page_kind: Literal['purchase_order', 'empty', 'other']
     orders: list[PurchaseOrder] = Field(default_factory=list)
@@ -30,16 +39,27 @@ class POPageResult(StrictModel):
 
     @model_validator(mode='after')
     def consistent_outcome(self):
+        """
+        Purpose: Validator that rejects a contradictory page result: only a 'purchase_order' page may contain orders.
+        Input: none (runs on the finished POPageResult).
+        Output: the same POPageResult, or a ValueError when an 'empty' or 'other' page lists orders.
+        """
         if self.page_kind != 'purchase_order' and self.orders:
             raise ValueError('Only purchase_order pages may contain orders')
         return self
 
 
+# Purpose: One page's result together with its real PDF page number.
+# Input: page_number and result (a POPageResult).
+# Output: a validated POPageTable.
 class POPageTable(StrictModel):
     page_number: int
     result: POPageResult
 
 
+# Purpose: The complete extracted result for one purchase-order PDF: combined orders, per-page results, warnings and token usage.
+# Input: orders, page_results, request_usage, warnings and processing_complete (true once every page finished).
+# Output: a validated POExtraction, which is what gets saved in the database.
 class POExtraction(StrictModel):
     orders: list[PurchaseOrder] = Field(default_factory=list)
     page_results: list[POPageTable] = Field(default_factory=list)
@@ -49,15 +69,23 @@ class POExtraction(StrictModel):
 
 
 class POCorrections(StrictModel):
-    """Only orders are editable; processing evidence remains server-owned."""
+    """
+    Purpose: The body of a PO correction request. Only the orders are editable; the processing
+    evidence (page results, usage) stays owned by the server.
+    Input: orders - the corrected list of PurchaseOrder objects.
+    Output: a validated POCorrections that the correction endpoint applies.
+    """
     orders: list[PurchaseOrder]
 
 
 def load_saved_extraction(payload: dict) -> POExtraction:
-    """Read older saved results without exposing fields removed from the PO contract.
-
-    This compatibility adapter is only for database reads. New model responses and
-    user corrections still use strict schemas and reject unexpected fields.
+    """
+    Purpose: Read a saved PO extraction from the database, including older results that still
+    contain fields since removed (dates, prices, currencies, names). Those fields are dropped.
+    Only database reads use this; new model responses and user corrections still use the
+    strict schemas and reject unexpected fields.
+    Input: payload - the saved extraction as a dict.
+    Output: a validated POExtraction.
     """
     data = deepcopy(payload)
     orders = list(data.get('orders', []))

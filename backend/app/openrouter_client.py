@@ -53,7 +53,10 @@ Return a JSON object with has_wovens_bom boolean."""
 @lru_cache
 def required_response_model(model):
     """
-    takes a Pydantic model such as PageResult and PageClassify and returns a new model that requires all fields to be present in the response.
+    Purpose: Build the version of a response model used to validate model output, where every field
+    (including those of nested list items) is required, so a reply that omits a field is rejected.
+    Input: model - a Pydantic model class such as PageResult, PageClassify or POPageResult.
+    Output: a new model class with all fields required. Results are cached per class.
     """
     fields = {}
     for name, field in model.model_fields.items():
@@ -67,14 +70,30 @@ def required_response_model(model):
 
 
 class OutputTokenLimitError(RuntimeError):
-    """A truncated response must be split and re-extracted, never parsed as complete JSON."""
+    """
+    Purpose: Signal that a model reply was cut off at the output limit. A truncated reply must be
+    split into smaller groups and re-extracted, never parsed as complete JSON.
+    Input: a message describing the limit that was reached.
+    Output: an exception (a RuntimeError) raised by the model client and caught by extract_grouped.
+    """
 
 
 class MalformedGenerationError(RuntimeError):
-    """Provider output is looping, rather than a table needing smaller groups."""
+    """
+    Purpose: Signal that the model's output is looping (blank lines or the same contract repeated), which
+    smaller row groups cannot fix.
+    Input: a message saying which kind of loop was detected.
+    Output: an exception (a RuntimeError) raised by the model client; it triggers one compact-JSON retry.
+    """
 
 
 def whitespace_generation_loop(content):
+    """
+    Purpose: Detect a model reply stuck generating blank lines instead of data.
+    Input: content - the reply text.
+    Output: True when the reply is at least 4096 characters, at most 5% non-blank, and contains a
+    run of 1024 or more whitespace characters; otherwise False.
+    """
     if not isinstance(content, str) or len(content) < 4096:
         return False
     meaningful = sum(not character.isspace() for character in content)
@@ -82,11 +101,12 @@ def whitespace_generation_loop(content):
 
 
 def repeated_po_contract_blocks(content):
-    """Recognize a run of identical whole contracts, even in truncated JSON.
-
-    Never deduplicate size rows or different contract continuations. Decode each
-    complete order object so whitespace, key ordering and braces in strings cannot
-    turn a long legitimate size table into a repetition alarm.
+    """
+    Purpose: Detect a model reply that repeats the same whole contract over and over, even in
+    truncated JSON. Size rows and different contracts are never treated as repeats: each
+    complete order is decoded and compared, so a long legitimate size table does not trigger it.
+    Input: content - the reply text.
+    Output: True when four or more identical contract blocks follow each other; otherwise False.
     """
     if not isinstance(content, str):
         return False
@@ -118,6 +138,12 @@ def repeated_po_contract_blocks(content):
 
 
 def po_result_error(result):
+    """
+    Purpose: Check a PO page result for problems that should trigger a retry.
+    Input: result - a POPageResult from the model.
+    Output: an error message when a purchase_order page has no orders or has blank quantity
+    strings (null means unreadable and is allowed); otherwise None.
+    """
     if result.page_kind != 'purchase_order':
         return None
     if not result.orders:
@@ -130,7 +156,19 @@ def po_result_error(result):
 
 
 class OpenRouterVLM:
+    """
+    Purpose: Client for the OpenRouter vision model. It sends page images, validates the replies and
+    keeps a record of every request's token usage.
+    Input: none to create it (the key and model come from the settings); its methods take page images.
+    Output: methods classify, extract, extract_po and locate_table_rows return validated results;
+    request_usage lists every attempt made.
+    """
     def __init__(self):
+        """
+        Purpose: Create a client for the OpenRouter model, ready to track token usage per request.
+        Input: none (the API key and model come from the settings).
+        Output: an OpenRouterVLM. Raises RuntimeError if OPENROUTER_API_KEY is not set.
+        """
         self.settings = get_settings()
         self.request_usage = []
         self.current_page = None
@@ -140,7 +178,11 @@ class OpenRouterVLM:
 
     def _save_failed_response(self, entry, content):
         """
-        save the request and response to a local file for debugging when the VLM fails to return valid JSON or raises an error.
+        Purpose: Save a failed model response to a local file for debugging. The file holds the
+        reply and request usage metadata, never the API key, prompt or image.
+        Input: entry - the usage record of the failed attempt (gets a 'diagnostic_file' path);
+        content - the raw reply text, if any.
+        Output: nothing. If the file cannot be written, entry['diagnostic_saved'] is set to False.
         """
         try:
             directory = Path(getattr(self.settings, 'diagnostics_dir', '.venv/diagnostics'))
@@ -156,7 +198,16 @@ class OpenRouterVLM:
                  max_tokens=None, stage=None, schema_name=None, result_validator=None,
                  empty_retry_instruction=None, recover_po_generation=False, strict_schema=True):
         """
-        send a request to OpenRouter VLM with the given prompt, image, and expected response schema.
+        Purpose: Send one image and instruction to the model and return its validated answer.
+        Retries temporary network errors and invalid JSON (up to three attempts), retries a
+        looping or empty reply once, and records every attempt in request_usage.
+        Input: prompt - the instruction; image_bytes - the page image; schema_cls - the response model
+        class; auxiliary_text - optional text layer; max_tokens, stage, schema_name - request settings;
+        result_validator - optional check returning an error message; empty_retry_instruction and
+        recover_po_generation - retry behaviour; strict_schema - True for constrained decoding,
+        False for plain JSON with the schema written into the prompt.
+        Output: an instance of schema_cls. Raises OutputTokenLimitError when the reply was truncated,
+        or RuntimeError (MalformedGenerationError) when the model fails or loops.
         """
         response_model = required_response_model(schema_cls)
         img_b64 = base64.b64encode(image_bytes).decode("ascii")
@@ -340,17 +391,26 @@ class OpenRouterVLM:
 
     def classify(self, image_bytes: bytes) -> bool:
         """
-        send a request to OpenRouter VLM to classify whether the given page image contains a Wovens BOM table.
+        Purpose: Ask the model whether a page image contains a Wovens BOM table.
+        Input: image_bytes - the page image.
+        Output: True if it does, otherwise False.
         """
         return self._request(CLASSIFY_PROMPT, image_bytes, PageClassify).has_wovens_bom
 
     def extract(self, image_bytes: bytes, text: str) -> PageResult:
         """
-        send a request to OpenRouter VLM to extract the Wovens BOM table from the given page image and text.
+        Purpose: Ask the model to extract the Wovens BOM table from a page.
+        Input: image_bytes - the page image; text - the page's text layer, as supporting evidence.
+        Output: a PageResult with the materials, colorway headers and warnings.
         """
         return self._request(EXTRACT_PROMPT, image_bytes, PageResult, text)
 
     def extract_po(self, image_bytes: bytes):
+        """
+        Purpose: Ask the model to transcribe the purchase-order contracts and size quantities on a page.
+        Input: image_bytes - the page image (the PDF text layer is never used for POs).
+        Output: a POPageResult with the page kind, orders and warnings.
+        """
         from .po_schema import POPageResult
         from .po_prompts import PO_PROMPT
         return self._request(
@@ -363,6 +423,12 @@ class OpenRouterVLM:
         )
 
     def locate_table_rows(self, image_bytes: bytes, workflow: str):
+        """
+        Purpose: Ask the model where a table can safely be split between rows, used only when
+        a table without ruled lines is too large for one reply.
+        Input: image_bytes - the page image; workflow - 'techpack' or 'po'.
+        Output: a list of row-boundary positions as integers from 0 to 1000 (fractions of the page height).
+        """
         from .table_layout_schema import TableRowLayout
         previous = self.current_group
         try:

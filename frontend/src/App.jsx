@@ -8,12 +8,25 @@ import { useConfirm } from './useConfirm.jsx';
 import { inProgress } from './documentSearch.js';
 import { loadSelectedDocument } from './document-loading.js';
 
+/**
+ * Purpose: Prepare a Tech Pack extraction for the JSON editor. When page tables exist they are the
+ * source of truth, so the combined materials list (which the server rebuilds) is left out.
+ * Input: extraction - the extraction object.
+ * Output: the object to show in the editor.
+ */
 function editableExtraction(extraction) {
   if (!extraction.page_tables?.length) return extraction;
   const { materials, ...editable } = extraction;
   return editable;
 }
 
+/**
+ * Purpose: The whole screen: top bar, the three-tab sidebar (Tech Pack, Purchase Order, Marker Plan)
+ * and the main review area. It owns the document lists, the current selection, uploads, deletes,
+ * corrections and approvals, and refreshes statuses while extractions run.
+ * Input: none.
+ * Output: the page.
+ */
 export default function App() {
   const [selectedId, setSelectedId] = useState(null);
   const [poId, setPoId] = useState(null);
@@ -33,11 +46,17 @@ export default function App() {
   const [editor, setEditor] = useState('');
   const [confirm, dialog] = useConfirm();
 
+  /** Purpose: Make a Tech Pack the selected one. Input: id. Output: nothing (updates the selection and its ref). */
   function selectDocument(id) {
     selectedIdRef.current = id;
     setSelectedId(id);
   }
 
+  /**
+   * Purpose: Reload the selected Tech Pack from the server, ignoring the answer if the user has selected another since.
+   * Input: id - the Tech Pack; updateEditor - also reset the JSON editor text to the reloaded data.
+   * Output: a promise of the loaded row.
+   */
   async function refreshDocument(id, updateEditor = false) {
     return loadSelectedDocument(id, () => selectedIdRef.current, row => {
       setDocumentData(row);
@@ -70,7 +89,12 @@ export default function App() {
     return () => clearInterval(handle);
   }, [selectedId, documentData?.status, showEditor]);
 
-  // A failed list refresh keeps the previous list; it must not hide a working document view.
+  /**
+   * Purpose: Reload the Tech Pack and PO lists for the sidebar. A failed refresh keeps the previous
+   * list, so it never hides a working document view.
+   * Input: none.
+   * Output: a promise that finishes when both lists have been tried.
+   */
   async function refreshLists() {
     const [packs, orders] = await Promise.allSettled([api.list(), poApi.list()]);
     if (packs.status === 'fulfilled') setTechPacks(packs.value);
@@ -86,6 +110,12 @@ export default function App() {
     return () => clearInterval(handle);
   }, [listBusy]);
 
+  /**
+   * Purpose: Open a document the user clicked in the sidebar. From the Marker Plan tab the user stays
+   * on that tab, so the search results remain in view.
+   * Input: kind - 'techpack' or 'po'; id - the document's id.
+   * Output: nothing.
+   */
   function onSelect(kind, id) {
     setError(''); setMessage('');
     setLastKind(kind);
@@ -94,6 +124,11 @@ export default function App() {
     if (kind === 'po') setPoId(id); else selectDocument(id);
   }
 
+  /**
+   * Purpose: Delete a document after the user confirms in a dialog, then remove it from the lists and clear it from view.
+   * Input: kind - 'techpack' or 'po'; item - the list entry to delete.
+   * Output: a promise that finishes when the delete is done or cancelled; failures show an error message.
+   */
   async function onDelete(kind, item) {
     const isPo = kind === 'po';
     if (!await confirm({ tone: 'danger', title: `Delete this ${isPo ? 'purchase order' : 'Tech Pack'}?`, confirmLabel: 'Delete', detail: item.filename,
@@ -118,7 +153,11 @@ export default function App() {
     finally { setBusy(false); refreshLists(); }
   }
 
-  // Returns false when the upload was rejected, so the sidebar keeps the chosen file.
+  /**
+   * Purpose: Upload a PDF from the sidebar, select the new document and refresh the lists.
+   * Input: kind - 'techpack' or 'po'; file - the chosen PDF.
+   * Output: a promise of true when accepted, or false when rejected (so the sidebar keeps the chosen file).
+   */
   async function onUpload(kind, file) {
     setBusy(true); setError(''); setMessage('');
     try {
@@ -139,6 +178,11 @@ export default function App() {
     } finally { setBusy(false); }
   }
 
+  /**
+   * Purpose: Save the corrected Tech Pack JSON from the editor and reload it.
+   * Input: none (uses the editor text and the selected Tech Pack).
+   * Output: a promise that finishes when saved; invalid JSON or server errors show an error message.
+   */
   async function onSave() {
     setBusy(true); setMessage(''); setError('');
     try {
@@ -152,6 +196,11 @@ export default function App() {
     finally { setBusy(false); }
   }
 
+  /**
+   * Purpose: Approve the selected Tech Pack's extraction after the user confirms they checked it against the PDF.
+   * Input: none (uses the selected Tech Pack).
+   * Output: a promise that finishes when approved or cancelled; failures show an error message.
+   */
   async function onApprove() {
     if (!await confirm({ title: 'Approve this Wovens BOM?', confirmLabel: 'Approve',
       message: 'Confirm you have checked the Wovens values against the original PDF.', detail: current?.filename })) return;
@@ -179,7 +228,7 @@ export default function App() {
     {dialog}
     <header className="app-topbar">
       <div className="brand project-brand"><img src="/guston-logo.png" alt="Marker Plan logo" className="brand-logo" /><strong className="project-name">Marker Plan</strong></div>
-      <div className="topbar-right"><span className="topbar-tag">{planWelcome ? 'Marker Plan search' : isPO ? 'Purchase order review' : 'Tech Pack review'}</span><span className="workspace-avatar" aria-hidden="true">M</span></div>
+      <div className="topbar-right"><span className="topbar-tag">{planWelcome ? 'Marker Plan search' : isPO ? 'Purchase order review' : 'Tech Pack review'}</span><a className="topbar-link" href="/plies">Plies</a><span className="workspace-avatar" aria-hidden="true">M</span></div>
     </header>
     <div className="main-grid">
       <Sidebar tab={tab} onTabChange={setTab} techPacks={techPacks} purchaseOrders={purchaseOrders}

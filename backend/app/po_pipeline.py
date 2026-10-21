@@ -14,6 +14,12 @@ from .po_schema import POPageResult, load_saved_extraction
 
 
 def association_warnings(session, document, orders):
+    """
+    Purpose: Warn when a PO was uploaded with a Tech Pack, or when a contract's Tech Pack ID
+    differs from the linked Tech Pack's number. The link never proves the match.
+    Input: session - a database session; document - the PurchaseOrderDocument; orders - its extracted orders.
+    Output: a list of warning strings (empty when the PO has no linked Tech Pack).
+    """
     if not document.tech_pack_id:
         return []
     linked = session.get(TechPack, document.tech_pack_id)
@@ -28,6 +34,15 @@ def association_warnings(session, document, orders):
 
 
 def process_purchase_order(document_id: str, resume: bool = False):
+    """
+    Purpose: Background job that renders every page of a PO PDF, then extracts the pages one
+    at a time with the model. Results are saved after each page so a failure keeps the
+    completed ones. On success the document needs review; on error it is marked failed.
+    Input: document_id - the PO document's id as a string; resume - True to reuse completed
+    pages and saved images from an earlier failed run (a retry).
+    Output: nothing. The outcome is stored on the document: status 'needs_review' or 'failed',
+    the extraction JSON, per-page results, page images and token usage.
+    """
     doc_id = UUID(document_id)
     vlm = None
     pages, raw = [], []
@@ -43,6 +58,11 @@ def process_purchase_order(document_id: str, resume: bool = False):
             usage_history = list(document.extraction.extracted_json.get('request_usage', []))
 
         def persist(complete=False):
+            """
+            Purpose: Save everything extracted so far and refresh the combined orders.
+            Input: complete - True only for the final save, marking the extraction fully processed.
+            Output: the combined POExtraction that was saved.
+            """
             # Pending/failed pages can expose completed groups for inspection, but
             # source_complete still requires the entire page to finish.
             partial = [(entry['page'], POPageResult.model_validate(entry['result'])) for entry in raw
@@ -103,6 +123,11 @@ def process_purchase_order(document_id: str, resume: bool = False):
                     continue
                 vlm.current_page = entry['page']
                 def progress(result):
+                    """
+                    Purpose: Callback run after each group of rows; stores the partial page result and saves it.
+                    Input: result - the POPageResult for the groups finished on the current page.
+                    Output: nothing.
+                    """
                     entry['result'] = result.model_dump(mode='json')
                     persist()
                 result = extract_grouped(vlm, get_bytes(entry['image_key']), 'po',
