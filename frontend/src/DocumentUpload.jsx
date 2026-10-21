@@ -24,15 +24,15 @@ export default function DocumentUpload({ busy = false, onUpload }) {
   const [po, setPO] = useState(null);
   return <section className="document-upload panel" aria-label="Tech Pack and related purchase order">
     <div className="upload-panel-heading"><div><span className="eyebrow">DOCUMENT SET</span><h2>Tech Pack & related PO</h2>
-      <p>Select your Tech Pack and the purchase order that belongs with it.</p></div><Link2 size={20}/></div>
+      <p>Select a Tech Pack, a purchase order, or both to extract and review.</p></div><Link2 size={20}/></div>
     <div className="upload-pair">
       <FileSlot title="Tech Pack" label="Upload Tech Pack" inputLabel="Choose Tech Pack PDF" file={techPack} disabled={busy}
-        onChoose={file => { if (techPack) setPO(null); setTechPack(file); }} onRemove={() => { setTechPack(null); setPO(null); }}/>
+        onChoose={setTechPack} onRemove={() => setTechPack(null)}/>
       <FileSlot title="Related PO" label="Upload PO" inputLabel="Choose purchase order PDF" file={po} disabled={busy}
         onChoose={setPO} onRemove={() => setPO(null)}/>
     </div>
-    <div className="upload-panel-footer"><p>{po ? 'Related PO selected for reference in this session.' : 'Add the related PO when available.'}</p>
-      <button type="button" className="primary-button" disabled={!techPack || busy} onClick={() => onUpload?.(techPack)}><ScanText size={16}/>{busy ? 'Uploading…' : 'Extract Wovens'}</button>
+    <div className="upload-panel-footer"><p>{po && techPack ? 'Both documents will be saved and processed separately.' : po ? 'Extract purchase-order contracts and size quantities.' : 'Add the related PO when available.'}</p>
+      <button type="button" className="primary-button" disabled={(!techPack && !po) || busy} onClick={() => onUpload?.({techPack, po})}><ScanText size={16}/>{busy ? 'Uploading…' : techPack && po ? 'Extract documents' : po ? 'Extract PO' : 'Extract Wovens'}</button>
     </div>
   </section>;
 }

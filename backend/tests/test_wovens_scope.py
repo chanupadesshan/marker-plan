@@ -1,12 +1,12 @@
-from app.schema import Colorway, Material, PageResult
-from app.wovens import normalize_wovens_page, scope_wovens_text
-from app.merge import combine_pages
-from app.pdf_processing import render_page
+from app.techpack_schema import Colorway, Material, PageResult
+from app.techpack_wovens import normalize_wovens_page, scope_wovens_text
+from app.techpack_merge import combine_pages
+from app.techpack_pdf import render_page
 import pymupdf
 from PIL import Image
 from io import BytesIO
 import pytest
-from app.schema import DocumentExtraction, WovensPageTable
+from app.techpack_schema import DocumentExtraction, WovensPageTable
 
 
 SOURCE = '''Description
@@ -99,7 +99,7 @@ def test_render_excludes_next_category_from_both_image_and_text():
 
 
 def test_page_table_corrections_regenerate_material_rows():
-    from app.merge import canonicalize_corrections
+    from app.techpack_merge import canonicalize_corrections
     payload = DocumentExtraction(page_tables=[WovensPageTable(
         page_number=4, materials=[Material(material_code='R1', quantity='0.75 m', unit='m')],
     )])
@@ -108,7 +108,7 @@ def test_page_table_corrections_regenerate_material_rows():
     assert result.materials[0].source_pages == [4]
     assert result.page_tables[0].materials[0].quantity == '0.75'
     assert result.source_pages == [4]
-    from app.pipeline import write_material_rows
+    from app.techpack_pipeline import write_material_rows
     from decimal import Decimal
     from uuid import uuid4
     captured = []
@@ -123,7 +123,7 @@ def test_page_table_corrections_regenerate_material_rows():
 
 
 def test_conflicting_material_and_page_table_edits_are_rejected():
-    from app.merge import canonicalize_corrections
+    from app.techpack_merge import canonicalize_corrections
     payload = DocumentExtraction(
         materials=[Material(material_code='R1', quantity='1', unit='m', source_pages=[4])],
         page_tables=[WovensPageTable(page_number=4, materials=[Material(material_code='R1', quantity='2', unit='m')])],

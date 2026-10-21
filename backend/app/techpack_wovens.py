@@ -11,7 +11,7 @@ Knits      <------- End boundary
 """
 
 import re
-from .schema import ColorwayHeader, PageResult
+from .techpack_schema import ColorwayHeader, PageResult
 
 WOVENS_HEADING = re.compile(r"^\s*(?:wovens|woven fabrics?)\s*$", re.I)
 NEXT_SECTION = re.compile(

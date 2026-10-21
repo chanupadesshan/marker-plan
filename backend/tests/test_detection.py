@@ -1,7 +1,7 @@
 import pymupdf
-from app.pdf_processing import locate_pages
-from app.merge import combine_pages
-from app.schema import PageResult, Material, Colorway
+from app.techpack_pdf import locate_pages
+from app.techpack_merge import combine_pages
+from app.techpack_schema import PageResult, Material, Colorway
 
 
 def test_detects_dynamic_pages_not_hardcoded():
@@ -34,3 +34,10 @@ def test_does_not_merge_same_material_with_different_quantity():
     combined = combine_pages(data)
     assert len(combined.materials) == 2
     assert any("distinct BOM rows" in w for w in combined.warnings)
+
+
+def test_identical_rows_on_one_page_remain_distinct_after_document_merge():
+    row = Material(material_code='REPEATED', quantity='1', unit='m')
+    result = combine_pages([(2, PageResult(section_found=True, materials=[row, row]))])
+    assert len(result.materials) == 2
+    assert len(result.page_tables[0].materials) == 2

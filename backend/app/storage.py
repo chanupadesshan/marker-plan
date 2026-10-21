@@ -3,6 +3,7 @@ storage module for storing and retrieving files from MinIO object storage
 """
 
 
+import logging
 from io import BytesIO
 from minio import Minio
 from .config import get_settings
@@ -34,6 +35,24 @@ def put_bytes(key: str, payload: bytes, mime: str):
     c = client()
     c.put_object(get_settings().minio_bucket, key, BytesIO(payload),
                  length=len(payload), content_type=mime)
+
+
+def delete_prefix(prefix: str) -> bool:
+    """
+    Remove every object under a key prefix (a document's PDF and page images).
+
+    Best effort: the database row is already gone when this runs, so a storage failure
+    leaves orphaned files to clean up later instead of failing the user's delete.
+    """
+    try:
+        c = client()
+        bucket = get_settings().minio_bucket
+        for obj in c.list_objects(bucket, prefix=prefix, recursive=True):
+            c.remove_object(bucket, obj.object_name)
+        return True
+    except Exception:
+        logging.getLogger(__name__).warning("Could not remove stored files under %s", prefix, exc_info=True)
+        return False
 
 
 def get_bytes(key: str) -> bytes:

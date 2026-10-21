@@ -8,12 +8,14 @@ from sqlalchemy import delete
 from .config import get_settings
 from .database import SessionLocal
 from .models import TechPack, BomExtraction, WovenMaterial
-from .pdf_processing import locate_pages, render_page
+from .techpack_pdf import locate_pages, render_page
 from .storage import get_bytes, put_bytes
-from .vlm import OpenRouterVLM
-from .merge import combine_pages, parse_quantity
-from .schema import DocumentExtraction
-from .wovens import normalize_wovens_page
+from .openrouter_client import OpenRouterVLM
+from .techpack_merge import combine_pages, parse_quantity
+from .techpack_schema import DocumentExtraction
+from .techpack_wovens import normalize_wovens_page
+from .table_groups import extract_grouped
+from copy import deepcopy
 
 
 def write_material_rows(session, document_id, document: DocumentExtraction):
@@ -41,6 +43,7 @@ def process_document(document_id: str):
     """
     doc_uuid = UUID(document_id)
     vlm = None
+    raw_pages = []
     with SessionLocal() as session:
         document = session.get(TechPack, doc_uuid)
         if document is None:
@@ -48,6 +51,21 @@ def process_document(document_id: str):
         document.status = "processing"
         document.error_message = None
         session.commit()
+        extracted_pages = []
+
+        def save_snapshot(combined):
+            combined.request_usage = list(vlm.request_usage) if vlm else []
+            extraction = document.extraction
+            if extraction is None:
+                extraction = BomExtraction(document_id=doc_uuid, model_name=get_settings().openrouter_model,
+                    extracted_json={}, raw_page_results=[], warnings=[])
+                document.extraction = extraction
+                session.add(extraction)
+            extraction.extracted_json = combined.model_dump(mode='json')
+            extraction.raw_page_results = deepcopy(raw_pages)
+            extraction.warnings = combined.warnings
+            session.commit()
+
         try:
             data = get_bytes(document.minio_key)
             vlm = OpenRouterVLM()
@@ -55,16 +73,21 @@ def process_document(document_id: str):
             document.page_count = total
             document.selected_pages = [p + 1 for p in pages]
             session.commit()
-            extracted_pages = []
-            raw_pages = []
             for index in pages:
                 vlm.current_page = index + 1
                 image, text = render_page(data, index)
                 key = f"{doc_uuid}/page-images/page-{index + 1}.jpg"
                 put_bytes(key, image, "image/jpeg")
-                result = normalize_wovens_page(vlm.extract(image, text), text)
+                entry = {'page': index + 1, 'image_key': key, 'groups': [], 'result': None, 'status': 'processing'}
+                raw_pages.append(entry)
+                def progress(partial):
+                    partial = normalize_wovens_page(partial, text)
+                    entry['result'] = partial.model_dump(mode='json')
+                    save_snapshot(combine_pages(extracted_pages + [(index + 1, partial)]))
+                result = extract_grouped(vlm, image, 'techpack', text, groups_log=entry['groups'], on_progress=progress)
+                result = normalize_wovens_page(result, text)
                 extracted_pages.append((index + 1, result))
-                raw_pages.append({"page": index + 1, "image_key": key, "result": result.model_dump(mode="json")})
+                entry.update(status='completed', result=result.model_dump(mode='json'))
             combined = combine_pages(extracted_pages)
             combined.request_usage = vlm.request_usage
             if pages and not combined.materials:
@@ -85,6 +108,9 @@ def process_document(document_id: str):
             document.status = "needs_review"
             session.commit()
         except Exception as exc:
+            for entry in raw_pages:
+                if entry.get('status') == 'processing':
+                    entry['status'] = 'failed'
             session.rollback()
             document = session.get(TechPack, doc_uuid)
             if document:
@@ -98,6 +124,7 @@ def process_document(document_id: str):
                                                    raw_page_results=[], warnings=[])
                         session.add(extraction)
                     extraction.extracted_json = {**extraction.extracted_json, 'request_usage': vlm.request_usage}
+                    extraction.raw_page_results = deepcopy(raw_pages)
                 session.commit()
             # Console logging only; never log full PDF contents or API credentials.
             print(f"Extraction failed for {doc_uuid}: {type(exc).__name__}: {str(exc)[:200]}")
