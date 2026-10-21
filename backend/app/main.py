@@ -39,6 +39,8 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(title="Wovens BOM Extraction API", version="0.1.0", lifespan=lifespan)
+from .po_routes import router as po_router
+app.include_router(po_router)
 
 
 def record_summary(row: TechPack):
