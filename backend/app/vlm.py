@@ -87,7 +87,9 @@ class OpenRouterVLM:
         except OSError:
             entry['diagnostic_saved'] = False
 
-    def _request(self, prompt: str, image_bytes: bytes, schema_cls, auxiliary_text=""):
+    def _request(self, prompt: str, image_bytes: bytes, schema_cls, auxiliary_text="", *,
+                 max_tokens=None, stage=None, schema_name=None, result_validator=None,
+                 empty_retry_instruction=None):
         """
         send a request to OpenRouter VLM with the given prompt, image, and expected response schema.
         """
@@ -106,12 +108,12 @@ class OpenRouterVLM:
                 ]},
             ],
             "temperature": 0,
-            "max_tokens": 6500 if schema_cls is PageResult else 200,
+            "max_tokens": max_tokens if max_tokens is not None else (6500 if schema_cls is PageResult else 200),
             "provider": {"require_parameters": True},
             "response_format": {
                 "type": "json_schema",
                 "json_schema": {
-                    "name": "wovens_result" if schema_cls is PageResult else "bom_page_classification",
+                    "name": schema_name or ("wovens_result" if schema_cls is PageResult else "bom_page_classification"),
                     "strict": True,
                     "schema": response_model.model_json_schema(),
                 },
@@ -127,7 +129,7 @@ class OpenRouterVLM:
             for attempt in range(3):
                 entry = {
                     'page': self.current_page,
-                    'stage': 'extraction' if schema_cls is PageResult else 'classification',
+                    'stage': stage or ('extraction' if schema_cls is PageResult else 'classification'),
                     'attempt': attempt + 1, 'request_id': None,
                     'input_tokens': None, 'output_tokens': None, 'total_tokens': None,
                     'finish_reason': None, 'output_limit': body['max_tokens'],
@@ -163,6 +165,11 @@ class OpenRouterVLM:
                     if content.startswith("```"):
                         content = content.split("\n", 1)[1].rsplit("```", 1)[0].strip()
                     result = response_model.model_validate(json.loads(content))
+                    if result_validator:
+                        error = result_validator(result)
+                        if error:
+                            entry['status'] = 'empty_result'
+                            raise RuntimeError(error)
                     if isinstance(result, PageResult) and result.section_found and not result.materials:
                         entry['status'] = 'empty_result'
                         raise RuntimeError('OpenRouter detected Wovens but returned no material rows; extraction failed. This is not a confirmed token-limit error.')
@@ -177,12 +184,12 @@ class OpenRouterVLM:
                     self._save_failed_response(entry, response_content)
                     if isinstance(exc, RuntimeError):
                         if entry['status'] == 'empty_result' and attempt == 0:
-                            body['messages'][1]['content'][0]['text'] = instruction + (
+                            body['messages'][1]['content'][0]['text'] = instruction + (empty_retry_instruction or (
                                 '\n\nYour previous response marked Wovens as present but returned no rows. '
                                 'Re-read the image and transcribe every visible row into materials, including '
                                 'all colorway cells. Use null only for individual unreadable cells. '
                                 'If no rows can be read, explain why in warnings; do not invent materials.'
-                            )
+                            ))
                             continue
                         raise
                     last_error = 'Response did not include all required extraction fields; inspect the locally saved response' if isinstance(exc, ValidationError) else exc
@@ -210,3 +217,15 @@ class OpenRouterVLM:
         send a request to OpenRouter VLM to extract the Wovens BOM table from the given page image and text.
         """
         return self._request(EXTRACT_PROMPT, image_bytes, PageResult, text)
+
+    def extract_po(self, image_bytes: bytes):
+        from .po_schema import POPageResult
+        from .po_prompts import PO_PROMPT
+        return self._request(
+            PO_PROMPT, image_bytes, POPageResult, max_tokens=6500,
+            stage='po_extraction', schema_name='purchase_order_page',
+            result_validator=lambda result: ('OpenRouter detected a purchase order but returned no orders'
+                if result.page_kind == 'purchase_order' and not result.orders else None),
+            empty_retry_instruction='\nRe-read the image and transcribe every visible order and size row. '
+                'Return null for individual unreadable cells; never invent orders. Explain unreadable content in warnings.',
+        )
