@@ -2,8 +2,8 @@ import json
 from types import SimpleNamespace
 import httpx
 import pytest
-from app import vlm
-from app.schema import Material, PageResult
+from app import openrouter_client as vlm
+from app.techpack_schema import Material, PageResult
 
 
 def test_wire_schema_requires_materials_and_nested_fields():

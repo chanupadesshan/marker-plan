@@ -3,7 +3,7 @@ from types import SimpleNamespace
 
 import httpx
 
-from app import vlm
+from app import openrouter_client as vlm
 
 
 def test_openrouter_uses_system_trust_with_certificate_verification(monkeypatch):

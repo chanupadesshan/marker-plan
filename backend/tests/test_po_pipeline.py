@@ -1,4 +1,4 @@
-from types import SimpleNamespace
+﻿from types import SimpleNamespace
 from uuid import uuid4
 import pymupdf
 import pytest
@@ -7,6 +7,8 @@ from app import po_pipeline
 from sqlalchemy import inspect
 from sqlalchemy.orm.attributes import set_committed_value
 from copy import deepcopy
+from io import BytesIO
+from PIL import Image
 
 
 def setup_pipeline(monkeypatch, fail_page=None, kind='purchase_order'):
@@ -37,11 +39,13 @@ def setup_pipeline(monkeypatch, fail_page=None, kind='purchase_order'):
     with pymupdf.open() as pdf:
         pdf.new_page(); pdf.new_page()
         data = pdf.tobytes()
+    buffer = BytesIO(); Image.new('RGB', (100, 100), 'white').save(buffer, 'JPEG')
+    image_data = buffer.getvalue()
     monkeypatch.setattr(po_pipeline, 'SessionLocal', Session)
     monkeypatch.setattr(po_pipeline, 'OpenRouterVLM', Model)
-    monkeypatch.setattr(po_pipeline, 'get_bytes', lambda key: data)
+    monkeypatch.setattr(po_pipeline, 'get_bytes', lambda key: data if key == 'po.pdf' else image_data)
     monkeypatch.setattr(po_pipeline, 'put_bytes', lambda key, *args: events.append(('image', key)))
-    monkeypatch.setattr(po_pipeline, 'page_image', lambda *args, **kwargs: b'jpeg')
+    monkeypatch.setattr(po_pipeline, 'trimmed_page_image', lambda *args, **kwargs: b'jpeg')
     return doc, events
 
 
@@ -53,6 +57,7 @@ def test_all_images_saved_before_inference_and_success(monkeypatch):
     assert doc.extraction.extracted_json['processing_complete'] is True
     assert doc.extraction.extracted_json['orders'][0]['source_pages'] == [1, 2]
     assert [entry['status'] for entry in doc.stored_raw] == ['completed', 'completed']
+    assert doc.stored_raw[0]['groups'][0]['status'] == 'completed'
 
 
 @pytest.mark.parametrize('failure,completed', [(1, 0), (2, 1)])

@@ -8,10 +8,19 @@ HEADER_FIELDS = tuple(name for name in PurchaseOrder.model_fields
 
 
 def number(value):
-    """Accept an ungrouped decimal with either comma or dot; reject ambiguous grouping."""
-    if value is None or not re.fullmatch(r'[+-]?\d+(?:[.,]\d+)?', value.strip()):
+    """Accept a decimal with either comma or dot; reject ambiguous comma/dot grouping.
+
+    A space (or no-break space) between groups of exactly three digits, as in '1 002',
+    is an unambiguous thousands separator and is accepted for whole numbers.
+    """
+    if value is None:
         return None
-    return Decimal(value.strip().replace(',', '.'))
+    text = value.strip()
+    if re.fullmatch(r'[+-]?\d{1,3}(?:[   ]\d{3})+(?:[.,]\d+)?', text):
+        text = re.sub(r'[   ]', '', text)
+    if not re.fullmatch(r'[+-]?\d+(?:[.,]\d+)?', text):
+        return None
+    return Decimal(text.replace(',', '.'))
 
 
 def validate_totals(order):

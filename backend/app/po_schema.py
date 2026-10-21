@@ -1,15 +1,13 @@
 """Purchase-order data, preserving printed values rather than guessing missing cells."""
 from typing import Literal
+from copy import deepcopy
 from pydantic import Field, model_validator
-from .schema import StrictModel
+from .techpack_schema import StrictModel
 
 
 class POSizeRow(StrictModel):
     size: str | None = None
     quantity: str | None = None
-    unit_price: str | None = None
-    amount: str | None = None
-    currency: str | None = None
     source_page: int | None = None
 
 
@@ -19,13 +17,7 @@ class PurchaseOrder(StrictModel):
     model_id: str | None = None
     quality_id: str | None = None
     color_id: str | None = None
-    registered_date: str | None = None
-    shipping_date: str | None = None
     total_quantity: str | None = None
-    modified_by: str | None = None
-    signed_by: str | None = None
-    total_amount: str | None = None
-    currency: str | None = None
     size_rows: list[POSizeRow] = Field(default_factory=list)
     source_pages: list[int] = Field(default_factory=list)
     warnings: list[str] = Field(default_factory=list)
@@ -59,3 +51,22 @@ class POExtraction(StrictModel):
 class POCorrections(StrictModel):
     """Only orders are editable; processing evidence remains server-owned."""
     orders: list[PurchaseOrder]
+
+
+def load_saved_extraction(payload: dict) -> POExtraction:
+    """Read older saved results without exposing fields removed from the PO contract.
+
+    This compatibility adapter is only for database reads. New model responses and
+    user corrections still use strict schemas and reject unexpected fields.
+    """
+    data = deepcopy(payload)
+    orders = list(data.get('orders', []))
+    for page in data.get('page_results', []):
+        orders.extend(page.get('result', {}).get('orders', []))
+    for order in orders:
+        for field in ('registered_date', 'shipping_date', 'modified_by', 'signed_by', 'total_amount', 'currency'):
+            order.pop(field, None)
+        for row in order.get('size_rows', []):
+            for field in ('unit_price', 'amount', 'currency'):
+                row.pop(field, None)
+    return POExtraction.model_validate(data)

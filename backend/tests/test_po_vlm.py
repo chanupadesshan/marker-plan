@@ -1,5 +1,5 @@
 import pytest
-from app import vlm
+from app import openrouter_client as vlm
 from app.po_schema import POPageResult, PurchaseOrder, POSizeRow
 from test_token_usage import make_vlm
 import httpx
@@ -54,7 +54,9 @@ def test_po_schema_retry_keeps_po_instructions_and_never_requests_materials(monk
         def post(self, url, **kwargs):
             body = kwargs['json']
             instructions.append(body['messages'][1]['content'][0]['text'])
-            assert body['response_format']['json_schema']['name'] == 'purchase_order_page'
+            # Strict constrained decoding made the model emit blank quantities; schema rides in the prompt.
+            assert body['response_format'] == {'type': 'json_object'}
+            assert 'JSON schema' in instructions[-1]
             assert 'PDF text layer' not in instructions[-1]
             return httpx.Response(200, request=httpx.Request('POST', url), json={
                 'choices': [{'finish_reason': 'stop', 'message': {'content': json.dumps(next(replies))}}]})
@@ -65,3 +67,14 @@ def test_po_schema_retry_keeps_po_instructions_and_never_requests_materials(monk
     assert model.extract_po(b'image').page_kind == 'other'
     assert len(instructions) == 2
     assert 'including materials' not in instructions[1]
+
+
+def test_layout_request_has_its_own_budget_and_restores_group_context(monkeypatch):
+    model = make_vlm(monkeypatch, {'row_cuts': [200, 500, 700]})
+    model.current_page = 4
+    model.current_group = {'group': '1', 'row_group_mode': True}
+    assert model.locate_table_rows(b'image', 'po') == [200, 500, 700]
+    assert model.current_group == {'group': '1', 'row_group_mode': True}
+    assert model.request_usage[0]['stage'] == 'row_layout'
+    assert model.request_usage[0]['output_limit'] == 1800
+    assert model.request_usage[0]['page'] == 4

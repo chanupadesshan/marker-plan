@@ -13,13 +13,14 @@ from pathlib import Path
 from fastapi import BackgroundTasks, FastAPI, UploadFile, File, HTTPException
 from fastapi.responses import JSONResponse, Response
 from sqlalchemy import select
+from sqlalchemy.orm import selectinload
 from .config import get_settings
 from .database import Base, SessionLocal, engine
 from .models import TechPack, BomExtraction
-from .storage import ensure_bucket, get_bytes, put_bytes
-from .pipeline import process_document, write_material_rows
-from .schema import DocumentExtraction
-from .merge import canonicalize_corrections
+from .storage import delete_prefix, ensure_bucket, get_bytes, put_bytes
+from .techpack_pipeline import process_document, write_material_rows
+from .techpack_schema import DocumentExtraction
+from .techpack_merge import canonicalize_corrections
 
 
 @asynccontextmanager
@@ -83,8 +84,17 @@ async def upload_document(background_tasks: BackgroundTasks, file: UploadFile = 
 @app.get("/api/documents")
 def list_documents():
     with SessionLocal() as session:
-        rows = session.scalars(select(TechPack).order_by(TechPack.created_at.desc()).limit(100)).all()
-        return [record_summary(row) for row in rows]
+        rows = session.scalars(select(TechPack).options(selectinload(TechPack.extraction))
+                               .order_by(TechPack.created_at.desc()).limit(100)).all()
+        items = []
+        for row in rows:
+            item = record_summary(row)
+            # Searchable identifiers only; the full extraction is loaded on selection.
+            extracted = row.extraction.extracted_json if row.extraction else {}
+            item["style_number"] = extracted.get("style_number")
+            item["tech_pack_number"] = extracted.get("tech_pack_number")
+            items.append(item)
+        return items
 
 
 @app.get("/api/documents/{doc_id}")
@@ -98,6 +108,22 @@ def get_document(doc_id: uuid.UUID):
         item["model"] = row.extraction.model_name if row.extraction else None
         item['request_usage'] = row.extraction.extracted_json.get('request_usage', []) if row.extraction else []
         return item
+
+
+@app.delete("/api/documents/{doc_id}")
+def delete_document(doc_id: uuid.UUID):
+    """Permanently remove a Tech Pack: its row, extraction and Wovens rows (cascade), then its stored files."""
+    with SessionLocal() as session:
+        row = session.get(TechPack, doc_id)
+        if row is None:
+            raise HTTPException(404, "Document not found")
+        if row.status in ("queued", "processing"):
+            raise HTTPException(409, "Wait for extraction to finish before deleting")
+        session.delete(row)
+        session.commit()
+    # Linked purchase orders are kept; their tech_pack_id is set to NULL by the database.
+    delete_prefix(f"{doc_id}/")
+    return {"ok": True}
 
 
 @app.get("/api/documents/{doc_id}/pdf")
@@ -136,11 +162,14 @@ def save_corrections(doc_id: uuid.UUID, payload: DocumentExtraction):
         row = session.get(TechPack, doc_id)
         if row is None or row.extraction is None:
             raise HTTPException(404, "Document or extraction not found")
+        if row.status in ('queued', 'processing'):
+            raise HTTPException(409, 'Wait for processing before editing')
         payload.request_usage = row.extraction.extracted_json.get('request_usage', [])
         row.extraction.extracted_json = payload.model_dump(mode="json")
         row.extraction.warnings = payload.warnings
         write_material_rows(session, doc_id, payload)
-        row.status = "needs_review"
+        if row.status != 'failed':
+            row.status = "needs_review"
         session.commit()
         return {"ok": True, "status": row.status}
 
@@ -151,6 +180,8 @@ def approve_document(doc_id: uuid.UUID):
         row = session.get(TechPack, doc_id)
         if row is None or row.extraction is None:
             raise HTTPException(404, "Document or extraction not found")
+        if row.status not in ('needs_review', 'approved'):
+            raise HTTPException(400, 'Cannot approve incomplete Tech Pack processing')
         if not row.extraction.extracted_json.get("materials"):
             raise HTTPException(400, "Cannot approve an empty extraction")
         row.status = "approved"

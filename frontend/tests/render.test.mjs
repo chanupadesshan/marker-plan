@@ -14,10 +14,18 @@ test('the initial screen renders the upload and review workspace', async () => {
   try {
     const { default: App } = await server.ssrLoadModule('/src/App.jsx');
     const html = renderToStaticMarkup(React.createElement(App));
-    assert.match(html, /Upload Tech Pack/);
     assert.match(html, /Wovens data review/);
+    // The sidebar has one tab per document type, each with its own upload and search.
+    assert.match(html, /role="tab"[^>]*>.*?Tech Pack/);
+    assert.match(html, /role="tab"[^>]*>.*?Purchase Order/);
+    assert.match(html, /Upload Tech Pack/);
+    assert.match(html, /Choose Tech Pack PDF/);
+    assert.match(html, /Search Tech Packs/);
     assert.match(html, /Upload PO/);
     assert.match(html, /Choose purchase order PDF/);
+    assert.match(html, /Search purchase orders/);
+    assert.match(html, /role="tab"[^>]*>Marker Plan</);
+    assert.match(html, /Search Tech Packs and purchase orders/);
   } finally {
     await server.close();
   }
@@ -53,11 +61,13 @@ test('token usage distinguishes truncation and unavailable counts', async () => 
   try {
     const { default: TokenUsage } = await server.ssrLoadModule('/src/TokenUsage.jsx');
     const html = renderToStaticMarkup(React.createElement(TokenUsage, { entries: [{
-      page: 37, stage: 'extraction', attempt: 1, input_tokens: 1200, output_tokens: 6500,
+      page: 37, group: '2.1', band_start: 7, band_end: 9, stage: 'extraction', attempt: 1, input_tokens: 1200, output_tokens: 6500,
       total_tokens: 7700, output_limit: 6500, finish_reason: 'length', status: 'token_limit',
     }, { page: 43, status: 'request_error' }] }));
     assert.match(html, /Token usage/);
     assert.match(html, /Token limit reached/);
+    assert.match(html, /Row group/);
+    assert.match(html, /2\.1/);
     assert.match(html, /Unavailable/);
     const old = renderToStaticMarkup(React.createElement(TokenUsage, { entries: [] }));
     assert.match(old, /not recorded/);

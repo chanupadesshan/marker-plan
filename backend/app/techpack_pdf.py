@@ -13,7 +13,7 @@ from io import BytesIO
 import pymupdf
 from PIL import Image
 from .config import get_settings
-from .wovens import WOVENS_HEADING, NEXT_SECTION, scope_wovens_text
+from .techpack_wovens import WOVENS_HEADING, NEXT_SECTION, scope_wovens_text
 
 # match terms such as "Wovens","woven fabrics","woven fabric"
 WOVENS = re.compile(r"\b(wovens|woven\s+fabrics?)\b", re.IGNORECASE)
@@ -33,6 +33,24 @@ def page_image(page: pymupdf.Page, dpi: int = 220, clip=None) -> bytes:
     buf = BytesIO()
     img.save(buf, format="JPEG", quality=92, optimize=True)
     return buf.getvalue()
+
+
+def content_clip(page: pymupdf.Page, margin: float = 18, probe_dpi: int = 72):
+    """Bounding box (PDF points) of the visible ink on a page, or None for a blank page."""
+    pixmap = page.get_pixmap(dpi=probe_dpi, alpha=False)
+    gray = Image.frombytes("RGB", [pixmap.width, pixmap.height], pixmap.samples).convert("L")
+    box = gray.point(lambda value: 255 if value < 240 else 0).getbbox()
+    if box is None:
+        return None
+    scale = 72 / probe_dpi
+    rect = pymupdf.Rect(box[0] * scale, box[1] * scale, box[2] * scale, box[3] * scale)
+    rect = pymupdf.Rect(rect.x0 - margin, rect.y0 - margin, rect.x1 + margin, rect.y1 + margin)
+    return rect & page.rect
+
+
+def trimmed_page_image(page: pymupdf.Page, dpi: int = 300) -> bytes:
+    """Render only the printed content, so sparse pages give the model larger text."""
+    return page_image(page, dpi, clip=content_clip(page))
 
 
 def locate_pages(pdf_bytes: bytes, vlm=None) -> tuple[list[int], int]:

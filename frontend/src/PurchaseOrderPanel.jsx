@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { poApi } from './api.js';
 import PurchaseOrderWorkspace from './PurchaseOrderWorkspace.jsx';
+import { useConfirm } from './useConfirm.jsx';
 
 // Keyed by document ID in App: cleanup prevents late responses replacing a new PO.
 export default function PurchaseOrderPanel({ id, refreshKey }) {
@@ -10,6 +11,8 @@ export default function PurchaseOrderPanel({ id, refreshKey }) {
   const [busy, setBusy] = useState(false);
   const [showEditor, setShowEditor] = useState(false);
   const [editor, setEditor] = useState('');
+  const [reloadKey, setReloadKey] = useState(0);
+  const [confirm, dialog] = useConfirm();
   useEffect(() => {
     let cancelled = false;
     let timer;
@@ -25,23 +28,33 @@ export default function PurchaseOrderPanel({ id, refreshKey }) {
     }
     load();
     return () => { cancelled = true; clearTimeout(timer); };
-  }, [id, refreshKey]);
+  }, [id, refreshKey, reloadKey]);
   async function action(kind) {
-    if (kind === 'approve' && !window.confirm('Have you checked the PO values against the original PDF?')) return;
+    if (kind === 'approve' && !await confirm({ title: 'Approve this purchase order?', confirmLabel: 'Approve PO', detail: current?.filename,
+      message: 'Confirm you have checked the contracts, IDs and size quantities against the original PDF.' })) return;
     setBusy(true); setError(''); setMessage('');
     try {
       if (kind === 'save') await poApi.save(id, JSON.parse(editor));
+      else if (kind === 'retry') {
+        const queued = await poApi.retry(id);
+        setCurrent(previous => ({ ...previous, ...queued }));
+        setReloadKey(value => value + 1);
+        setShowEditor(false);
+        setMessage('Retry queued. Completed pages will be kept.');
+        return;
+      }
       else await poApi.approve(id);
       setCurrent(await poApi.get(id)); setShowEditor(false);
-      setMessage(kind === 'save' ? 'PO corrections saved.' : 'PO approved.');
+      setMessage(kind === 'save' ? 'PO corrections saved.' : kind === 'retry' ? 'Retry queued. Completed pages will be kept.' : 'PO approved.');
     } catch (e) { setError(e.message); }
     finally { setBusy(false); }
   }
   return <>
+    {dialog}
     {error && <div className="alert error" role="alert">{error}</div>}
     {message && <div className="alert success" role="status">{message}</div>}
     {current ? <PurchaseOrderWorkspace current={current} busy={busy} showEditor={showEditor} editor={editor}
-      onApprove={() => action('approve')} onSave={() => action('save')} onEditorChange={setEditor}
+      onApprove={() => action('approve')} onSave={() => action('save')} onRetry={() => action('retry')} onEditorChange={setEditor}
       onToggleEditor={() => { setEditor(JSON.stringify({ orders: current.extraction?.orders || [] }, null, 2)); setShowEditor(!showEditor); }}/>
       : <div className="loading-workspace" role="status">Loading purchase order…</div>}
   </>;

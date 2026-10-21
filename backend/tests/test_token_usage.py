@@ -2,8 +2,10 @@ import json
 from types import SimpleNamespace
 import httpx
 import pytest
-from app import vlm
-from app.schema import PageResult, Material
+from io import BytesIO
+from PIL import Image
+from app import openrouter_client as vlm
+from app.techpack_schema import PageResult, Material
 
 
 def make_vlm(monkeypatch, content, finish='stop', usage=None):
@@ -64,8 +66,21 @@ def test_token_limit_is_distinct_and_missing_usage_is_unknown(monkeypatch):
     assert entry['input_tokens'] is None
 
 
+def test_group_identity_is_recorded_with_token_limit(monkeypatch):
+    from app.openrouter_client import OutputTokenLimitError
+    model = make_vlm(monkeypatch, {}, finish='length')
+    model.current_page = 5
+    model.current_group = {'group': '2.1', 'band_start': 7, 'band_end': 9, 'row_group_mode': True}
+    with pytest.raises(OutputTokenLimitError):
+        model.extract(b'image', '')
+    entry = model.request_usage[0]
+    assert entry['group'] == '2.1'
+    assert entry['page'] == 5
+    assert entry['band_start'] == 7
+
+
 def test_pipeline_persists_usage_when_extraction_fails(monkeypatch):
-    from app import pipeline
+    from app import techpack_pipeline as pipeline
     from uuid import uuid4
     document = SimpleNamespace(status='queued', error_message=None, extraction=None,
                                minio_key='test.pdf', page_count=None, selected_pages=[])
@@ -85,8 +100,10 @@ def test_pipeline_persists_usage_when_extraction_fails(monkeypatch):
     monkeypatch.setattr(pipeline, 'get_bytes', lambda key: b'pdf')
     monkeypatch.setattr(pipeline, 'put_bytes', lambda *args: None)
     monkeypatch.setattr(pipeline, 'locate_pages', lambda *args: ([0], 1))
-    monkeypatch.setattr(pipeline, 'render_page', lambda *args: (b'image', 'Wovens'))
+    buffer = BytesIO(); Image.new('RGB', (100, 100), 'white').save(buffer, 'JPEG')
+    monkeypatch.setattr(pipeline, 'render_page', lambda *args: (buffer.getvalue(), 'Wovens'))
     pipeline.process_document(str(uuid4()))
     assert document.status == 'failed'
     assert document.extraction.extracted_json['request_usage'] == usage
     assert 'no material rows' in document.error_message
+    assert document.extraction.raw_page_results[0]['groups'][0]['status'] == 'failed'

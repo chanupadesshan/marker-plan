@@ -4,13 +4,15 @@ from pathlib import Path
 from uuid import UUID, uuid4
 from fastapi import APIRouter, BackgroundTasks, File, Form, HTTPException, UploadFile
 from fastapi.responses import JSONResponse, Response
+from sqlalchemy import select
+from sqlalchemy.orm import selectinload
 from .config import get_settings
 from .database import SessionLocal
 from .models import PurchaseOrderDocument, TechPack
-from .po_schema import POCorrections, POExtraction
-from .po_merge import validate_totals
+from .po_schema import POCorrections, POExtraction, load_saved_extraction
+from .po_merge import validate_totals, combine_po_pages
 from .po_pipeline import process_purchase_order, association_warnings
-from .storage import get_bytes, put_bytes
+from .storage import delete_prefix, get_bytes, put_bytes
 
 router = APIRouter(prefix='/api/purchase-orders', tags=['Purchase orders'])
 
@@ -41,7 +43,7 @@ def source_complete(row):
 
 def review_data(session, row):
     """Refresh links that may have finished extracting after this PO did."""
-    data = POExtraction.model_validate(row.extraction.extracted_json).model_dump(mode='json')
+    data = load_saved_extraction(row.extraction.extracted_json).model_dump(mode='json')
     data['warnings'] = [warning for warning in data['warnings']
         if warning != 'Uploaded alongside a Tech Pack; business-reference matching requires review'
         and not (warning.startswith('Contract ') and warning.endswith('Tech Pack reference differs from the linked extraction'))]
@@ -78,6 +80,24 @@ async def upload(background_tasks: BackgroundTasks, file: UploadFile = File(...)
     return result
 
 
+@router.get('')
+def list_purchase_orders():
+    with SessionLocal() as session:
+        rows = session.scalars(select(PurchaseOrderDocument).options(selectinload(PurchaseOrderDocument.extraction))
+                               .order_by(PurchaseOrderDocument.created_at.desc()).limit(100)).all()
+        items = []
+        for row in rows:
+            item = summary(row)
+            # Searchable identifiers only; the full extraction is loaded on selection.
+            orders = row.extraction.extracted_json.get('orders', []) if row.extraction else []
+            item.update(contract_count=len(orders),
+                        contract_numbers=[order.get('contract_number') for order in orders if order.get('contract_number')],
+                        tech_pack_references=sorted({order.get('tech_pack_reference') for order in orders
+                                                     if order.get('tech_pack_reference')}))
+            items.append(item)
+        return items
+
+
 @router.get('/{doc_id}')
 def details(doc_id: UUID):
     with SessionLocal() as session:
@@ -88,6 +108,19 @@ def details(doc_id: UUID):
                       request_usage=row.extraction.extracted_json.get('request_usage', []) if row.extraction else [],
                       approval_ready=source_complete(row))
         return result
+
+
+@router.delete('/{doc_id}')
+def delete_purchase_order(doc_id: UUID):
+    """Permanently remove a PO: its row and extraction (cascade), then its stored PDF and page images."""
+    with SessionLocal() as session:
+        row = find(session, doc_id)
+        if row.status in ('queued', 'processing'):
+            raise HTTPException(409, 'Wait for extraction to finish before deleting')
+        session.delete(row)
+        session.commit()
+    delete_prefix(f'purchase-orders/{doc_id}/')
+    return {'ok': True}
 
 
 @router.get('/{doc_id}/pdf')
@@ -115,7 +148,7 @@ def corrections(doc_id: UUID, payload: POCorrections):
         row = find(session, doc_id, True)
         if row.status in ('queued', 'processing'):
             raise HTTPException(409, 'Wait for processing before editing')
-        saved = POExtraction.model_validate(row.extraction.extracted_json)
+        saved = load_saved_extraction(row.extraction.extracted_json)
         valid_pages = {entry['page'] for entry in row.extraction.raw_page_results if entry.get('status') == 'completed'}
         for order in payload.orders:
             if any(page not in valid_pages for page in order.source_pages) or any(
@@ -145,3 +178,24 @@ def approve(doc_id: UUID):
         row.status = 'approved'
         session.commit()
         return {'ok': True, 'status': row.status}
+
+
+@router.post('/{doc_id}/retry', status_code=202)
+def retry_failed(doc_id: UUID, background_tasks: BackgroundTasks):
+    with SessionLocal() as session:
+        # Serialize retry requests so two clicks cannot schedule the same failed PO.
+        row = session.get(PurchaseOrderDocument, doc_id, with_for_update=True)
+        if row is None:
+            raise HTTPException(404, 'Purchase order not found')
+        if row.status != 'failed':
+            raise HTTPException(409, 'Only failed PO processing can be retried')
+        if row.extraction:
+            saved = load_saved_extraction(row.extraction.extracted_json)
+            rebuilt = combine_po_pages([(page.page_number, page.result) for page in saved.page_results])
+            if saved.orders != rebuilt.orders:
+                raise HTTPException(409, 'This PO has manual corrections. Export them before starting a new extraction; retry will not overwrite edited results.')
+        row.status, row.error_message = 'queued', None
+        session.commit()
+        result = summary(row)
+    background_tasks.add_task(process_purchase_order, str(doc_id), True)
+    return result

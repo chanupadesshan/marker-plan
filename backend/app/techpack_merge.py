@@ -11,7 +11,7 @@ with the combined material records.
 
 import re
 from decimal import Decimal, InvalidOperation
-from .schema import PageResult, DocumentExtraction, Material, WovensPageTable
+from .techpack_schema import PageResult, DocumentExtraction, Material, WovensPageTable
 
 
 def canonical(text: str | None) -> str:
@@ -83,6 +83,7 @@ def combine_pages(results: list[tuple[int, PageResult]]) -> DocumentExtraction:
         if page.tech_pack_number:
             tech_packs.add(page.tech_pack_number.strip())
         warnings.extend(f"Page {page_number}: {w}" for w in page.warnings)
+        occurrences = {}
         for row_index, item in enumerate(page.materials):
             row = item.model_copy(deep=True)
             row.source_pages = [page_number]
@@ -99,6 +100,12 @@ def combine_pages(results: list[tuple[int, PageResult]]) -> DocumentExtraction:
             if not row.material_code:
                 # Rows without identifiers must not be merged just because fields match.
                 key = ("unidentified", page_number, row_index)
+            # Chunk crops do not overlap: repeated physical rows on this page are
+            # genuine evidence, not duplicate extraction to collapse. Across pages
+            # the corresponding occurrence may still collect other colorways.
+            occurrence = occurrences.get(key, 0)
+            occurrences[key] = occurrence + 1
+            key = (*key, occurrence)
             if row.material_code:
                 seen_codes.setdefault(canonical(row.material_code), set()).add(key)
             if key not in merged:

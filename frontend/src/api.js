@@ -19,9 +19,12 @@ export const api = {
     method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data),
   }),
   approve: (id) => request(`/api/documents/${id}/approve`, { method: 'POST' }),
+  remove: (id) => request(`/api/documents/${id}`, { method: 'DELETE' }),
 };
 
 export const poApi = {
+  list: () => request('/api/purchase-orders'),
+  retry: id => request(`/api/purchase-orders/${id}/retry`, { method: 'POST' }),
   get: id => request(`/api/purchase-orders/${id}`),
   upload: (file, techPackId = null) => {
     const form = new FormData();
@@ -33,4 +36,5 @@ export const poApi = {
     method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data),
   }),
   approve: id => request(`/api/purchase-orders/${id}/approve`, { method: 'POST' }),
+  remove: id => request(`/api/purchase-orders/${id}`, { method: 'DELETE' }),
 };
