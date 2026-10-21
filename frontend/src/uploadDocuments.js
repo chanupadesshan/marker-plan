@@ -1,4 +1,8 @@
 // Uploads are independent. Association records the uploaded pair, not a verified match.
+export function selectedPOAfterUpload(previousId, outcome) {
+  return outcome?.value?.id || previousId;
+}
+
 export async function uploadDocuments({ techPack, po }, clients) {
   const result = { techPackResult: null, poResult: null, warning: '' };
   if (techPack) {

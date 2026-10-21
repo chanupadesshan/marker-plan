@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { FileUp, ScanText, ShieldCheck, AlertTriangle, Check, Layers3, ArrowRight } from 'lucide-react';
 import { api, poApi } from './api';
-import { uploadDocuments } from './uploadDocuments.js';
+import { uploadDocuments, selectedPOAfterUpload } from './uploadDocuments.js';
 import PurchaseOrderPanel from './PurchaseOrderPanel.jsx';
 import DocumentWorkspace from './DocumentWorkspace.jsx';
 import DocumentUpload from './DocumentUpload.jsx';
@@ -71,7 +71,7 @@ export default function App() {
       if (result.techPackResult?.value) {
         setDocumentData(null); selectDocument(result.techPackResult.value.id);
       }
-      setPoId(result.poResult?.value?.id || null);
+      setPoId(previous => selectedPOAfterUpload(previous, result.poResult));
       setView(result.poResult?.value ? 'po' : 'bom');
       setError([result.techPackResult?.error && `Tech Pack: ${result.techPackResult.error}`,
         result.poResult?.error && `PO: ${result.poResult.error}`].filter(Boolean).join(' · '));
@@ -123,7 +123,7 @@ export default function App() {
         </nav>}
         {error && <div className="alert error" role="alert"><AlertTriangle size={18}/><span>{error}</span><button aria-label="Dismiss error" onClick={() => setError('')}>Dismiss</button></div>}
         {message && <div className="alert success" role="status"><Check size={18}/><span>{message}</span><button aria-label="Dismiss message" onClick={() => setMessage('')}>Dismiss</button></div>}
-        {poId && <div hidden={view !== 'po'}><PurchaseOrderPanel key={poId} id={poId}/></div>}
+        {poId && <div hidden={view !== 'po'}><PurchaseOrderPanel key={poId} id={poId} refreshKey={current?.status}/></div>}
         <div hidden={view !== 'bom'}>{loading ? <div className="loading-workspace" role="status"><span className="spinner"/> Loading your Tech Pack…</div> : current ?
           <DocumentWorkspace key={current.id} current={current} busy={busy} showEditor={showEditor} editor={editor} onApprove={onApprove}
             onToggleEditor={() => { setShowEditor(!showEditor); setEditor(JSON.stringify(editableExtraction(current.extraction), null, 2)); }} onEditorChange={setEditor} onSave={onSave}/> :

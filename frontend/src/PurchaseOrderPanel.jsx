@@ -3,7 +3,7 @@ import { poApi } from './api.js';
 import PurchaseOrderWorkspace from './PurchaseOrderWorkspace.jsx';
 
 // Keyed by document ID in App: cleanup prevents late responses replacing a new PO.
-export default function PurchaseOrderPanel({ id }) {
+export default function PurchaseOrderPanel({ id, refreshKey }) {
   const [current, setCurrent] = useState(null);
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
@@ -25,7 +25,7 @@ export default function PurchaseOrderPanel({ id }) {
     }
     load();
     return () => { cancelled = true; clearTimeout(timer); };
-  }, [id]);
+  }, [id, refreshKey]);
   async function action(kind) {
     if (kind === 'approve' && !window.confirm('Have you checked the PO values against the original PDF?')) return;
     setBusy(true); setError(''); setMessage('');

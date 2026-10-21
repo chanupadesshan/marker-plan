@@ -198,7 +198,7 @@ class OpenRouterVLM:
                         if isinstance(exc, ValidationError):
                             body['messages'][1]['content'][0]['text'] = instruction + (
                                 '\n\nThe previous response omitted required fields. Return every field '
-                                'in the schema, including materials and all nested fields. '
+                                'in the schema, including all nested objects and arrays. '
                                 'Use null for unreadable values and [] only for genuinely empty lists.'
                             )
                         time.sleep(2 ** attempt)

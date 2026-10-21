@@ -39,6 +39,17 @@ def source_complete(row):
             and all(entry.get('status') == 'completed' for entry in raw))
 
 
+def review_data(session, row):
+    """Refresh links that may have finished extracting after this PO did."""
+    data = POExtraction.model_validate(row.extraction.extracted_json).model_dump(mode='json')
+    data['warnings'] = [warning for warning in data['warnings']
+        if warning != 'Uploaded alongside a Tech Pack; business-reference matching requires review'
+        and not (warning.startswith('Contract ') and warning.endswith('Tech Pack reference differs from the linked extraction'))]
+    data['warnings'].extend(association_warnings(session, row,
+        POExtraction.model_validate(data).orders))
+    return data
+
+
 @router.post('/upload', status_code=202)
 async def upload(background_tasks: BackgroundTasks, file: UploadFile = File(...),
                  tech_pack_id: UUID | None = Form(None)):
@@ -72,7 +83,7 @@ def details(doc_id: UUID):
     with SessionLocal() as session:
         row = find(session, doc_id)
         result = summary(row)
-        result.update(extraction=row.extraction.extracted_json if row.extraction else None,
+        result.update(extraction=review_data(session, row) if row.extraction else None,
                       model=row.extraction.model_name if row.extraction else None,
                       request_usage=row.extraction.extracted_json.get('request_usage', []) if row.extraction else [],
                       approval_ready=source_complete(row))
@@ -94,7 +105,7 @@ def original(doc_id: UUID):
 def export(doc_id: UUID):
     with SessionLocal() as session:
         row = find(session, doc_id, True)
-        return JSONResponse(row.extraction.extracted_json,
+        return JSONResponse(review_data(session, row),
             headers={'Content-Disposition': f'attachment; filename="purchase-orders-{doc_id}.json"'})
 
 

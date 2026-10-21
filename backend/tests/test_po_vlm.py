@@ -2,6 +2,9 @@ import pytest
 from app import vlm
 from app.po_schema import POPageResult, PurchaseOrder, POSizeRow
 from test_token_usage import make_vlm
+import httpx
+import json
+from types import SimpleNamespace
 
 
 def test_po_wire_schema_requires_nested_fields():
@@ -39,3 +42,26 @@ def test_po_token_limit_is_recorded(monkeypatch):
     with pytest.raises(RuntimeError, match='token limit'):
         model.extract_po(b'image')
     assert model.request_usage[0]['status'] == 'token_limit'
+
+
+def test_po_schema_retry_keeps_po_instructions_and_never_requests_materials(monkeypatch):
+    instructions = []
+    replies = iter([{'page_kind': 'purchase_order'}, POPageResult(page_kind='other').model_dump()])
+    class Client:
+        def __init__(self, **kwargs): pass
+        def __enter__(self): return self
+        def __exit__(self, *args): pass
+        def post(self, url, **kwargs):
+            body = kwargs['json']
+            instructions.append(body['messages'][1]['content'][0]['text'])
+            assert body['response_format']['json_schema']['name'] == 'purchase_order_page'
+            assert 'PDF text layer' not in instructions[-1]
+            return httpx.Response(200, request=httpx.Request('POST', url), json={
+                'choices': [{'finish_reason': 'stop', 'message': {'content': json.dumps(next(replies))}}]})
+    monkeypatch.setattr(vlm.httpx, 'Client', Client)
+    monkeypatch.setattr(vlm.time, 'sleep', lambda _: None)
+    monkeypatch.setattr(vlm, 'get_settings', lambda: SimpleNamespace(openrouter_api_key='test', openrouter_model='test'))
+    model = vlm.OpenRouterVLM()
+    assert model.extract_po(b'image').page_kind == 'other'
+    assert len(instructions) == 2
+    assert 'including materials' not in instructions[1]

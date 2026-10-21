@@ -4,6 +4,9 @@ import pymupdf
 import pytest
 from app.po_schema import POPageResult, PurchaseOrder, POSizeRow
 from app import po_pipeline
+from sqlalchemy import inspect
+from sqlalchemy.orm.attributes import set_committed_value
+from copy import deepcopy
 
 
 def setup_pipeline(monkeypatch, fail_page=None, kind='purchase_order'):
@@ -15,7 +18,13 @@ def setup_pipeline(monkeypatch, fail_page=None, kind='purchase_order'):
         def __exit__(self, *args): pass
         def get(self, *args): return doc
         def add(self, value): doc.extraction = value
-        def commit(self): pass
+        def commit(self):
+            # Model the ORM's JSONB dirty comparison, which a no-op fake misses.
+            if doc.extraction:
+                attribute = inspect(doc.extraction).attrs.raw_page_results
+                if attribute.history.has_changes():
+                    doc.stored_raw = deepcopy(doc.extraction.raw_page_results)
+                set_committed_value(doc.extraction, 'raw_page_results', doc.extraction.raw_page_results)
         def rollback(self): pass
     class Model:
         def __init__(self): self.request_usage = []
@@ -43,6 +52,7 @@ def test_all_images_saved_before_inference_and_success(monkeypatch):
     assert doc.status == 'needs_review'
     assert doc.extraction.extracted_json['processing_complete'] is True
     assert doc.extraction.extracted_json['orders'][0]['source_pages'] == [1, 2]
+    assert [entry['status'] for entry in doc.stored_raw] == ['completed', 'completed']
 
 
 @pytest.mark.parametrize('failure,completed', [(1, 0), (2, 1)])

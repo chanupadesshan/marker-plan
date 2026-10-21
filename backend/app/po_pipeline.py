@@ -1,5 +1,6 @@
 """Render every PO page first, then extract sequentially with durable partial results."""
 from uuid import UUID
+from copy import deepcopy
 import pymupdf
 from .config import get_settings
 from .database import SessionLocal
@@ -47,7 +48,8 @@ def process_purchase_order(document_id: str):
                 document.extraction = extraction
                 session.add(extraction)
             extraction.extracted_json = combined.model_dump(mode='json')
-            extraction.raw_page_results = list(raw)
+            # JSONB change detection needs an independent snapshot of nested entries.
+            extraction.raw_page_results = deepcopy(raw)
             extraction.warnings = combined.warnings
             session.commit()
             return combined

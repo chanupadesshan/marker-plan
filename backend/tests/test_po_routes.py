@@ -45,6 +45,16 @@ def test_pdf_validation_and_bad_link(context):
     assert response.json()['filename'] == 'x.pdf'
 
 
+def test_upload_limit_and_existing_link(context, monkeypatch):
+    client, doc = context
+    response = client.post('/api/purchase-orders/upload', files={'file': ('x.pdf', b'%PDF-test')},
+                           data={'tech_pack_id': str(doc.id)})
+    assert response.status_code == 202
+    assert response.json()['tech_pack_id'] == str(doc.id)
+    monkeypatch.setattr(po_routes, 'get_settings', lambda: SimpleNamespace(max_upload_mb=0))
+    assert client.post('/api/purchase-orders/upload', files={'file': ('x.pdf', b'%PDF-test')}).status_code == 413
+
+
 def test_corrections_preserve_usage_and_raw_evidence(context):
     client, doc = context
     url = f'/api/purchase-orders/{doc.id}/extraction'
@@ -78,3 +88,17 @@ def test_complete_review_can_approve(context):
     client, doc = context
     assert client.post(f'/api/purchase-orders/{doc.id}/approve').status_code == 200
     assert doc.status == 'approved'
+
+
+def test_details_refreshes_reference_warning_when_linked_tech_pack_finishes_later(context, monkeypatch):
+    client, doc = context
+    doc.tech_pack_id = uuid4()
+    doc.extraction.extracted_json['orders'][0]['tech_pack_reference'] = 'PO-REFERENCE'
+    linked = SimpleNamespace(extraction=SimpleNamespace(extracted_json={'tech_pack_number': 'OTHER-REFERENCE'}))
+    class Session:
+        def __enter__(self): return self
+        def __exit__(self, *args): pass
+        def get(self, model, key): return linked if key == doc.tech_pack_id else doc
+    monkeypatch.setattr(po_routes, 'SessionLocal', Session)
+    response = client.get(f'/api/purchase-orders/{doc.id}')
+    assert any('differs' in warning for warning in response.json()['extraction']['warnings'])
