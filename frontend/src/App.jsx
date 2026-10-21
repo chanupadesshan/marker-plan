@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { FileUp, ScanText, ShieldCheck, AlertTriangle, Check, Layers3, ArrowRight } from 'lucide-react';
-import { api } from './api';
+import { api, poApi } from './api';
+import { uploadDocuments } from './uploadDocuments.js';
+import PurchaseOrderPanel from './PurchaseOrderPanel.jsx';
 import DocumentWorkspace from './DocumentWorkspace.jsx';
 import DocumentUpload from './DocumentUpload.jsx';
 import { loadSelectedDocument } from './document-loading.js';
@@ -13,6 +15,8 @@ function editableExtraction(extraction) {
 
 export default function App() {
   const [selectedId, setSelectedId] = useState(null);
+  const [poId, setPoId] = useState(null);
+  const [view, setView] = useState('bom');
   const selectedIdRef = useRef(null);
   const [documentData, setDocumentData] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -59,14 +63,19 @@ export default function App() {
     return () => clearInterval(handle);
   }, [selectedId, documentData?.status, showEditor]);
 
-  async function onUpload(file) {
-    if (!file) return;
+  async function onUpload(files) {
+    if (!files.techPack && !files.po) return;
     setBusy(true); setError(''); setMessage('');
     try {
-      const item = await api.upload(file);
-      setDocumentData(null);
-      selectDocument(item.id);
-      setMessage('Upload saved. Extraction queued.');
+      const result = await uploadDocuments(files, { techPack: api, po: poApi });
+      if (result.techPackResult?.value) {
+        setDocumentData(null); selectDocument(result.techPackResult.value.id);
+      }
+      setPoId(result.poResult?.value?.id || null);
+      setView(result.poResult?.value ? 'po' : 'bom');
+      setError([result.techPackResult?.error && `Tech Pack: ${result.techPackResult.error}`,
+        result.poResult?.error && `PO: ${result.poResult.error}`].filter(Boolean).join(' · '));
+      setMessage(result.warning || (result.techPackResult?.value || result.poResult?.value ? 'Upload saved. Extraction queued.' : ''));
     } catch (e) { setError(e.message); }
     finally { setBusy(false); }
   }
@@ -107,18 +116,23 @@ export default function App() {
         <div className="workspace-heading"><div className="workspace-heading-copy">
           <div><div className="breadcrumb">Workspace <span>/</span> Wovens</div><h1>Wovens data review</h1></div>
         </div></div>
-        <DocumentUpload busy={busy || loading || ["queued", "processing"].includes(current?.status)} onUpload={onUpload}/>
+        <DocumentUpload busy={busy || loading} onUpload={onUpload}/>
+        {(selectedId || poId) && <nav className="result-tabs" aria-label="Document results">
+          {selectedId && <button className={view === 'bom' ? 'active' : ''} onClick={() => setView('bom')}>Wovens BOM {current?.status ? `· ${current.status.replaceAll('_', ' ')}` : ''}</button>}
+          {poId && <button className={view === 'po' ? 'active' : ''} onClick={() => setView('po')}>Purchase orders</button>}
+        </nav>}
         {error && <div className="alert error" role="alert"><AlertTriangle size={18}/><span>{error}</span><button aria-label="Dismiss error" onClick={() => setError('')}>Dismiss</button></div>}
         {message && <div className="alert success" role="status"><Check size={18}/><span>{message}</span><button aria-label="Dismiss message" onClick={() => setMessage('')}>Dismiss</button></div>}
-        {loading ? <div className="loading-workspace" role="status"><span className="spinner"/> Loading your Tech Pack…</div> : current ?
+        {poId && <div hidden={view !== 'po'}><PurchaseOrderPanel key={poId} id={poId}/></div>}
+        <div hidden={view !== 'bom'}>{loading ? <div className="loading-workspace" role="status"><span className="spinner"/> Loading your Tech Pack…</div> : current ?
           <DocumentWorkspace key={current.id} current={current} busy={busy} showEditor={showEditor} editor={editor} onApprove={onApprove}
             onToggleEditor={() => { setShowEditor(!showEditor); setEditor(JSON.stringify(editableExtraction(current.extraction), null, 2)); }} onEditorChange={setEditor} onSave={onSave}/> :
           <section className="welcome">
             <div className="document-illustration" aria-hidden="true"><span className="paper-back"/><span className="paper-front"><ScanText size={40}/><i/><i/><i/></span><span className="paper-check"><Check size={18}/></span></div>
             <span className="eyebrow">FROM TECH PACK TO MATERIAL TABLE</span><h2>Your Wovens, ready to review.</h2>
-            <p>Choose the Tech Pack and its related PO above, then extract the Wovens BOM to start your review.</p>
+            <p>Choose a Tech Pack, a purchase order, or both above to start your review.</p>
             <div className="welcome-steps"><span><b>01</b> Upload PDF</span><span><b>02</b> Extract Wovens</span><span><b>03</b> Review & approve</span></div>
-          </section>}
+          </section>}</div>
         <footer className="workspace-footer"><ShieldCheck size={13}/> Human review keeps your material data accurate.</footer>
       </main>
     </div>

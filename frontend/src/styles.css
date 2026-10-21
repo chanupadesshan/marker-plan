@@ -130,3 +130,12 @@ td { padding: 16px 15px; vertical-align: top; color: #58677c; line-height: 1.65;
 .upload-panel-footer { display: flex; align-items: center; justify-content: space-between; gap: 15px; margin-top: 18px; }
 .upload-panel-footer>p { font-size: 10px; }
 @media(max-width:580px) { .upload-pair { grid-template-columns: 1fr; gap: 12px; }.document-upload { padding: 17px; }.upload-panel-footer { align-items: flex-start; flex-direction: column; }.upload-panel-footer .primary-button { width: 100%; } }
+.result-tabs { display: flex; gap: 8px; margin: 20px 0; flex-wrap: wrap; }
+.result-tabs button { padding: 11px 18px; border: 1px solid #dce3ed; border-radius: 8px; background: white; color: #475569; cursor: pointer; }
+.result-tabs button.active { background: #243f68; color: white; border-color: #243f68; }
+.po-contract { margin: 20px 0; overflow: hidden; }
+.po-facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(145px, 1fr)); gap: 18px; padding: 0 24px 20px; }
+.po-facts dt { color: #64748b; font-size: 12px; }
+.po-facts dd { margin: 5px 0 0; overflow-wrap: anywhere; }
+.po-notes { color: #9a4d13; margin: 0 24px 20px; padding-left: 18px; }
+[hidden] { display: none !important; }
