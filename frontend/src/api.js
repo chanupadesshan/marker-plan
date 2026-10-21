@@ -20,3 +20,17 @@ export const api = {
   }),
   approve: (id) => request(`/api/documents/${id}/approve`, { method: 'POST' }),
 };
+
+export const poApi = {
+  get: id => request(`/api/purchase-orders/${id}`),
+  upload: (file, techPackId = null) => {
+    const form = new FormData();
+    form.append('file', file);
+    if (techPackId) form.append('tech_pack_id', techPackId);
+    return request('/api/purchase-orders/upload', { method: 'POST', body: form });
+  },
+  save: (id, data) => request(`/api/purchase-orders/${id}/extraction`, {
+    method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data),
+  }),
+  approve: id => request(`/api/purchase-orders/${id}/approve`, { method: 'POST' }),
+};
