@@ -32,11 +32,21 @@ def validate_totals(order):
     Output: nothing. A warning is added to order.warnings when quantities are missing or
     unreadable, or when their sum differs from the total.
     """
-    total = number(order.total_quantity)
+    # Refresh only warnings owned by this validator, keeping extraction/review notes.
+    order.warnings = [warning for warning in order.warnings
+                      if not warning.startswith(('Quantity validation incomplete:', 'Size quantity sum differs'))]
+    totals = {number(order.total_quantity)}
+    printed = (order.total_quantity or '').strip()
+    # A grouped total is accepted only when the actual size sum supports it. Keep
+    # number() unchanged: a single comma or dot can genuinely be a decimal mark.
+    for separator in (',', '.'):
+        if re.fullmatch(r'[+-]?\d{1,3}(?:' + re.escape(separator) + r'\d{3})+', printed):
+            totals.add(Decimal(printed.replace(separator, '')))
+    totals.discard(None)
     quantities = [number(row.quantity) for row in order.size_rows]
-    if total is None or not quantities or any(q is None for q in quantities):
+    if not totals or not quantities or any(q is None for q in quantities):
         order.warnings.append('Quantity validation incomplete: total or size quantities are missing/unreadable')
-    elif sum(quantities, Decimal(0)) != total:
+    elif sum(quantities, Decimal(0)) not in totals:
         order.warnings.append('Size quantity sum differs from the printed total quantity')
 
 

@@ -64,13 +64,14 @@ test('the dashboard page renders its search, add button and loading state', asyn
     server: { middlewareMode: true, watch: null }, appType: 'custom' });
   try {
     const { default: PliesDashboard } = await server.ssrLoadModule('/src/PliesDashboard.jsx');
-    const html = renderToStaticMarkup(React.createElement(PliesDashboard));
+    const html = renderToStaticMarkup(React.createElement(PliesDashboard, { user: { full_name: 'Root', email: 'r@x.co', is_admin: true, permissions: {} } }));
     assert.match(html, /<h1>Plies<\/h1>/);
-    assert.match(html, /Plies dashboard/);
     assert.match(html, /aria-label="Search plies"/);
     assert.match(html, /Add ply/);
     assert.match(html, /Loading plies/);
-    assert.match(html, /href="\/"[^>]*>.*?Back to review/);
+    // The left navigation replaces the old "Back to review" link and marks Plies as the current page.
+    assert.match(html, /href="\/"[^>]*>.*?Create Marker Plan/);
+    assert.match(html, /<a[^>]*aria-current="page"[^>]*>.*?Plies/);
   } finally { await server.close(); }
 });
 

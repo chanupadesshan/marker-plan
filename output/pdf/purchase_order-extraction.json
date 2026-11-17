@@ -1,0 +1,385 @@
+{
+  "id": "61d90941-59bd-4af7-a765-7c5d7a56a561",
+  "filename": "purchase-orders-two-pos.pdf",
+  "status": "needs_review",
+  "error": null,
+  "page_count": 2,
+  "tech_pack_id": null,
+  "created_at": "2026-10-27T01:54:17.337441+00:00",
+  "extraction": {
+    "orders": [
+      {
+        "contract_number": "361061",
+        "tech_pack_reference": "24409",
+        "model_id": "1478",
+        "quality_id": "1514",
+        "color_id": "8933",
+        "total_quantity": "504",
+        "size_rows": [
+          {
+            "size": "-C48",
+            "quantity": "84",
+            "source_page": 1
+          },
+          {
+            "size": "-C50",
+            "quantity": "42",
+            "source_page": 1
+          },
+          {
+            "size": "-C52",
+            "quantity": "84",
+            "source_page": 1
+          },
+          {
+            "size": "-C54",
+            "quantity": "112",
+            "source_page": 1
+          },
+          {
+            "size": "-C56",
+            "quantity": "70",
+            "source_page": 1
+          },
+          {
+            "size": "-C58",
+            "quantity": "28",
+            "source_page": 1
+          },
+          {
+            "size": "-D92",
+            "quantity": "14",
+            "source_page": 1
+          },
+          {
+            "size": "-D96",
+            "quantity": "28",
+            "source_page": 1
+          },
+          {
+            "size": "-D100",
+            "quantity": "14",
+            "source_page": 1
+          },
+          {
+            "size": "-D108",
+            "quantity": "14",
+            "source_page": 1
+          },
+          {
+            "size": "-C152",
+            "quantity": "14",
+            "source_page": 1
+          }
+        ],
+        "source_pages": [
+          1
+        ],
+        "warnings": []
+      },
+      {
+        "contract_number": "355800",
+        "tech_pack_reference": "16926",
+        "model_id": "1449",
+        "quality_id": "1845",
+        "color_id": "8699",
+        "total_quantity": "1,410",
+        "size_rows": [
+          {
+            "size": "-C44",
+            "quantity": "30",
+            "source_page": 2
+          },
+          {
+            "size": "-C46",
+            "quantity": "90",
+            "source_page": 2
+          },
+          {
+            "size": "-C48",
+            "quantity": "210",
+            "source_page": 2
+          },
+          {
+            "size": "-C50",
+            "quantity": "240",
+            "source_page": 2
+          },
+          {
+            "size": "-C52",
+            "quantity": "330",
+            "source_page": 2
+          },
+          {
+            "size": "-C54",
+            "quantity": "270",
+            "source_page": 2
+          },
+          {
+            "size": "-C56",
+            "quantity": "150",
+            "source_page": 2
+          },
+          {
+            "size": "-C58",
+            "quantity": "30",
+            "source_page": 2
+          },
+          {
+            "size": "-C60",
+            "quantity": "30",
+            "source_page": 2
+          },
+          {
+            "size": "-C62",
+            "quantity": "30",
+            "source_page": 2
+          }
+        ],
+        "source_pages": [
+          2
+        ],
+        "warnings": [
+          "Size quantity sum differs from the printed total quantity"
+        ]
+      }
+    ],
+    "page_results": [
+      {
+        "page_number": 1,
+        "result": {
+          "page_kind": "purchase_order",
+          "orders": [
+            {
+              "contract_number": "361061",
+              "tech_pack_reference": "24409",
+              "model_id": "1478",
+              "quality_id": "1514",
+              "color_id": "8933",
+              "total_quantity": "504",
+              "size_rows": [
+                {
+                  "size": "-C48",
+                  "quantity": "84",
+                  "source_page": 1
+                },
+                {
+                  "size": "-C50",
+                  "quantity": "42",
+                  "source_page": 1
+                },
+                {
+                  "size": "-C52",
+                  "quantity": "84",
+                  "source_page": 1
+                },
+                {
+                  "size": "-C54",
+                  "quantity": "112",
+                  "source_page": 1
+                },
+                {
+                  "size": "-C56",
+                  "quantity": "70",
+                  "source_page": 1
+                },
+                {
+                  "size": "-C58",
+                  "quantity": "28",
+                  "source_page": 1
+                },
+                {
+                  "size": "-D92",
+                  "quantity": "14",
+                  "source_page": 1
+                },
+                {
+                  "size": "-D96",
+                  "quantity": "28",
+                  "source_page": 1
+                },
+                {
+                  "size": "-D100",
+                  "quantity": "14",
+                  "source_page": 1
+                },
+                {
+                  "size": "-D108",
+                  "quantity": "14",
+                  "source_page": 1
+                },
+                {
+                  "size": "-C152",
+                  "quantity": "14",
+                  "source_page": 1
+                }
+              ],
+              "source_pages": [
+                1
+              ],
+              "warnings": []
+            }
+          ],
+          "warnings": []
+        }
+      },
+      {
+        "page_number": 2,
+        "result": {
+          "page_kind": "purchase_order",
+          "orders": [
+            {
+              "contract_number": "355800",
+              "tech_pack_reference": "16926",
+              "model_id": "1449",
+              "quality_id": "1845",
+              "color_id": "8699",
+              "total_quantity": "1,410",
+              "size_rows": [
+                {
+                  "size": "-C44",
+                  "quantity": "30",
+                  "source_page": 2
+                },
+                {
+                  "size": "-C46",
+                  "quantity": "90",
+                  "source_page": 2
+                },
+                {
+                  "size": "-C48",
+                  "quantity": "210",
+                  "source_page": 2
+                },
+                {
+                  "size": "-C50",
+                  "quantity": "240",
+                  "source_page": 2
+                },
+                {
+                  "size": "-C52",
+                  "quantity": "330",
+                  "source_page": 2
+                },
+                {
+                  "size": "-C54",
+                  "quantity": "270",
+                  "source_page": 2
+                },
+                {
+                  "size": "-C56",
+                  "quantity": "150",
+                  "source_page": 2
+                },
+                {
+                  "size": "-C58",
+                  "quantity": "30",
+                  "source_page": 2
+                },
+                {
+                  "size": "-C60",
+                  "quantity": "30",
+                  "source_page": 2
+                },
+                {
+                  "size": "-C62",
+                  "quantity": "30",
+                  "source_page": 2
+                }
+              ],
+              "source_pages": [
+                2
+              ],
+              "warnings": []
+            }
+          ],
+          "warnings": []
+        }
+      }
+    ],
+    "request_usage": [
+      {
+        "page": 1,
+        "group": "1",
+        "stage": "po_extraction",
+        "status": "success",
+        "attempt": 1,
+        "band_end": 1,
+        "cost_usd": 0.00119939,
+        "crop_top": 0,
+        "band_start": 1,
+        "request_id": "gen-1793066062-3y4e4Pc4NC9FANCrBtda",
+        "crop_bottom": 1442,
+        "input_tokens": 1839,
+        "output_limit": 6500,
+        "total_tokens": 2267,
+        "finish_reason": "stop",
+        "output_tokens": 428,
+        "row_group_mode": false
+      },
+      {
+        "page": 2,
+        "group": "1",
+        "stage": "po_extraction",
+        "status": "success",
+        "attempt": 1,
+        "band_end": 1,
+        "cost_usd": 0.00104082,
+        "crop_top": 0,
+        "band_start": 1,
+        "request_id": "gen-1793066071-Siqj2v54NCgTRiZewxsB",
+        "crop_bottom": 1450,
+        "input_tokens": 1704,
+        "output_limit": 6500,
+        "total_tokens": 2107,
+        "finish_reason": "stop",
+        "output_tokens": 403,
+        "row_group_mode": false
+      }
+    ],
+    "warnings": [],
+    "processing_complete": true
+  },
+  "model": "qwen/qwen3-vl-235b-a22b-instruct",
+  "request_usage": [
+    {
+      "page": 1,
+      "group": "1",
+      "stage": "po_extraction",
+      "status": "success",
+      "attempt": 1,
+      "band_end": 1,
+      "cost_usd": 0.00119939,
+      "crop_top": 0,
+      "band_start": 1,
+      "request_id": "gen-1793066062-3y4e4Pc4NC9FANCrBtda",
+      "crop_bottom": 1442,
+      "input_tokens": 1839,
+      "output_limit": 6500,
+      "total_tokens": 2267,
+      "finish_reason": "stop",
+      "output_tokens": 428,
+      "row_group_mode": false
+    },
+    {
+      "page": 2,
+      "group": "1",
+      "stage": "po_extraction",
+      "status": "success",
+      "attempt": 1,
+      "band_end": 1,
+      "cost_usd": 0.00104082,
+      "crop_top": 0,
+      "band_start": 1,
+      "request_id": "gen-1793066071-Siqj2v54NCgTRiZewxsB",
+      "crop_bottom": 1450,
+      "input_tokens": 1704,
+      "output_limit": 6500,
+      "total_tokens": 2107,
+      "finish_reason": "stop",
+      "output_tokens": 403,
+      "row_group_mode": false
+    }
+  ],
+  "approval_ready": true
+}

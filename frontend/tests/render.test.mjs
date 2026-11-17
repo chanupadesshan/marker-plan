@@ -1,4 +1,4 @@
-import assert from 'node:assert/strict';
+﻿import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { fileURLToPath } from 'node:url';
 import React from 'react';
@@ -13,19 +13,15 @@ test('the initial screen renders the upload and review workspace', async () => {
   });
   try {
     const { default: App } = await server.ssrLoadModule('/src/App.jsx');
-    const html = renderToStaticMarkup(React.createElement(App));
-    assert.match(html, /Wovens data review/);
-    // The sidebar has one tab per document type, each with its own upload and search.
-    assert.match(html, /role="tab"[^>]*>.*?Tech Pack/);
-    assert.match(html, /role="tab"[^>]*>.*?Purchase Order/);
+    const html = renderToStaticMarkup(React.createElement(App, { user: { full_name: 'Ann', email: 'a@x.co', is_admin: true, permissions: {} } }));
+    assert.match(html, /Start with a Tech Pack/);
+    // One sidebar for the whole workflow: a style starts with its Tech Pack upload; the PO is submitted inside the style.
     assert.match(html, /Upload Tech Pack/);
     assert.match(html, /Choose Tech Pack PDF/);
-    assert.match(html, /Search Tech Packs/);
-    assert.match(html, /Upload PO/);
-    assert.match(html, /Choose purchase order PDF/);
-    assert.match(html, /Search purchase orders/);
-    assert.match(html, /role="tab"[^>]*>Marker Plan</);
-    assert.match(html, /Search Tech Packs and purchase orders/);
+    assert.doesNotMatch(html, /Search styles|document-row/);
+    assert.doesNotMatch(html, /Upload PO|Choose purchase order PDF|role="tab"/);
+    assert.match(html, /<span class="vp-nav-text">Create Marker Plan<\/span>/);
+    assert.match(html, /<span class="vp-nav-text">Marker Plans<\/span>/);
   } finally {
     await server.close();
   }
@@ -38,7 +34,7 @@ test('Wovens tables keep one material row and separate colorway columns per page
   });
   try {
     const { default: WovensTable } = await server.ssrLoadModule('/src/WovensTable.jsx');
-    const row = { material_code: 'R1371', description: 'Cotton', placement: 'Main fabric', quantity: '0.95 m', unit: 'm',
+    const row = { material_code: 'R1371', developer_code: 'B-10262', placement_type: 'Shell 1_Fabric 1_Care', description: 'Cotton', placement: 'Main fabric', quantity: '0.95 m', unit: 'm',
       colorways: [{ code: '8833', name: 'Navy/HV yellow', material_color_code: '8800', material_color_name: 'Navy' },
         { code: '8853', name: 'Navy/HV orange', material_color_code: '8800', material_color_name: 'Navy' }] };
     const html = renderToStaticMarkup(React.createElement(WovensTable, { extraction: {
@@ -50,6 +46,15 @@ test('Wovens tables keep one material row and separate colorway columns per page
     assert.match(html, /8833/);
     assert.match(html, /8853/);
     assert.match(html, /9955/);
+    assert.match(html, /B-10262/);
+    assert.match(html, /Shell 1_Fabric 1_Care/);
+    const placementOnly = renderToStaticMarkup(React.createElement(WovensTable, { extraction: {
+      page_tables: [{ page_number: 63, materials: [{ ...row, developer_code: 'R1371', placement_type: null,
+        placement: 'Back pocket facing', colorways: [{ code: '9955', fabric_reference: 'Fabric 1' }] }] }],
+    } }));
+    assert.match(placementOnly, /<strong>R1371<\/strong><div>R1371<\/div>/);
+    assert.match(placementOnly, /Back pocket facing/);
+    assert.doesNotMatch(placementOnly, /Fabric 1|Shell 1/);
     assert.doesNotMatch(html, /0\.95 m m/);
     assert.doesNotMatch(html, /<th[^>]*>PDF pages|<th[^>]*>Fabric reference/);
   } finally { await server.close(); }

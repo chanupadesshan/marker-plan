@@ -1,0 +1,1060 @@
+{
+  "id": "d767daf4-6a54-4721-bf64-d8ca8d700ed7",
+  "saved": true,
+  "sizes": [
+    "-C48",
+    "-C50",
+    "-C52",
+    "-C54",
+    "-C56",
+    "-C58",
+    "-D92",
+    "-D96",
+    "-D100",
+    "-D108",
+    "-C152"
+  ],
+  "status": "complete",
+  "request": {
+    "orders": [
+      {
+        "label": "361061",
+        "color_id": "8933",
+        "model_id": "1478",
+        "size_rows": [
+          {
+            "size": "-C48",
+            "quantity": "84"
+          },
+          {
+            "size": "-C50",
+            "quantity": "42"
+          },
+          {
+            "size": "-C52",
+            "quantity": "84"
+          },
+          {
+            "size": "-C54",
+            "quantity": "112"
+          },
+          {
+            "size": "-C56",
+            "quantity": "70"
+          },
+          {
+            "size": "-C58",
+            "quantity": "28"
+          },
+          {
+            "size": "-D92",
+            "quantity": "14"
+          },
+          {
+            "size": "-D96",
+            "quantity": "28"
+          },
+          {
+            "size": "-D100",
+            "quantity": "14"
+          },
+          {
+            "size": "-D108",
+            "quantity": "14"
+          },
+          {
+            "size": "-C152",
+            "quantity": "14"
+          }
+        ],
+        "quality_id": "1514",
+        "source_filename": "purchase-orders-two-pos.pdf",
+        "tech_pack_reference": "24409"
+      }
+    ],
+    "materials": [
+      {
+        "unit": "m",
+        "colorways": [
+          {
+            "code": "8933",
+            "name": "Navy/HV yellow",
+            "fabric_reference": null,
+            "material_color_code": "8904",
+            "material_color_name": "Navy (contrast 15797)"
+          }
+        ],
+        "max_plies": 70,
+        "placement": "Body Fabric. Pocket Bag, Knee Pocket",
+        "composition": "75% cotton, 24% polyester, 1% Other fibers,",
+        "consumption": "1.65",
+        "description": "75% cotton, 24% polyester, 1% Other fibers, flameretardant, antistatic, UL FR, 350 g/m2",
+        "page_number": 1,
+        "material_code": "R1514",
+        "placement_type": "Shell 1_Fabric 1_Care"
+      },
+      {
+        "unit": "m",
+        "colorways": [
+          {
+            "code": "8933",
+            "name": "Navy/HV yellow",
+            "fabric_reference": null,
+            "material_color_code": "3300",
+            "material_color_name": "HV yellow"
+          }
+        ],
+        "max_plies": 30,
+        "placement": "High Visibility Areas.",
+        "composition": "75% cotton, 24% polyester, 1% Other fibers,",
+        "consumption": "0.32",
+        "description": "75% cotton, 24% polyester, 1% Other fibers, flameretardant, antistatic, UL FR, 350 g/m2",
+        "page_number": 1,
+        "material_code": "R1514",
+        "placement_type": "Fabric 1"
+      },
+      {
+        "unit": "m",
+        "colorways": [
+          {
+            "code": "8933",
+            "name": "Navy/HV yellow",
+            "fabric_reference": null,
+            "material_color_code": "9991",
+            "material_color_name": "Black Melange"
+          }
+        ],
+        "max_plies": 30,
+        "placement": "Knee Pocket Patch Front",
+        "composition": "39% modacrylic, 28% polyamide, 17% cotton, 15% Aramid, 1% Other fibers,",
+        "consumption": "0.12",
+        "description": "39% modacrylic, 28% polyamide, 17% cotton, 15% Aramid, 1% Other fibers, flame retardant, 270 g/m2",
+        "page_number": 1,
+        "material_code": "R1548",
+        "placement_type": "Fabric 2"
+      },
+      {
+        "unit": "m",
+        "colorways": [
+          {
+            "code": "8933",
+            "name": "Navy/HV yellow",
+            "fabric_reference": null,
+            "material_color_code": "9900",
+            "material_color_name": "Black"
+          }
+        ],
+        "max_plies": 30,
+        "placement": "Lining at Front Knee Patch Behind R1548",
+        "composition": "90% polyester, 10% cotton,",
+        "consumption": "0.15",
+        "description": "90% polyester, 10% cotton, 100 g/m2",
+        "page_number": 1,
+        "material_code": "R2020",
+        "placement_type": "Lining 1"
+      }
+    ],
+    "min_plies": 10,
+    "style_number": "1449",
+    "tech_pack_id": "f89c4d32-129d-47ce-8253-22047652689b",
+    "table_length_m": "8",
+    "tech_pack_number": null,
+    "tech_pack_filename": "tech-pack-two-boms.pdf",
+    "time_limit_seconds": 20.0
+  },
+  "summary": {
+    "failed": 0,
+    "complete": true,
+    "lay_count": 8,
+    "marker_count": 8
+  },
+  "settings": {
+    "min_plies": 10,
+    "table_length_m": "8",
+    "time_limit_seconds": 20.0
+  },
+  "warnings": [],
+  "materials": [
+    {
+      "live": {
+        "phase": "complete",
+        "status": "FEASIBLE",
+        "lay_count": 4,
+        "marker_count": 4,
+        "elapsed_seconds": 0.686,
+        "marker_minimum_proven": false
+      },
+      "unit": "m",
+      "state": "done",
+      "number": 1,
+      "result": {
+        "lays": [
+          {
+            "sets": 168,
+            "plies": 42,
+            "counts": [
+              0,
+              1,
+              0,
+              2,
+              1,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "number": 1,
+            "marker_id": "B01-M01"
+          },
+          {
+            "sets": 168,
+            "plies": 42,
+            "counts": [
+              2,
+              0,
+              2,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "number": 2,
+            "marker_id": "B01-M02"
+          },
+          {
+            "sets": 112,
+            "plies": 28,
+            "counts": [
+              0,
+              0,
+              0,
+              1,
+              1,
+              1,
+              0,
+              1,
+              0,
+              0,
+              0
+            ],
+            "number": 3,
+            "marker_id": "B01-M03"
+          },
+          {
+            "sets": 56,
+            "plies": 14,
+            "counts": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+              1,
+              1,
+              1
+            ],
+            "number": 4,
+            "marker_id": "B01-M04"
+          }
+        ],
+        "status": "FEASIBLE",
+        "markers": [
+          {
+            "id": "B01-M01",
+            "counts": [
+              0,
+              1,
+              0,
+              2,
+              1,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "sets_cut": 168,
+            "lay_count": 1,
+            "lay_numbers": [
+              1
+            ],
+            "total_plies": 42,
+            "sets_per_marker": 4
+          },
+          {
+            "id": "B01-M02",
+            "counts": [
+              2,
+              0,
+              2,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "sets_cut": 168,
+            "lay_count": 1,
+            "lay_numbers": [
+              2
+            ],
+            "total_plies": 42,
+            "sets_per_marker": 4
+          },
+          {
+            "id": "B01-M03",
+            "counts": [
+              0,
+              0,
+              0,
+              1,
+              1,
+              1,
+              0,
+              1,
+              0,
+              0,
+              0
+            ],
+            "sets_cut": 112,
+            "lay_count": 1,
+            "lay_numbers": [
+              3
+            ],
+            "total_plies": 28,
+            "sets_per_marker": 4
+          },
+          {
+            "id": "B01-M04",
+            "counts": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+              1,
+              1,
+              1
+            ],
+            "sets_cut": 56,
+            "lay_count": 1,
+            "lay_numbers": [
+              4
+            ],
+            "total_plies": 14,
+            "sets_per_marker": 4
+          }
+        ],
+        "message": "Valid plan found by compact search; minimum marker count is not proven.",
+        "progress": [
+          {
+            "phase": "building",
+            "status": "SEARCHING",
+            "lay_count": null,
+            "marker_count": null,
+            "elapsed_seconds": 0.0,
+            "marker_minimum_proven": false
+          },
+          {
+            "phase": "markers",
+            "status": "SEARCHING",
+            "lay_count": 6,
+            "marker_count": 6,
+            "elapsed_seconds": 0.186,
+            "marker_minimum_proven": false
+          },
+          {
+            "phase": "markers",
+            "status": "SEARCHING",
+            "lay_count": 4,
+            "marker_count": 4,
+            "elapsed_seconds": 0.686,
+            "marker_minimum_proven": false
+          },
+          {
+            "phase": "complete",
+            "status": "FEASIBLE",
+            "lay_count": 4,
+            "marker_count": 4,
+            "elapsed_seconds": 0.686,
+            "marker_minimum_proven": false
+          }
+        ],
+        "lay_count": 4,
+        "validated": true,
+        "production": [
+          {
+            "size": "-C48",
+            "produced": 84,
+            "required": 84,
+            "difference": 0
+          },
+          {
+            "size": "-C50",
+            "produced": 42,
+            "required": 42,
+            "difference": 0
+          },
+          {
+            "size": "-C52",
+            "produced": 84,
+            "required": 84,
+            "difference": 0
+          },
+          {
+            "size": "-C54",
+            "produced": 112,
+            "required": 112,
+            "difference": 0
+          },
+          {
+            "size": "-C56",
+            "produced": 70,
+            "required": 70,
+            "difference": 0
+          },
+          {
+            "size": "-C58",
+            "produced": 28,
+            "required": 28,
+            "difference": 0
+          },
+          {
+            "size": "-D92",
+            "produced": 14,
+            "required": 14,
+            "difference": 0
+          },
+          {
+            "size": "-D96",
+            "produced": 28,
+            "required": 28,
+            "difference": 0
+          },
+          {
+            "size": "-D100",
+            "produced": 14,
+            "required": 14,
+            "difference": 0
+          },
+          {
+            "size": "-D108",
+            "produced": 14,
+            "required": 14,
+            "difference": 0
+          },
+          {
+            "size": "-C152",
+            "produced": 14,
+            "required": 14,
+            "difference": 0
+          }
+        ],
+        "marker_count": 4,
+        "elapsed_seconds": 0.686,
+        "secondary_optimal": false,
+        "lay_minimum_proven": false,
+        "marker_lower_bound": 3,
+        "one_marker_shortcut": false,
+        "marker_minimum_proven": false
+      },
+      "capacity": 4,
+      "max_plies": 70,
+      "placement": "Body Fabric. Pocket Bag, Knee Pocket",
+      "consumption": "1.65",
+      "description": "75% cotton, 24% polyester, 1% Other fibers, flameretardant, antistatic, UL FR, 350 g/m2",
+      "page_number": 1,
+      "consumption_m": "1.65",
+      "marker_prefix": "B01-",
+      "material_code": "R1514"
+    },
+    {
+      "live": {
+        "phase": "complete",
+        "status": "OPTIMAL",
+        "lay_count": 2,
+        "marker_count": 2,
+        "elapsed_seconds": 0.001,
+        "marker_minimum_proven": true
+      },
+      "unit": "m",
+      "state": "done",
+      "number": 2,
+      "result": {
+        "lays": [
+          {
+            "sets": 350,
+            "plies": 14,
+            "counts": [
+              6,
+              0,
+              6,
+              8,
+              5,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "number": 1,
+            "marker_id": "B02-M01"
+          },
+          {
+            "sets": 154,
+            "plies": 14,
+            "counts": [
+              0,
+              3,
+              0,
+              0,
+              0,
+              2,
+              1,
+              2,
+              1,
+              1,
+              1
+            ],
+            "number": 2,
+            "marker_id": "B02-M02"
+          }
+        ],
+        "status": "OPTIMAL",
+        "markers": [
+          {
+            "id": "B02-M01",
+            "counts": [
+              6,
+              0,
+              6,
+              8,
+              5,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "sets_cut": 350,
+            "lay_count": 1,
+            "lay_numbers": [
+              1
+            ],
+            "total_plies": 14,
+            "sets_per_marker": 25
+          },
+          {
+            "id": "B02-M02",
+            "counts": [
+              0,
+              3,
+              0,
+              0,
+              0,
+              2,
+              1,
+              2,
+              1,
+              1,
+              1
+            ],
+            "sets_cut": 154,
+            "lay_count": 1,
+            "lay_numbers": [
+              2
+            ],
+            "total_plies": 14,
+            "sets_per_marker": 11
+          }
+        ],
+        "message": "Minimum unique marker count proven by matching the lower bound.",
+        "progress": [
+          {
+            "phase": "building",
+            "status": "SEARCHING",
+            "lay_count": null,
+            "marker_count": null,
+            "elapsed_seconds": 0.0,
+            "marker_minimum_proven": false
+          },
+          {
+            "phase": "markers",
+            "status": "SEARCHING",
+            "lay_count": 2,
+            "marker_count": 2,
+            "elapsed_seconds": 0.0,
+            "marker_minimum_proven": false
+          },
+          {
+            "phase": "complete",
+            "status": "OPTIMAL",
+            "lay_count": 2,
+            "marker_count": 2,
+            "elapsed_seconds": 0.001,
+            "marker_minimum_proven": true
+          }
+        ],
+        "lay_count": 2,
+        "validated": true,
+        "production": [
+          {
+            "size": "-C48",
+            "produced": 84,
+            "required": 84,
+            "difference": 0
+          },
+          {
+            "size": "-C50",
+            "produced": 42,
+            "required": 42,
+            "difference": 0
+          },
+          {
+            "size": "-C52",
+            "produced": 84,
+            "required": 84,
+            "difference": 0
+          },
+          {
+            "size": "-C54",
+            "produced": 112,
+            "required": 112,
+            "difference": 0
+          },
+          {
+            "size": "-C56",
+            "produced": 70,
+            "required": 70,
+            "difference": 0
+          },
+          {
+            "size": "-C58",
+            "produced": 28,
+            "required": 28,
+            "difference": 0
+          },
+          {
+            "size": "-D92",
+            "produced": 14,
+            "required": 14,
+            "difference": 0
+          },
+          {
+            "size": "-D96",
+            "produced": 28,
+            "required": 28,
+            "difference": 0
+          },
+          {
+            "size": "-D100",
+            "produced": 14,
+            "required": 14,
+            "difference": 0
+          },
+          {
+            "size": "-D108",
+            "produced": 14,
+            "required": 14,
+            "difference": 0
+          },
+          {
+            "size": "-C152",
+            "produced": 14,
+            "required": 14,
+            "difference": 0
+          }
+        ],
+        "marker_count": 2,
+        "elapsed_seconds": 0.001,
+        "secondary_optimal": false,
+        "lay_minimum_proven": false,
+        "marker_lower_bound": 2,
+        "one_marker_shortcut": false,
+        "marker_minimum_proven": true
+      },
+      "capacity": 25,
+      "max_plies": 30,
+      "placement": "High Visibility Areas.",
+      "consumption": "0.32",
+      "description": "75% cotton, 24% polyester, 1% Other fibers, flameretardant, antistatic, UL FR, 350 g/m2",
+      "page_number": 1,
+      "consumption_m": "0.32",
+      "marker_prefix": "B02-",
+      "material_code": "R1514"
+    },
+    {
+      "live": {
+        "phase": "complete",
+        "status": "OPTIMAL",
+        "lay_count": 1,
+        "marker_count": 1,
+        "elapsed_seconds": 0.0,
+        "marker_minimum_proven": true
+      },
+      "unit": "m",
+      "state": "done",
+      "number": 3,
+      "result": {
+        "lays": [
+          {
+            "sets": 504,
+            "plies": 14,
+            "counts": [
+              6,
+              3,
+              6,
+              8,
+              5,
+              2,
+              1,
+              2,
+              1,
+              1,
+              1
+            ],
+            "number": 1,
+            "marker_id": "B03-M01"
+          }
+        ],
+        "status": "OPTIMAL",
+        "markers": [
+          {
+            "id": "B03-M01",
+            "counts": [
+              6,
+              3,
+              6,
+              8,
+              5,
+              2,
+              1,
+              2,
+              1,
+              1,
+              1
+            ],
+            "sets_cut": 504,
+            "lay_count": 1,
+            "lay_numbers": [
+              1
+            ],
+            "total_plies": 14,
+            "sets_per_marker": 36
+          }
+        ],
+        "message": "One marker is sufficient; marker count and lay count are proven optimal.",
+        "progress": [
+          {
+            "phase": "building",
+            "status": "SEARCHING",
+            "lay_count": null,
+            "marker_count": null,
+            "elapsed_seconds": 0.0,
+            "marker_minimum_proven": false
+          },
+          {
+            "phase": "complete",
+            "status": "OPTIMAL",
+            "lay_count": 1,
+            "marker_count": 1,
+            "elapsed_seconds": 0.0,
+            "marker_minimum_proven": true
+          }
+        ],
+        "lay_count": 1,
+        "validated": true,
+        "production": [
+          {
+            "size": "-C48",
+            "produced": 84,
+            "required": 84,
+            "difference": 0
+          },
+          {
+            "size": "-C50",
+            "produced": 42,
+            "required": 42,
+            "difference": 0
+          },
+          {
+            "size": "-C52",
+            "produced": 84,
+            "required": 84,
+            "difference": 0
+          },
+          {
+            "size": "-C54",
+            "produced": 112,
+            "required": 112,
+            "difference": 0
+          },
+          {
+            "size": "-C56",
+            "produced": 70,
+            "required": 70,
+            "difference": 0
+          },
+          {
+            "size": "-C58",
+            "produced": 28,
+            "required": 28,
+            "difference": 0
+          },
+          {
+            "size": "-D92",
+            "produced": 14,
+            "required": 14,
+            "difference": 0
+          },
+          {
+            "size": "-D96",
+            "produced": 28,
+            "required": 28,
+            "difference": 0
+          },
+          {
+            "size": "-D100",
+            "produced": 14,
+            "required": 14,
+            "difference": 0
+          },
+          {
+            "size": "-D108",
+            "produced": 14,
+            "required": 14,
+            "difference": 0
+          },
+          {
+            "size": "-C152",
+            "produced": 14,
+            "required": 14,
+            "difference": 0
+          }
+        ],
+        "marker_count": 1,
+        "elapsed_seconds": 0.0,
+        "secondary_optimal": true,
+        "lay_minimum_proven": true,
+        "marker_lower_bound": 1,
+        "one_marker_shortcut": true,
+        "marker_minimum_proven": true
+      },
+      "capacity": 66,
+      "max_plies": 30,
+      "placement": "Knee Pocket Patch Front",
+      "consumption": "0.12",
+      "description": "39% modacrylic, 28% polyamide, 17% cotton, 15% Aramid, 1% Other fibers, flame retardant, 270 g/m2",
+      "page_number": 1,
+      "consumption_m": "0.12",
+      "marker_prefix": "B03-",
+      "material_code": "R1548"
+    },
+    {
+      "live": {
+        "phase": "complete",
+        "status": "OPTIMAL",
+        "lay_count": 1,
+        "marker_count": 1,
+        "elapsed_seconds": 0.0,
+        "marker_minimum_proven": true
+      },
+      "unit": "m",
+      "state": "done",
+      "number": 4,
+      "result": {
+        "lays": [
+          {
+            "sets": 504,
+            "plies": 14,
+            "counts": [
+              6,
+              3,
+              6,
+              8,
+              5,
+              2,
+              1,
+              2,
+              1,
+              1,
+              1
+            ],
+            "number": 1,
+            "marker_id": "B04-M01"
+          }
+        ],
+        "status": "OPTIMAL",
+        "markers": [
+          {
+            "id": "B04-M01",
+            "counts": [
+              6,
+              3,
+              6,
+              8,
+              5,
+              2,
+              1,
+              2,
+              1,
+              1,
+              1
+            ],
+            "sets_cut": 504,
+            "lay_count": 1,
+            "lay_numbers": [
+              1
+            ],
+            "total_plies": 14,
+            "sets_per_marker": 36
+          }
+        ],
+        "message": "One marker is sufficient; marker count and lay count are proven optimal.",
+        "progress": [
+          {
+            "phase": "building",
+            "status": "SEARCHING",
+            "lay_count": null,
+            "marker_count": null,
+            "elapsed_seconds": 0.0,
+            "marker_minimum_proven": false
+          },
+          {
+            "phase": "complete",
+            "status": "OPTIMAL",
+            "lay_count": 1,
+            "marker_count": 1,
+            "elapsed_seconds": 0.0,
+            "marker_minimum_proven": true
+          }
+        ],
+        "lay_count": 1,
+        "validated": true,
+        "production": [
+          {
+            "size": "-C48",
+            "produced": 84,
+            "required": 84,
+            "difference": 0
+          },
+          {
+            "size": "-C50",
+            "produced": 42,
+            "required": 42,
+            "difference": 0
+          },
+          {
+            "size": "-C52",
+            "produced": 84,
+            "required": 84,
+            "difference": 0
+          },
+          {
+            "size": "-C54",
+            "produced": 112,
+            "required": 112,
+            "difference": 0
+          },
+          {
+            "size": "-C56",
+            "produced": 70,
+            "required": 70,
+            "difference": 0
+          },
+          {
+            "size": "-C58",
+            "produced": 28,
+            "required": 28,
+            "difference": 0
+          },
+          {
+            "size": "-D92",
+            "produced": 14,
+            "required": 14,
+            "difference": 0
+          },
+          {
+            "size": "-D96",
+            "produced": 28,
+            "required": 28,
+            "difference": 0
+          },
+          {
+            "size": "-D100",
+            "produced": 14,
+            "required": 14,
+            "difference": 0
+          },
+          {
+            "size": "-D108",
+            "produced": 14,
+            "required": 14,
+            "difference": 0
+          },
+          {
+            "size": "-C152",
+            "produced": 14,
+            "required": 14,
+            "difference": 0
+          }
+        ],
+        "marker_count": 1,
+        "elapsed_seconds": 0.0,
+        "secondary_optimal": true,
+        "lay_minimum_proven": true,
+        "marker_lower_bound": 1,
+        "one_marker_shortcut": true,
+        "marker_minimum_proven": true
+      },
+      "capacity": 53,
+      "max_plies": 30,
+      "placement": "Lining at Front Knee Patch Behind R1548",
+      "consumption": "0.15",
+      "description": "90% polyester, 10% cotton, 100 g/m2",
+      "page_number": 1,
+      "consumption_m": "0.15",
+      "marker_prefix": "B04-",
+      "material_code": "R2020"
+    }
+  ],
+  "created_at": "2026-10-27T03:06:46.815629+00:00",
+  "quantities": [
+    84,
+    42,
+    84,
+    112,
+    70,
+    28,
+    14,
+    28,
+    14,
+    14,
+    14
+  ],
+  "started_at": "2026-10-27T03:06:46.871333+00:00",
+  "finished_at": "2026-10-27T03:06:47.762716+00:00",
+  "order_labels": [
+    "361061"
+  ],
+  "total_quantity": 504,
+  "persistence_error": null
+}

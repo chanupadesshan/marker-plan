@@ -1,0 +1,94 @@
+{
+  "orders": [
+    {
+      "label": "361061",
+      "size_rows": [
+        {
+          "size": "-C48",
+          "quantity": "84"
+        },
+        {
+          "size": "-C50",
+          "quantity": "42"
+        },
+        {
+          "size": "-C52",
+          "quantity": "84"
+        },
+        {
+          "size": "-C54",
+          "quantity": "112"
+        },
+        {
+          "size": "-C56",
+          "quantity": "70"
+        },
+        {
+          "size": "-C58",
+          "quantity": "28"
+        },
+        {
+          "size": "-D92",
+          "quantity": "14"
+        },
+        {
+          "size": "-D96",
+          "quantity": "28"
+        },
+        {
+          "size": "-D100",
+          "quantity": "14"
+        },
+        {
+          "size": "-D108",
+          "quantity": "14"
+        },
+        {
+          "size": "-C152",
+          "quantity": "14"
+        }
+      ]
+    }
+  ],
+  "materials": [
+    {
+      "material_code": "R1514",
+      "description": "75% cotton, 24% polyester, 1% Other fibers, flameretardant, antistatic, UL FR, 350 g/m2",
+      "placement": "Body Fabric. Pocket Bag, Knee Pocket",
+      "page_number": 1,
+      "consumption": "1.65",
+      "unit": "m",
+      "max_plies": 70
+    },
+    {
+      "material_code": "R1514",
+      "description": "75% cotton, 24% polyester, 1% Other fibers, flameretardant, antistatic, UL FR, 350 g/m2",
+      "placement": "High Visibility Areas.",
+      "page_number": 1,
+      "consumption": "0.32",
+      "unit": "m",
+      "max_plies": 30
+    },
+    {
+      "material_code": "R1548",
+      "description": "39% modacrylic, 28% polyamide, 17% cotton, 15% Aramid, 1% Other fibers, flame retardant, 270 g/m2",
+      "placement": "Knee Pocket Patch Front",
+      "page_number": 1,
+      "consumption": "0.12",
+      "unit": "m",
+      "max_plies": 30
+    },
+    {
+      "material_code": "R2020",
+      "description": "90% polyester, 10% cotton, 100 g/m2",
+      "placement": "Lining at Front Knee Patch Behind R1548",
+      "page_number": 1,
+      "consumption": "0.15",
+      "unit": "m",
+      "max_plies": 30
+    }
+  ],
+  "table_length_m": "8",
+  "min_plies": 10,
+  "time_limit_seconds": 20
+}

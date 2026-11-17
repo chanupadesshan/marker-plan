@@ -9,13 +9,11 @@ import { useConfirm } from './useConfirm.jsx';
  * Input: props - id: the PO to show; refreshKey: a value whose change triggers a reload.
  * Output: the PO review screen, or a loading message.
  */
-export default function PurchaseOrderPanel({ id, refreshKey }) {
+export default function PurchaseOrderPanel({ id, refreshKey, canEdit = false, onChanged }) {
   const [current, setCurrent] = useState(null);
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
   const [busy, setBusy] = useState(false);
-  const [showEditor, setShowEditor] = useState(false);
-  const [editor, setEditor] = useState('');
   const [reloadKey, setReloadKey] = useState(0);
   const [confirm, dialog] = useConfirm();
   useEffect(() => {
@@ -37,7 +35,7 @@ export default function PurchaseOrderPanel({ id, refreshKey }) {
   }, [id, refreshKey, reloadKey]);
   /**
    * Purpose: Run a PO action. Approving first asks the user to confirm in a dialog.
-   * Input: kind - 'approve', 'save' (the edited JSON) or 'retry' (continue a failed extraction).
+   * Input: kind - 'approve', 'retry' (continue a failed extraction) or 'extractSkipped' (read the pages skipped as not matching the Tech Pack).
    * Output: a promise that finishes when done; the result or error is shown on screen.
    */
   async function action(kind) {
@@ -45,28 +43,36 @@ export default function PurchaseOrderPanel({ id, refreshKey }) {
       message: 'Confirm you have checked the contracts, IDs and size quantities against the original PDF.' })) return;
     setBusy(true); setError(''); setMessage('');
     try {
-      if (kind === 'save') await poApi.save(id, JSON.parse(editor));
-      else if (kind === 'retry') {
-        const queued = await poApi.retry(id);
-        setCurrent(previous => ({ ...previous, ...queued }));
+      if (kind === 'retry' || kind === 'extractSkipped') {
+        const queued = await (kind === 'retry' ? poApi.retry(id) : poApi.extractSkipped(id));
+        setCurrent(previous => ({ ...previous, ...queued, progress: null }));
         setReloadKey(value => value + 1);
-        setShowEditor(false);
-        setMessage('Retry queued. Completed pages will be kept.');
+        onChanged?.();
+        setMessage(kind === 'retry' ? 'Retry queued. Completed pages will be kept.' : 'Extracting the skipped pages. Pages already read are kept.');
         return;
       }
       else await poApi.approve(id);
-      setCurrent(await poApi.get(id)); setShowEditor(false);
-      setMessage(kind === 'save' ? 'PO corrections saved.' : kind === 'retry' ? 'Retry queued. Completed pages will be kept.' : 'PO approved.');
+      setCurrent(await poApi.get(id));
+      onChanged?.();
+      setMessage('PO approved.');
     } catch (e) { setError(e.message); }
     finally { setBusy(false); }
+  }
+  async function savePoChanges(payload) {
+    setBusy(true); setError(''); setMessage('');
+    try {
+      await poApi.save(id, payload);
+      setCurrent(await poApi.get(id));
+      onChanged?.();
+      setMessage('Changes saved. Review the corrected purchase order, then approve it.');
+    } finally { setBusy(false); }
   }
   return <>
     {dialog}
     {error && <div className="alert error" role="alert">{error}</div>}
     {message && <div className="alert success" role="status">{message}</div>}
-    {current ? <PurchaseOrderWorkspace current={current} busy={busy} showEditor={showEditor} editor={editor}
-      onApprove={() => action('approve')} onSave={() => action('save')} onRetry={() => action('retry')} onEditorChange={setEditor}
-      onToggleEditor={() => { setEditor(JSON.stringify({ orders: current.extraction?.orders || [] }, null, 2)); setShowEditor(!showEditor); }}/>
+    {current ? <PurchaseOrderWorkspace current={current} busy={busy} canEdit={canEdit}
+      onApprove={() => action('approve')} onSaveData={savePoChanges} onRetry={() => action('retry')} onExtractSkipped={() => action('extractSkipped')}/>
       : <div className="loading-workspace" role="status">Loading purchase order…</div>}
   </>;
 }

@@ -1,0 +1,911 @@
+{
+  "id": "f861cb42-14b0-487e-b98a-f298870c80b0",
+  "status": "complete",
+  "created_at": "2026-10-27T02:05:39.753801+00:00",
+  "started_at": "2026-10-27T02:05:39.758139+00:00",
+  "finished_at": "2026-10-27T02:05:40.732587+00:00",
+  "sizes": [
+    "-C48",
+    "-C50",
+    "-C52",
+    "-C54",
+    "-C56",
+    "-C58",
+    "-D92",
+    "-D96",
+    "-D100",
+    "-D108",
+    "-C152"
+  ],
+  "quantities": [
+    84,
+    42,
+    84,
+    112,
+    70,
+    28,
+    14,
+    28,
+    14,
+    14,
+    14
+  ],
+  "total_quantity": 504,
+  "warnings": [],
+  "order_labels": [
+    "361061"
+  ],
+  "settings": {
+    "table_length_m": "8",
+    "min_plies": 10,
+    "time_limit_seconds": 20.0
+  },
+  "materials": [
+    {
+      "number": 1,
+      "marker_prefix": "B01-",
+      "material_code": "R1514",
+      "description": "75% cotton, 24% polyester, 1% Other fibers, flameretardant, antistatic, UL FR, 350 g/m2",
+      "placement": "Body Fabric. Pocket Bag, Knee Pocket",
+      "page_number": 1,
+      "consumption": "1.65",
+      "unit": "m",
+      "consumption_m": "1.65",
+      "max_plies": 70,
+      "capacity": 4,
+      "state": "done",
+      "live": {
+        "phase": "complete",
+        "elapsed_seconds": 0.972,
+        "marker_count": 4,
+        "lay_count": 4,
+        "marker_minimum_proven": false,
+        "status": "FEASIBLE"
+      },
+      "result": {
+        "status": "FEASIBLE",
+        "message": "Valid plan found by compact search; minimum marker count is not proven.",
+        "marker_count": 4,
+        "one_marker_shortcut": false,
+        "lay_count": 4,
+        "secondary_optimal": false,
+        "marker_lower_bound": 3,
+        "elapsed_seconds": 0.972,
+        "validated": true,
+        "marker_minimum_proven": false,
+        "lay_minimum_proven": false,
+        "markers": [
+          {
+            "id": "B01-M01",
+            "counts": [
+              0,
+              1,
+              0,
+              2,
+              1,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "sets_per_marker": 4,
+            "lay_numbers": [
+              1
+            ],
+            "lay_count": 1,
+            "total_plies": 42,
+            "sets_cut": 168
+          },
+          {
+            "id": "B01-M02",
+            "counts": [
+              2,
+              0,
+              2,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "sets_per_marker": 4,
+            "lay_numbers": [
+              2
+            ],
+            "lay_count": 1,
+            "total_plies": 42,
+            "sets_cut": 168
+          },
+          {
+            "id": "B01-M03",
+            "counts": [
+              0,
+              0,
+              0,
+              1,
+              1,
+              1,
+              0,
+              1,
+              0,
+              0,
+              0
+            ],
+            "sets_per_marker": 4,
+            "lay_numbers": [
+              3
+            ],
+            "lay_count": 1,
+            "total_plies": 28,
+            "sets_cut": 112
+          },
+          {
+            "id": "B01-M04",
+            "counts": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+              1,
+              1,
+              1
+            ],
+            "sets_per_marker": 4,
+            "lay_numbers": [
+              4
+            ],
+            "lay_count": 1,
+            "total_plies": 14,
+            "sets_cut": 56
+          }
+        ],
+        "lays": [
+          {
+            "number": 1,
+            "marker_id": "B01-M01",
+            "counts": [
+              0,
+              1,
+              0,
+              2,
+              1,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "plies": 42,
+            "sets": 168
+          },
+          {
+            "number": 2,
+            "marker_id": "B01-M02",
+            "counts": [
+              2,
+              0,
+              2,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "plies": 42,
+            "sets": 168
+          },
+          {
+            "number": 3,
+            "marker_id": "B01-M03",
+            "counts": [
+              0,
+              0,
+              0,
+              1,
+              1,
+              1,
+              0,
+              1,
+              0,
+              0,
+              0
+            ],
+            "plies": 28,
+            "sets": 112
+          },
+          {
+            "number": 4,
+            "marker_id": "B01-M04",
+            "counts": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+              1,
+              1,
+              1
+            ],
+            "plies": 14,
+            "sets": 56
+          }
+        ],
+        "production": [
+          {
+            "size": "-C48",
+            "required": 84,
+            "produced": 84,
+            "difference": 0
+          },
+          {
+            "size": "-C50",
+            "required": 42,
+            "produced": 42,
+            "difference": 0
+          },
+          {
+            "size": "-C52",
+            "required": 84,
+            "produced": 84,
+            "difference": 0
+          },
+          {
+            "size": "-C54",
+            "required": 112,
+            "produced": 112,
+            "difference": 0
+          },
+          {
+            "size": "-C56",
+            "required": 70,
+            "produced": 70,
+            "difference": 0
+          },
+          {
+            "size": "-C58",
+            "required": 28,
+            "produced": 28,
+            "difference": 0
+          },
+          {
+            "size": "-D92",
+            "required": 14,
+            "produced": 14,
+            "difference": 0
+          },
+          {
+            "size": "-D96",
+            "required": 28,
+            "produced": 28,
+            "difference": 0
+          },
+          {
+            "size": "-D100",
+            "required": 14,
+            "produced": 14,
+            "difference": 0
+          },
+          {
+            "size": "-D108",
+            "required": 14,
+            "produced": 14,
+            "difference": 0
+          },
+          {
+            "size": "-C152",
+            "required": 14,
+            "produced": 14,
+            "difference": 0
+          }
+        ],
+        "progress": [
+          {
+            "phase": "building",
+            "elapsed_seconds": 0.0,
+            "marker_count": null,
+            "lay_count": null,
+            "marker_minimum_proven": false,
+            "status": "SEARCHING"
+          },
+          {
+            "phase": "markers",
+            "elapsed_seconds": 0.213,
+            "marker_count": 6,
+            "lay_count": 6,
+            "marker_minimum_proven": false,
+            "status": "SEARCHING"
+          },
+          {
+            "phase": "markers",
+            "elapsed_seconds": 0.971,
+            "marker_count": 4,
+            "lay_count": 4,
+            "marker_minimum_proven": false,
+            "status": "SEARCHING"
+          },
+          {
+            "phase": "complete",
+            "elapsed_seconds": 0.972,
+            "marker_count": 4,
+            "lay_count": 4,
+            "marker_minimum_proven": false,
+            "status": "FEASIBLE"
+          }
+        ]
+      }
+    },
+    {
+      "number": 2,
+      "marker_prefix": "B02-",
+      "material_code": "R1514",
+      "description": "75% cotton, 24% polyester, 1% Other fibers, flameretardant, antistatic, UL FR, 350 g/m2",
+      "placement": "High Visibility Areas.",
+      "page_number": 1,
+      "consumption": "0.32",
+      "unit": "m",
+      "consumption_m": "0.32",
+      "max_plies": 30,
+      "capacity": 25,
+      "state": "done",
+      "live": {
+        "phase": "complete",
+        "elapsed_seconds": 0.001,
+        "marker_count": 2,
+        "lay_count": 2,
+        "marker_minimum_proven": true,
+        "status": "OPTIMAL"
+      },
+      "result": {
+        "status": "OPTIMAL",
+        "message": "Minimum unique marker count proven by matching the lower bound.",
+        "marker_count": 2,
+        "one_marker_shortcut": false,
+        "lay_count": 2,
+        "secondary_optimal": false,
+        "marker_lower_bound": 2,
+        "elapsed_seconds": 0.001,
+        "validated": true,
+        "marker_minimum_proven": true,
+        "lay_minimum_proven": false,
+        "markers": [
+          {
+            "id": "B02-M01",
+            "counts": [
+              6,
+              0,
+              6,
+              8,
+              5,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "sets_per_marker": 25,
+            "lay_numbers": [
+              1
+            ],
+            "lay_count": 1,
+            "total_plies": 14,
+            "sets_cut": 350
+          },
+          {
+            "id": "B02-M02",
+            "counts": [
+              0,
+              3,
+              0,
+              0,
+              0,
+              2,
+              1,
+              2,
+              1,
+              1,
+              1
+            ],
+            "sets_per_marker": 11,
+            "lay_numbers": [
+              2
+            ],
+            "lay_count": 1,
+            "total_plies": 14,
+            "sets_cut": 154
+          }
+        ],
+        "lays": [
+          {
+            "number": 1,
+            "marker_id": "B02-M01",
+            "counts": [
+              6,
+              0,
+              6,
+              8,
+              5,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0
+            ],
+            "plies": 14,
+            "sets": 350
+          },
+          {
+            "number": 2,
+            "marker_id": "B02-M02",
+            "counts": [
+              0,
+              3,
+              0,
+              0,
+              0,
+              2,
+              1,
+              2,
+              1,
+              1,
+              1
+            ],
+            "plies": 14,
+            "sets": 154
+          }
+        ],
+        "production": [
+          {
+            "size": "-C48",
+            "required": 84,
+            "produced": 84,
+            "difference": 0
+          },
+          {
+            "size": "-C50",
+            "required": 42,
+            "produced": 42,
+            "difference": 0
+          },
+          {
+            "size": "-C52",
+            "required": 84,
+            "produced": 84,
+            "difference": 0
+          },
+          {
+            "size": "-C54",
+            "required": 112,
+            "produced": 112,
+            "difference": 0
+          },
+          {
+            "size": "-C56",
+            "required": 70,
+            "produced": 70,
+            "difference": 0
+          },
+          {
+            "size": "-C58",
+            "required": 28,
+            "produced": 28,
+            "difference": 0
+          },
+          {
+            "size": "-D92",
+            "required": 14,
+            "produced": 14,
+            "difference": 0
+          },
+          {
+            "size": "-D96",
+            "required": 28,
+            "produced": 28,
+            "difference": 0
+          },
+          {
+            "size": "-D100",
+            "required": 14,
+            "produced": 14,
+            "difference": 0
+          },
+          {
+            "size": "-D108",
+            "required": 14,
+            "produced": 14,
+            "difference": 0
+          },
+          {
+            "size": "-C152",
+            "required": 14,
+            "produced": 14,
+            "difference": 0
+          }
+        ],
+        "progress": [
+          {
+            "phase": "building",
+            "elapsed_seconds": 0.0,
+            "marker_count": null,
+            "lay_count": null,
+            "marker_minimum_proven": false,
+            "status": "SEARCHING"
+          },
+          {
+            "phase": "markers",
+            "elapsed_seconds": 0.0,
+            "marker_count": 2,
+            "lay_count": 2,
+            "marker_minimum_proven": false,
+            "status": "SEARCHING"
+          },
+          {
+            "phase": "complete",
+            "elapsed_seconds": 0.001,
+            "marker_count": 2,
+            "lay_count": 2,
+            "marker_minimum_proven": true,
+            "status": "OPTIMAL"
+          }
+        ]
+      }
+    },
+    {
+      "number": 3,
+      "marker_prefix": "B03-",
+      "material_code": "R1548",
+      "description": "39% modacrylic, 28% polyamide, 17% cotton, 15% Aramid, 1% Other fibers, flame retardant, 270 g/m2",
+      "placement": "Knee Pocket Patch Front",
+      "page_number": 1,
+      "consumption": "0.12",
+      "unit": "m",
+      "consumption_m": "0.12",
+      "max_plies": 30,
+      "capacity": 66,
+      "state": "done",
+      "live": {
+        "phase": "complete",
+        "elapsed_seconds": 0.0,
+        "marker_count": 1,
+        "lay_count": 1,
+        "marker_minimum_proven": true,
+        "status": "OPTIMAL"
+      },
+      "result": {
+        "status": "OPTIMAL",
+        "message": "One marker is sufficient; marker count and lay count are proven optimal.",
+        "marker_count": 1,
+        "one_marker_shortcut": true,
+        "lay_count": 1,
+        "secondary_optimal": true,
+        "marker_lower_bound": 1,
+        "elapsed_seconds": 0.0,
+        "validated": true,
+        "marker_minimum_proven": true,
+        "lay_minimum_proven": true,
+        "markers": [
+          {
+            "id": "B03-M01",
+            "counts": [
+              6,
+              3,
+              6,
+              8,
+              5,
+              2,
+              1,
+              2,
+              1,
+              1,
+              1
+            ],
+            "sets_per_marker": 36,
+            "lay_numbers": [
+              1
+            ],
+            "lay_count": 1,
+            "total_plies": 14,
+            "sets_cut": 504
+          }
+        ],
+        "lays": [
+          {
+            "number": 1,
+            "marker_id": "B03-M01",
+            "counts": [
+              6,
+              3,
+              6,
+              8,
+              5,
+              2,
+              1,
+              2,
+              1,
+              1,
+              1
+            ],
+            "plies": 14,
+            "sets": 504
+          }
+        ],
+        "production": [
+          {
+            "size": "-C48",
+            "required": 84,
+            "produced": 84,
+            "difference": 0
+          },
+          {
+            "size": "-C50",
+            "required": 42,
+            "produced": 42,
+            "difference": 0
+          },
+          {
+            "size": "-C52",
+            "required": 84,
+            "produced": 84,
+            "difference": 0
+          },
+          {
+            "size": "-C54",
+            "required": 112,
+            "produced": 112,
+            "difference": 0
+          },
+          {
+            "size": "-C56",
+            "required": 70,
+            "produced": 70,
+            "difference": 0
+          },
+          {
+            "size": "-C58",
+            "required": 28,
+            "produced": 28,
+            "difference": 0
+          },
+          {
+            "size": "-D92",
+            "required": 14,
+            "produced": 14,
+            "difference": 0
+          },
+          {
+            "size": "-D96",
+            "required": 28,
+            "produced": 28,
+            "difference": 0
+          },
+          {
+            "size": "-D100",
+            "required": 14,
+            "produced": 14,
+            "difference": 0
+          },
+          {
+            "size": "-D108",
+            "required": 14,
+            "produced": 14,
+            "difference": 0
+          },
+          {
+            "size": "-C152",
+            "required": 14,
+            "produced": 14,
+            "difference": 0
+          }
+        ],
+        "progress": [
+          {
+            "phase": "building",
+            "elapsed_seconds": 0.0,
+            "marker_count": null,
+            "lay_count": null,
+            "marker_minimum_proven": false,
+            "status": "SEARCHING"
+          },
+          {
+            "phase": "complete",
+            "elapsed_seconds": 0.0,
+            "marker_count": 1,
+            "lay_count": 1,
+            "marker_minimum_proven": true,
+            "status": "OPTIMAL"
+          }
+        ]
+      }
+    },
+    {
+      "number": 4,
+      "marker_prefix": "B04-",
+      "material_code": "R2020",
+      "description": "90% polyester, 10% cotton, 100 g/m2",
+      "placement": "Lining at Front Knee Patch Behind R1548",
+      "page_number": 1,
+      "consumption": "0.15",
+      "unit": "m",
+      "consumption_m": "0.15",
+      "max_plies": 30,
+      "capacity": 53,
+      "state": "done",
+      "live": {
+        "phase": "complete",
+        "elapsed_seconds": 0.0,
+        "marker_count": 1,
+        "lay_count": 1,
+        "marker_minimum_proven": true,
+        "status": "OPTIMAL"
+      },
+      "result": {
+        "status": "OPTIMAL",
+        "message": "One marker is sufficient; marker count and lay count are proven optimal.",
+        "marker_count": 1,
+        "one_marker_shortcut": true,
+        "lay_count": 1,
+        "secondary_optimal": true,
+        "marker_lower_bound": 1,
+        "elapsed_seconds": 0.0,
+        "validated": true,
+        "marker_minimum_proven": true,
+        "lay_minimum_proven": true,
+        "markers": [
+          {
+            "id": "B04-M01",
+            "counts": [
+              6,
+              3,
+              6,
+              8,
+              5,
+              2,
+              1,
+              2,
+              1,
+              1,
+              1
+            ],
+            "sets_per_marker": 36,
+            "lay_numbers": [
+              1
+            ],
+            "lay_count": 1,
+            "total_plies": 14,
+            "sets_cut": 504
+          }
+        ],
+        "lays": [
+          {
+            "number": 1,
+            "marker_id": "B04-M01",
+            "counts": [
+              6,
+              3,
+              6,
+              8,
+              5,
+              2,
+              1,
+              2,
+              1,
+              1,
+              1
+            ],
+            "plies": 14,
+            "sets": 504
+          }
+        ],
+        "production": [
+          {
+            "size": "-C48",
+            "required": 84,
+            "produced": 84,
+            "difference": 0
+          },
+          {
+            "size": "-C50",
+            "required": 42,
+            "produced": 42,
+            "difference": 0
+          },
+          {
+            "size": "-C52",
+            "required": 84,
+            "produced": 84,
+            "difference": 0
+          },
+          {
+            "size": "-C54",
+            "required": 112,
+            "produced": 112,
+            "difference": 0
+          },
+          {
+            "size": "-C56",
+            "required": 70,
+            "produced": 70,
+            "difference": 0
+          },
+          {
+            "size": "-C58",
+            "required": 28,
+            "produced": 28,
+            "difference": 0
+          },
+          {
+            "size": "-D92",
+            "required": 14,
+            "produced": 14,
+            "difference": 0
+          },
+          {
+            "size": "-D96",
+            "required": 28,
+            "produced": 28,
+            "difference": 0
+          },
+          {
+            "size": "-D100",
+            "required": 14,
+            "produced": 14,
+            "difference": 0
+          },
+          {
+            "size": "-D108",
+            "required": 14,
+            "produced": 14,
+            "difference": 0
+          },
+          {
+            "size": "-C152",
+            "required": 14,
+            "produced": 14,
+            "difference": 0
+          }
+        ],
+        "progress": [
+          {
+            "phase": "building",
+            "elapsed_seconds": 0.0,
+            "marker_count": null,
+            "lay_count": null,
+            "marker_minimum_proven": false,
+            "status": "SEARCHING"
+          },
+          {
+            "phase": "complete",
+            "elapsed_seconds": 0.0,
+            "marker_count": 1,
+            "lay_count": 1,
+            "marker_minimum_proven": true,
+            "status": "OPTIMAL"
+          }
+        ]
+      }
+    }
+  ],
+  "summary": {
+    "complete": true,
+    "marker_count": 8,
+    "lay_count": 8,
+    "failed": 0
+  }
+}

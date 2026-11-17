@@ -2,7 +2,8 @@
 define the valid data shape for the extracted BOM data using Pydantic models
 """
 import re
-from pydantic import BaseModel, ConfigDict, Field, model_validator
+from typing import Literal
+from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 
 # Purpose: Base class for every data shape in the app. It rejects unexpected fields and strips whitespace from text.
@@ -29,22 +30,42 @@ class Colorway(StrictModel):
     fabric_reference: str | None = None
 
 
-# Purpose: One row of the Wovens bill of materials: a material with its quantity, unit and per-colorway details.
-# Input: material_code, description, composition, placement, quantity (exact text), unit, a list of Colorway items and source_pages.
+# Purpose: One row of the fabric bill of materials (Wovens or Knits): a material with its quantity, unit and per-colorway details.
+# Input: category ('wovens' or 'knits'), material_code, description, composition, placement, quantity (exact text), unit, a list of Colorway items and source_pages.
 # Output: a validated Material. A quantity printed with its unit, such as '0.95 m', is split into quantity and unit automatically.
 class Material(StrictModel):
     """
     materials table contains the extracted material data from the BOM
     """
+    category: Literal['wovens', 'knits'] = Field(default='wovens', description="'wovens' for a row under the Wovens heading, 'knits' for a row under the Knits heading. Decide it from the section heading above the row.")
     material_code: str | None = None
+    developer_code: str | None = Field(default=None, description='Second identifier in No/Dev No, copied exactly even when equal to material_code. Null when absent.')
     description: str | None = None
     composition: str | None = None
     placement: str | None = None
+    placement_type: str | None = Field(default=None, description='Exact placement type printed in this row, e.g. Shell 1_Fabric 1_Care. Preserve underscores and all words. Null when absent; never inherit from another row.')
     quantity: str | None = None  # Exact numeric text, e.g. '0.95'; never guess.
     unit: str | None = None      # m, kg, pcs, etc. Preserve unit as printed.
     colorways: list[Colorway] = Field(default_factory=list)
     source_pages: list[int] = Field(default_factory=list)
 
+
+    @field_validator('category', mode='before')
+    @classmethod
+    def normalize_category(cls, value):
+        """
+        Purpose: Accept the section name however it is written ('Knits', 'knit', 'Woven fabrics').
+        Input: value - the category as given by the model or the editor; None means not given.
+        Output: 'wovens' or 'knits'; an unrecognized text is returned unchanged so validation reports it.
+        """
+        if value is None:
+            return 'wovens'
+        text = str(value).strip().casefold()
+        if text.startswith('knit'):
+            return 'knits'
+        if text.startswith('woven'):
+            return 'wovens'
+        return value
 
     @model_validator(mode="before")
     @classmethod
@@ -77,7 +98,7 @@ class ColorwayHeader(StrictModel):
     name: str | None = None
 
 
-# Purpose: What the model returns for one Tech Pack page: whether it has a Wovens BOM, and the rows found.
+# Purpose: What the model returns for one Tech Pack page: whether it has a Wovens or Knits BOM, and the rows found.
 # Input: section_found (required), style_number, tech_pack_number, materials, colorway_headers and warnings.
 # Output: a validated PageResult. This class is also sent to the model as the required reply format.
 class PageResult(StrictModel):
@@ -86,14 +107,15 @@ class PageResult(StrictModel):
     """
     section_found: bool
     style_number: str | None = None
+    design_number: str | None = None
     tech_pack_number: str | None = None
     materials: list[Material] = Field(default_factory=list)
     warnings: list[str] = Field(default_factory=list)
     colorway_headers: list[ColorwayHeader] = Field(default_factory=list)
 
 
-# Purpose: The model's yes/no answer to "does this page contain a Wovens BOM table?".
-# Input: has_wovens_bom (true or false).
+# Purpose: The model's yes/no answer to "does this page contain a Wovens or Knits BOM table?".
+# Input: has_wovens_bom (true or false; the name is kept from when only Wovens were read).
 # Output: a validated PageClassify, used to decide which unclear pages to extract.
 class PageClassify(StrictModel):
     """
@@ -123,6 +145,9 @@ class DocumentExtraction(StrictModel):
     represents the complete extracted BOM result for a single techpack document
     """
     style_number: str | None = None
+    # One Tech Pack can hold several designs (each BOM title is style - design - BOM). design_number is set only when there is one.
+    design_number: str | None = None
+    design_numbers: list[str] = Field(default_factory=list)
     tech_pack_number: str | None = None
     category: str = "Wovens"
     materials: list[Material] = Field(default_factory=list)

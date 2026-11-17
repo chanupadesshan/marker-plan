@@ -1,0 +1,39 @@
+{
+  "361061": {
+    "id": "701091da-7fd1-4381-8979-2b7de28c7c81",
+    "previous_id": "d767daf4-6a54-4721-bf64-d8ca8d700ed7",
+    "previous_summary": {
+      "failed": 0,
+      "complete": true,
+      "lay_count": 8,
+      "marker_count": 8
+    },
+    "notes": [
+      "R1548: no current ply limit found; keeping the saved limit of 30."
+    ]
+  },
+  "355800": {
+    "id": "37c546cc-78d0-43ef-91da-bb43ddfa3935",
+    "previous_id": "a11ab28d-c34d-4041-a9f2-94dd8d86bd49",
+    "previous_summary": {
+      "failed": 0,
+      "complete": true,
+      "lay_count": 8,
+      "marker_count": 8
+    },
+    "notes": []
+  },
+  "362097": {
+    "id": "95919856-a476-4516-bf0e-9bd566432450",
+    "previous_id": "9740cad5-b38a-47c7-bcb1-4b2cb24e3475",
+    "previous_summary": {
+      "failed": 0,
+      "complete": true,
+      "lay_count": 12,
+      "marker_count": 12
+    },
+    "notes": [
+      "R1847: no current ply limit found; keeping the saved limit of 80."
+    ]
+  }
+}

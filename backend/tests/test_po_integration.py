@@ -1,12 +1,14 @@
 """Exercise real ORM commits/reloads without a live DB, storage or paid model call."""
+from types import SimpleNamespace
 from uuid import uuid4
 import pymupdf
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, select
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.ext.compiler import compiles
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.pool import StaticPool
 from app.database import Base
-from app.models import PurchaseOrderDocument
+from app.models import AuditLog, PurchaseOrderDocument
 from app.po_schema import POPageResult, PurchaseOrder, POSizeRow
 from app import po_pipeline, po_routes
 
@@ -48,9 +50,13 @@ def test_po_pipeline_can_reload_and_approve_after_real_commits(monkeypatch):
         assert len(doc.extraction.extracted_json['orders']) == 2
         assert len(doc.extraction.extracted_json['request_usage']) == 2
         assert po_routes.source_complete(doc)
-    assert po_routes.approve(doc_id)['status'] == 'approved'
+    approver = SimpleNamespace(id=uuid4(), email='ann@example.com', full_name='Ann Approver')
+    assert po_routes.approve(doc_id, approver)['status'] == 'approved'
     with sessions() as session:
         assert session.get(PurchaseOrderDocument, doc_id).status == 'approved'
+        entry, = session.scalars(select(AuditLog)).all()
+        assert (entry.action, entry.user_email, entry.target_name, entry.target_id) == ('po.approve', 'ann@example.com', 'synthetic.pdf', str(doc_id))
+        assert entry.details == {'previous_status': 'needs_review', 'new_status': 'approved'}
     engine.dispose()
 
 
@@ -59,7 +65,8 @@ def test_techpack_saves_successful_group_before_a_later_group_fails(monkeypatch)
     from app.models import TechPack
     from app.techpack_schema import PageResult, Material
     from test_table_groups import grid_image
-    engine = create_engine('sqlite://')
+    # Pages are read in worker threads, so every thread must share the one in-memory database.
+    engine = create_engine('sqlite://', connect_args={'check_same_thread': False}, poolclass=StaticPool)
     Base.metadata.create_all(engine)
     sessions = sessionmaker(bind=engine, expire_on_commit=False)
     doc_id = uuid4()
@@ -133,7 +140,8 @@ def test_po_retry_keeps_completed_pages_and_usage_without_extracting_them_again(
     monkeypatch.setattr(po_pipeline, 'get_bytes', objects.__getitem__)
     fail[0] = False
     po_pipeline.process_purchase_order(str(doc_id), resume=True)
-    assert calls == [1, 2, 2]
+    # Page one is read once and page two twice; pages are read side by side, so the order is not fixed.
+    assert sorted(calls) == [1, 2, 2]
     with sessions() as session:
         doc = session.get(PurchaseOrderDocument, doc_id)
         assert doc.status == 'needs_review'

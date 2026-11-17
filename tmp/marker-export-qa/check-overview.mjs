@@ -1,0 +1,14 @@
+import { FileBlob, SpreadsheetFile } from '@oai/artifact-tool';
+const root = 'C:/Users/chanupa.d/Documents/concord/wovens-bom-extractor';
+const book = await SpreadsheetFile.importXlsx(await FileBlob.load(`${root}/output/marker-plan-test/361061-marker-plan.xlsx`));
+const sheet = book.worksheets.getItem('All markers');
+sheet.getRange('G8').values = [[1]];
+book.recalculate();
+const changed = sheet.getRange('G20:S20').values[0];
+console.log('Changed C48 produced:', changed[0], 'material total:', changed[12]);
+if (Number(changed[0]) !== 126 || Number(changed[12]) !== 546) throw new Error('Overview formulas did not recalculate');
+if (Number(sheet.getRange('S21').values[0][0]) !== 504) throw new Error('Another material total changed');
+sheet.getRange('G8').values = [[0]];
+book.recalculate();
+if (Number(sheet.getRange('S20').values[0][0]) !== 504) throw new Error('Restored total did not recalculate');
+console.log('PASS: first-sheet per-material totals recalculate from marker ratios and plies independently. Final downloaded file was not changed.');

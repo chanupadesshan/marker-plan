@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { AlertTriangle, ArrowLeft, Check, Pencil, Plus, Search, Trash2, X } from 'lucide-react';
+import { AlertTriangle, Check, Pencil, Plus, Search, Trash2, X } from 'lucide-react';
 import { pliesApi } from './api.js';
+import AppShell from './AppShell.jsx';
 import { PLY_COLUMNS, filterPlies, pageSlice, toPayload } from './plies.js';
 import PlyFormDialog from './PlyFormDialog.jsx';
 import { useConfirm } from './useConfirm.jsx';
@@ -11,10 +12,10 @@ const dash = value => value == null || value === '' ? '—' : value;
 /**
  * Purpose: The Plies dashboard, a separate page where the rows of the plies table can be searched,
  * added, edited and deleted. Changes are saved to the database straight away.
- * Input: none.
+ * Input: user - the signed-in person; onSignOut - called by the Sign out button.
  * Output: the page: top bar, summary figures, search, the table with Edit and Delete buttons, and paging.
  */
-export default function PliesDashboard() {
+export default function PliesDashboard({ user, onSignOut }) {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState('');
@@ -95,19 +96,12 @@ export default function PliesDashboard() {
   const view = pageSlice(visible, page);
   const missingD = rows.filter(row => !row.col_d).length;
 
-  return <div className="app-shell plies-page">
+  return <AppShell user={user} onSignOut={onSignOut} active="plies" title="Plies"
+    actions={<button type="button" className="vp-action" onClick={() => { setFormError(''); setForm({ mode: 'add' }); }}><Plus size={15}/> Add ply</button>}>
     {dialog}
     {form && <PlyFormDialog key={form.row?.id ?? 'new'} mode={form.mode} initial={form.row} busy={saving} error={formError}
       onSave={onSave} onCancel={() => { if (!saving) { setForm(null); setFormError(''); } }}/>}
-    <header className="app-topbar">
-      <div className="brand project-brand"><img src="/guston-logo.png" alt="Marker Plan logo" className="brand-logo" /><strong className="project-name">Marker Plan</strong></div>
-      <div className="topbar-right"><span className="topbar-tag">Plies dashboard</span>
-        <a className="topbar-link" href="/"><ArrowLeft size={14}/> Back to review</a></div>
-    </header>
     <main className="workspace plies-workspace">
-      <div className="workspace-heading"><div className="workspace-heading-copy">
-        <div><div className="breadcrumb">Workspace <span>/</span> Plies</div><h1>Plies</h1></div></div></div>
-
       {error && <div className="alert error" role="alert"><AlertTriangle size={18}/><span>{error}</span><button aria-label="Dismiss error" onClick={() => setError('')}>Dismiss</button></div>}
       {message && <div className="alert success" role="status"><Check size={18}/><span>{message}</span><button aria-label="Dismiss message" onClick={() => setMessage('')}>Dismiss</button></div>}
       {loadError && <div className="alert error" role="alert"><AlertTriangle size={18}/><span>Could not load the plies: {loadError}</span><button onClick={load}>Retry</button></div>}
@@ -125,7 +119,6 @@ export default function PliesDashboard() {
               onChange={event => { setQuery(event.target.value); setPage(1); }}/>
             {query && <button type="button" className="icon-button" aria-label="Clear search" onClick={() => { setQuery(''); setPage(1); }}><X size={14}/></button>}
           </label>
-          <button type="button" className="primary-button" onClick={() => { setFormError(''); setForm({ mode: 'add' }); }}><Plus size={15}/> Add ply</button>
         </div>
 
         {loading ? <div className="loading-workspace" role="status"><span className="spinner"/> Loading plies…</div> :
@@ -154,5 +147,5 @@ export default function PliesDashboard() {
         </div>}
       </section>
     </main>
-  </div>;
+  </AppShell>;
 }

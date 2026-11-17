@@ -1,0 +1,598 @@
+{
+  "id": "8f1de76e-4621-45d2-acba-33d1384a15e0",
+  "filename": "tech-pack-362097-bom.pdf",
+  "status": "needs_review",
+  "error": null,
+  "page_count": 1,
+  "selected_pages": [
+    1
+  ],
+  "created_at": "2026-10-27T06:28:11.235713+00:00",
+  "extraction": {
+    "category": "Wovens",
+    "warnings": [
+      "Material R1847 appears in 2 distinct BOM rows; review grouping",
+      "Material R1645 appears in 2 distinct BOM rows; review grouping",
+      "Material R1845 appears in 2 distinct BOM rows; review grouping"
+    ],
+    "materials": [
+      {
+        "unit": "m",
+        "quantity": "1.22",
+        "colorways": [
+          {
+            "code": "9900",
+            "name": "Black",
+            "fabric_reference": "Fabric 1",
+            "material_color_code": "9900",
+            "material_color_name": "Black"
+          },
+          {
+            "code": "8699",
+            "name": "Dark navy/Black",
+            "fabric_reference": "Fabric 1",
+            "material_color_code": "8600",
+            "material_color_name": "Dark navy"
+          }
+        ],
+        "placement": "Main Fabric",
+        "composition": "50% polyester, 28% cotton, 22% elastomultiester,",
+        "description": "50% polyester, 28% cotton, 22% elastomultiester, plain 2-way stretch, 175 g/m2",
+        "source_pages": [
+          1
+        ],
+        "material_code": "R1847",
+        "developer_code": "B-10476",
+        "placement_type": "Shell 1_Fabric 1_Care"
+      },
+      {
+        "unit": "m",
+        "quantity": "0.34",
+        "colorways": [
+          {
+            "code": "9900",
+            "name": "Black",
+            "fabric_reference": "Fabric 2",
+            "material_color_code": "9900",
+            "material_color_name": "Black"
+          },
+          {
+            "code": "8699",
+            "name": "Dark navy/Black",
+            "fabric_reference": "Fabric 2",
+            "material_color_code": "9900",
+            "material_color_name": "Black"
+          }
+        ],
+        "placement": "Knee, gusset, back side",
+        "composition": "92% polyamide, 8% elastane,",
+        "description": "92% polyamide, 8% elastane, double weave, 4-way stretch water repellent, 235 g/m2",
+        "source_pages": [
+          1
+        ],
+        "material_code": "R1645",
+        "developer_code": "B-10262",
+        "placement_type": "Shell 2_Fabric 2_Care"
+      },
+      {
+        "unit": "m",
+        "quantity": "0.04",
+        "colorways": [
+          {
+            "code": "9900",
+            "name": "Black",
+            "fabric_reference": "Fabric 3",
+            "material_color_code": "9900",
+            "material_color_name": "Black"
+          },
+          {
+            "code": "8699",
+            "name": "Dark navy/Black",
+            "fabric_reference": "Fabric 3",
+            "material_color_code": "8600",
+            "material_color_name": "Dark navy"
+          }
+        ],
+        "placement": "Back pocket facing",
+        "composition": "65% Polyester, 35% Cotton,",
+        "description": "65% Polyester, 35% Cotton, plain, 175 g/m2",
+        "source_pages": [
+          1
+        ],
+        "material_code": "R1845",
+        "developer_code": "R1845",
+        "placement_type": "Fabric 3"
+      },
+      {
+        "unit": "m",
+        "quantity": "1.22",
+        "colorways": [
+          {
+            "code": "9900",
+            "name": "Black",
+            "fabric_reference": "Fabric 1",
+            "material_color_code": "9900",
+            "material_color_name": "Black"
+          },
+          {
+            "code": "8699",
+            "name": "Dark navy/Black",
+            "fabric_reference": "Fabric 1",
+            "material_color_code": "8600",
+            "material_color_name": "Dark navy"
+          }
+        ],
+        "placement": "Main Fabric",
+        "composition": "50% polyester, 28% cotton, 22% elastomultiester,",
+        "description": "50% polyester, 28% cotton, 22% elastomultiester, plain 2-way stretch, 175 g/m2",
+        "source_pages": [
+          1
+        ],
+        "material_code": "R1847",
+        "developer_code": "B-10476",
+        "placement_type": "Shell 1_Fabric 1_Care"
+      },
+      {
+        "unit": "m",
+        "quantity": "0.34",
+        "colorways": [
+          {
+            "code": "9900",
+            "name": "Black",
+            "fabric_reference": "Fabric 2",
+            "material_color_code": "9900",
+            "material_color_name": "Black"
+          },
+          {
+            "code": "8699",
+            "name": "Dark navy/Black",
+            "fabric_reference": "Fabric 2",
+            "material_color_code": "9900",
+            "material_color_name": "Black"
+          }
+        ],
+        "placement": "Knee, gusset, back side",
+        "composition": "92% polyamide, 8% elastane,",
+        "description": "92% polyamide, 8% elastane, double weave, 4-way stretch water repellent, 235 g/m2",
+        "source_pages": [
+          1
+        ],
+        "material_code": "R1645",
+        "developer_code": "B-10262",
+        "placement_type": "Shell 2_Fabric 2_Care"
+      },
+      {
+        "unit": "m",
+        "quantity": "0.04",
+        "colorways": [
+          {
+            "code": "9900",
+            "name": "Black",
+            "fabric_reference": "Fabric 3",
+            "material_color_code": "9900",
+            "material_color_name": "Black"
+          },
+          {
+            "code": "8699",
+            "name": "Dark navy/Black",
+            "fabric_reference": "Fabric 3",
+            "material_color_code": "8600",
+            "material_color_name": "Dark navy"
+          }
+        ],
+        "placement": "Back pocket facing",
+        "composition": "65% Polyester, 35% Cotton,",
+        "description": "65% Polyester, 35% Cotton, plain, 175 g/m2",
+        "source_pages": [
+          1
+        ],
+        "material_code": "R1845",
+        "developer_code": "R1845",
+        "placement_type": "Fabric 3"
+      },
+      {
+        "unit": "m",
+        "quantity": "0.37",
+        "colorways": [
+          {
+            "code": "9900",
+            "name": "Black",
+            "fabric_reference": "Lining 1",
+            "material_color_code": "9900",
+            "material_color_name": "Black"
+          },
+          {
+            "code": "8699",
+            "name": "Dark navy/Black",
+            "fabric_reference": "Lining 1",
+            "material_color_code": "9900",
+            "material_color_name": "Black"
+          }
+        ],
+        "placement": "Front pocket & leg pockets lining, Inside WB.",
+        "composition": "90% polyester, 10% cotton,",
+        "description": "90% polyester, 10% cotton, 100 g/m2",
+        "source_pages": [
+          1
+        ],
+        "material_code": "R2020",
+        "developer_code": "R2020",
+        "placement_type": "Lining 1"
+      }
+    ],
+    "page_tables": [
+      {
+        "materials": [
+          {
+            "unit": "m",
+            "quantity": "1.22",
+            "colorways": [
+              {
+                "code": "9900",
+                "name": "Black",
+                "fabric_reference": "Fabric 1",
+                "material_color_code": "9900",
+                "material_color_name": "Black"
+              },
+              {
+                "code": "8699",
+                "name": "Dark navy/Black",
+                "fabric_reference": "Fabric 1",
+                "material_color_code": "8600",
+                "material_color_name": "Dark navy"
+              }
+            ],
+            "placement": "Main Fabric",
+            "composition": "50% polyester, 28% cotton, 22% elastomultiester,",
+            "description": "50% polyester, 28% cotton, 22% elastomultiester, plain 2-way stretch, 175 g/m2",
+            "source_pages": [
+              1
+            ],
+            "material_code": "R1847",
+            "developer_code": "B-10476",
+            "placement_type": "Shell 1_Fabric 1_Care"
+          },
+          {
+            "unit": "m",
+            "quantity": "0.34",
+            "colorways": [
+              {
+                "code": "9900",
+                "name": "Black",
+                "fabric_reference": "Fabric 2",
+                "material_color_code": "9900",
+                "material_color_name": "Black"
+              },
+              {
+                "code": "8699",
+                "name": "Dark navy/Black",
+                "fabric_reference": "Fabric 2",
+                "material_color_code": "9900",
+                "material_color_name": "Black"
+              }
+            ],
+            "placement": "Knee, gusset, back side",
+            "composition": "92% polyamide, 8% elastane,",
+            "description": "92% polyamide, 8% elastane, double weave, 4-way stretch water repellent, 235 g/m2",
+            "source_pages": [
+              1
+            ],
+            "material_code": "R1645",
+            "developer_code": "B-10262",
+            "placement_type": "Shell 2_Fabric 2_Care"
+          },
+          {
+            "unit": "m",
+            "quantity": "0.04",
+            "colorways": [
+              {
+                "code": "9900",
+                "name": "Black",
+                "fabric_reference": "Fabric 3",
+                "material_color_code": "9900",
+                "material_color_name": "Black"
+              },
+              {
+                "code": "8699",
+                "name": "Dark navy/Black",
+                "fabric_reference": "Fabric 3",
+                "material_color_code": "8600",
+                "material_color_name": "Dark navy"
+              }
+            ],
+            "placement": "Back pocket facing",
+            "composition": "65% Polyester, 35% Cotton,",
+            "description": "65% Polyester, 35% Cotton, plain, 175 g/m2",
+            "source_pages": [
+              1
+            ],
+            "material_code": "R1845",
+            "developer_code": "R1845",
+            "placement_type": "Fabric 3"
+          },
+          {
+            "unit": "m",
+            "quantity": "1.22",
+            "colorways": [
+              {
+                "code": "9900",
+                "name": "Black",
+                "fabric_reference": "Fabric 1",
+                "material_color_code": "9900",
+                "material_color_name": "Black"
+              },
+              {
+                "code": "8699",
+                "name": "Dark navy/Black",
+                "fabric_reference": "Fabric 1",
+                "material_color_code": "8600",
+                "material_color_name": "Dark navy"
+              }
+            ],
+            "placement": "Main Fabric",
+            "composition": "50% polyester, 28% cotton, 22% elastomultiester,",
+            "description": "50% polyester, 28% cotton, 22% elastomultiester, plain 2-way stretch, 175 g/m2",
+            "source_pages": [
+              1
+            ],
+            "material_code": "R1847",
+            "developer_code": "B-10476",
+            "placement_type": "Shell 1_Fabric 1_Care"
+          },
+          {
+            "unit": "m",
+            "quantity": "0.34",
+            "colorways": [
+              {
+                "code": "9900",
+                "name": "Black",
+                "fabric_reference": "Fabric 2",
+                "material_color_code": "9900",
+                "material_color_name": "Black"
+              },
+              {
+                "code": "8699",
+                "name": "Dark navy/Black",
+                "fabric_reference": "Fabric 2",
+                "material_color_code": "9900",
+                "material_color_name": "Black"
+              }
+            ],
+            "placement": "Knee, gusset, back side",
+            "composition": "92% polyamide, 8% elastane,",
+            "description": "92% polyamide, 8% elastane, double weave, 4-way stretch water repellent, 235 g/m2",
+            "source_pages": [
+              1
+            ],
+            "material_code": "R1645",
+            "developer_code": "B-10262",
+            "placement_type": "Shell 2_Fabric 2_Care"
+          },
+          {
+            "unit": "m",
+            "quantity": "0.04",
+            "colorways": [
+              {
+                "code": "9900",
+                "name": "Black",
+                "fabric_reference": "Fabric 3",
+                "material_color_code": "9900",
+                "material_color_name": "Black"
+              },
+              {
+                "code": "8699",
+                "name": "Dark navy/Black",
+                "fabric_reference": "Fabric 3",
+                "material_color_code": "8600",
+                "material_color_name": "Dark navy"
+              }
+            ],
+            "placement": "Back pocket facing",
+            "composition": "65% Polyester, 35% Cotton,",
+            "description": "65% Polyester, 35% Cotton, plain, 175 g/m2",
+            "source_pages": [
+              1
+            ],
+            "material_code": "R1845",
+            "developer_code": "R1845",
+            "placement_type": "Fabric 3"
+          },
+          {
+            "unit": "m",
+            "quantity": "0.37",
+            "colorways": [
+              {
+                "code": "9900",
+                "name": "Black",
+                "fabric_reference": "Lining 1",
+                "material_color_code": "9900",
+                "material_color_name": "Black"
+              },
+              {
+                "code": "8699",
+                "name": "Dark navy/Black",
+                "fabric_reference": "Lining 1",
+                "material_color_code": "9900",
+                "material_color_name": "Black"
+              }
+            ],
+            "placement": "Front pocket & leg pockets lining, Inside WB.",
+            "composition": "90% polyester, 10% cotton,",
+            "description": "90% polyester, 10% cotton, 100 g/m2",
+            "source_pages": [
+              1
+            ],
+            "material_code": "R2020",
+            "developer_code": "R2020",
+            "placement_type": "Lining 1"
+          }
+        ],
+        "page_number": 1,
+        "colorway_headers": [
+          {
+            "code": "9900",
+            "name": "Black"
+          },
+          {
+            "code": "8699",
+            "name": "Dark navy/Black"
+          }
+        ]
+      }
+    ],
+    "source_pages": [
+      1
+    ],
+    "style_number": null,
+    "request_usage": [
+      {
+        "page": 1,
+        "stage": "classification",
+        "status": "success",
+        "attempt": 1,
+        "cost_usd": 0.00046907,
+        "request_id": "gen-1793082493-6ddqQ9ImE1296T5wEUMt",
+        "input_tokens": 2107,
+        "output_limit": 200,
+        "total_tokens": 2121,
+        "finish_reason": "stop",
+        "output_tokens": 14
+      },
+      {
+        "page": 1,
+        "group": "1",
+        "stage": "extraction",
+        "status": "success",
+        "attempt": 1,
+        "band_end": 6,
+        "cost_usd": 0.00280448,
+        "crop_top": 0,
+        "band_start": 1,
+        "request_id": "gen-1793082498-XUO8sNNtdPwQkq2P6Kry",
+        "crop_bottom": 933,
+        "input_tokens": 5818,
+        "output_limit": 6500,
+        "total_tokens": 6651,
+        "finish_reason": "stop",
+        "output_tokens": 833,
+        "row_group_mode": true
+      },
+      {
+        "page": 1,
+        "group": "2",
+        "stage": "extraction",
+        "status": "success",
+        "attempt": 1,
+        "band_end": 11,
+        "cost_usd": 0.00321738,
+        "crop_top": 933,
+        "band_start": 7,
+        "request_id": "gen-1793082661-aNMgVEvasWNwflQ7XqiM",
+        "crop_bottom": 1819,
+        "input_tokens": 5658,
+        "output_limit": 6500,
+        "total_tokens": 6726,
+        "finish_reason": "stop",
+        "output_tokens": 1068,
+        "row_group_mode": true
+      }
+    ],
+    "tech_pack_number": null
+  },
+  "model": "qwen/qwen3-vl-235b-a22b-instruct",
+  "request_usage": [
+    {
+      "page": 1,
+      "stage": "classification",
+      "status": "success",
+      "attempt": 1,
+      "cost_usd": 0.00046907,
+      "request_id": "gen-1793082493-6ddqQ9ImE1296T5wEUMt",
+      "input_tokens": 2107,
+      "output_limit": 200,
+      "total_tokens": 2121,
+      "finish_reason": "stop",
+      "output_tokens": 14
+    },
+    {
+      "page": 1,
+      "group": "1",
+      "stage": "extraction",
+      "status": "success",
+      "attempt": 1,
+      "band_end": 6,
+      "cost_usd": 0.00280448,
+      "crop_top": 0,
+      "band_start": 1,
+      "request_id": "gen-1793082498-XUO8sNNtdPwQkq2P6Kry",
+      "crop_bottom": 933,
+      "input_tokens": 5818,
+      "output_limit": 6500,
+      "total_tokens": 6651,
+      "finish_reason": "stop",
+      "output_tokens": 833,
+      "row_group_mode": true
+    },
+    {
+      "page": 1,
+      "group": "2",
+      "stage": "extraction",
+      "status": "success",
+      "attempt": 1,
+      "band_end": 11,
+      "cost_usd": 0.00321738,
+      "crop_top": 933,
+      "band_start": 7,
+      "request_id": "gen-1793082661-aNMgVEvasWNwflQ7XqiM",
+      "crop_bottom": 1819,
+      "input_tokens": 5658,
+      "output_limit": 6500,
+      "total_tokens": 6726,
+      "finish_reason": "stop",
+      "output_tokens": 1068,
+      "row_group_mode": true
+    }
+  ],
+  "ply_info": {
+    "R1645": {
+      "max_ply": 500,
+      "matches": [
+        {
+          "id": 51,
+          "col_c": "1645",
+          "col_d": "500"
+        }
+      ]
+    },
+    "R1845": {
+      "max_ply": 80,
+      "matches": [
+        {
+          "id": 5,
+          "col_c": "1845",
+          "col_d": "80"
+        },
+        {
+          "id": 145,
+          "col_c": "R1845-9800",
+          "col_d": "80"
+        }
+      ]
+    },
+    "R2020": {
+      "max_ply": 130,
+      "matches": [
+        {
+          "id": 6,
+          "col_c": "2020",
+          "col_d": "130"
+        },
+        {
+          "id": 149,
+          "col_c": "R2020-2000",
+          "col_d": "80"
+        }
+      ]
+    }
+  }
+}

@@ -3,6 +3,7 @@ Communtication with OpenRouter VLM for Wovens BOM extraction.
 """
 
 import base64
+import copy
 import json
 import re
 import ssl
@@ -14,6 +15,7 @@ from uuid import uuid4
 import httpx
 from pydantic import BaseModel, Field, ValidationError, create_model
 from .config import get_settings
+from .observability import ModelCallTrace
 from .techpack_schema import PageResult, PageClassify
 
 SYSTEM = (
@@ -24,19 +26,29 @@ SYSTEM = (
     "Never guess unknown cells. Use JSON null for missing/illegible values."
 )
 
-EXTRACT_PROMPT = """Extract ONLY the WOVENS (woven fabrics) Bill of Materials table from this PDF page.
+EXTRACT_PROMPT = """Extract the WOVENS (woven fabrics) and KNITS (knitted fabrics) Bill of Materials tables from this PDF page. Either or both can be present.
 The page image is authoritative. A potentially disordered text-layer extract is included only as auxiliary evidence.
 Rules:
-- section_found=true only if a Wovens/fabric-material BOM is visible; do NOT confuse woven LABELS, Knits, Buttons, Thread, Zippers, or sketches with woven fabric BOM.
-- Read every woven-material row and all visible colorway columns, including their IDs and labels.
-- This is transcription, not page classification: return a materials entry for EVERY visible Wovens row. Do not return just section_found or column headers.
-- Populate colorway_headers ONCE from the garment colorway column headings ABOVE Wovens. Every row uses those SAME header codes and names.
+- tech_pack_number must be copied exactly as printed in this image, always including the TP prefix: the letters TP, a space, then the digits (for example the text 'TP' followed by its number). Other references such as A-02916 are not tech-pack numbers. Use null when no TP-prefixed number is printed on this page; null is the correct answer for most pages. Never invent, recall or reuse a number, and never add a TP prefix to another reference.
+- The page title reads like '1459 - 1845 - BOM': the first number is style_number and the second is design_number. Copy both exactly as printed; use null when the title is not on this page. Never invent them.
+- section_found=true only if a Wovens or Knits fabric-material BOM is visible; do NOT confuse woven LABELS, Buttons, Thread, Zippers, or sketches with a fabric BOM.
+- Read every material row under the Wovens heading AND every row under the Knits heading, and all visible colorway columns, including their IDs and labels.
+- Set category on EVERY row from the section heading above it: 'wovens' under the Wovens heading, 'knits' under the Knits heading. When a section starts above the visible rows (for example the TARGET panel begins below the heading), use the red outline in the CONTEXT panel to see which heading it sits under. Never label a row from its material code.
+- This is transcription, not page classification: return a materials entry for EVERY visible Wovens and Knits row. Do not return just section_found or column headers.
+- Populate colorway_headers ONCE from the garment colorway column headings ABOVE the first section heading. Every row, in both Wovens and Knits, uses those SAME header codes and names.
+- Determine columns by their printed headings and vertical cell boundaries, never by a fixed column count. A seven-column layout may contain No/Dev No, Description, Composition, Placement Type/Placement, Qty, a narrow shaded separator, and ONE garment colorway.
+- Blank, solid black/grey, or diagonally shaded separator columns are NOT colorways. Do not emit headers or colorways items for them, even when their shading changes between rows.
+- The No/Dev No cell can contain two stacked identifiers (e.g. R1845/R1845 or R1645/B-10262). Copy the first into material_code and the second into developer_code, even when identical. Use null for developer_code only when no second identifier is printed. Never move either identifier into a material color cell.
+- Follow each garment colorway column straight down to its own body cells. Read material_color_code and material_color_name ONLY from those cells, not from the No/Dev No column or neighbouring shaded cells.
 - Body cell color codes are material_color_code, NEVER the garment colorway code. A single colorway header applies to ALL rows in that column.
-- STOP at the next category heading (e.g. Knits). Do not extract rows in later sections.
+- STOP at the first category heading that is neither Wovens nor Knits (e.g. Buttons, Trims, Thread, Zippers). Do not extract rows in later sections.
 - Material code: copy the actual material ID (e.g. R1371), not a repeated developer label.
 - Preserve raw description, composition, placement, numeric quantity text, and unit separately. For a printed '0.95 m', quantity is '0.95' and unit is 'm', never quantity='0.95 m'.
+- In Placement Type / Placement, copy the full printed type into placement_type (e.g. 'Shell 1_Fabric 1_Care') and the placement text into placement (e.g. 'Main fab'). Preserve all words, numbers, and underscores; do not shorten the type to 'Fabric 1'. If a row prints only 'Back pocket facing' or 'Pkt lining, Inside Waist band', placement_type is null. Never infer or carry a type from another row, a repeated material code, or a colorway fabric_reference.
 - Each material should include one colorways item PER colorway column visible on this page.
-- For each colorway capture colorway code, colorway label, material color code/name, and fabric reference (Fabric 5, Fabric 7, etc.) when visible.
+- For example, a header '9699 / Mid Grey/Black' beside a shaded separator means ONE colorways item per row with code='9699' and name='Mid Grey/Black'. A body cell '9600 / Mid Grey' gives material_color_code='9600', material_color_name='Mid Grey'; a body cell '9900 / Black' gives '9900', 'Black'. R1845 in No/Dev No is not a material color or an extra colorway.
+- For each colorway capture colorway code, colorway label, material color code/name, and fabric_reference. fabric_reference is the 'Fabric' label printed inside that body cell; use null when none is printed there, and never number fabrics yourself.
+- colorway_headers come ONLY from the shaded heading cells at the top of the table, to the right of Qty. A body cell below a heading often prints a different code and name than the heading; the heading still names the whole column and the body cell still goes in material_color_code/material_color_name. Never build colorway_headers from body cells.
 - Some materials share IDs across colorways but have different material colors or fabric references; keep these associated with each specific colorway.
 - If identical material rows repeat in PDF headers or duplicate fields, emit the material only once per line item.
 - Do not invent material details; use null for unrecognized values.
@@ -44,9 +56,9 @@ Rules:
 - Include a warning for unreadable cells, misaligned columns, or conflicting labels.
 """
 
-CLASSIFY_PROMPT = """Does the IMAGE contain a table of woven fabric materials as a Bill of Materials
-(Wovens, woven fabric, shell fabrics, or equivalent) from a garment tech pack?
-Answer true ONLY when actual material entries are visible, not merely a mention of woven fabric or a diagram.
+CLASSIFY_PROMPT = """Does the IMAGE contain a table of woven or knitted fabric materials as a Bill of Materials
+(Wovens, Knits, woven fabric, knitted fabric, shell fabrics, or equivalent) from a garment tech pack?
+Answer true ONLY when actual material entries are visible, not merely a mention of woven or knitted fabric or a diagram.
 Return a JSON object with has_wovens_bom boolean."""
 
 
@@ -153,6 +165,21 @@ def po_result_error(result):
            for order in result.orders for row in order.size_rows):
         return 'OpenRouter returned blank quantity strings; re-read the numbers or use null'
     return None
+
+
+def fork(client):
+    """
+    Purpose: Give one page (or page check) its own copy of a model client so several can run in different threads.
+    The client remembers which page and row group it is reading and records every request's token usage, so a
+    shared one would mix the pages up.
+    Input: client - an OpenRouterVLM (or anything shaped like one).
+    Output: a copy with the same settings and trace labels, an empty request_usage list and no current row group.
+    The caller adds the copy's request_usage back to the original, in page order, when the page is done.
+    """
+    child = copy.copy(client)
+    child.request_usage = []
+    child.current_group = None
+    return child
 
 
 class OpenRouterVLM:
@@ -289,6 +316,12 @@ class OpenRouterVLM:
                 if group:
                     entry.update(group)
                 response_content = None
+                trace = ModelCallTrace(
+                    self.settings.openrouter_model, entry['stage'],
+                    {'page': self.current_page, 'attempt': attempt + 1, 'output_limit': body['max_tokens']},
+                    request_input=body['messages'][1]['content'][0]['text'],
+                    document_id=getattr(self, 'trace_document_id', None),
+                    trace_name=getattr(self, 'trace_name', None))
                 try:
                     response = client.post("https://openrouter.ai/api/v1/chat/completions", json=body, headers=headers)
                     if response.status_code in (429, 500, 502, 503, 504) and attempt < 2:
@@ -299,6 +332,9 @@ class OpenRouterVLM:
                     usage = payload.get('usage') or {}
                     entry.update(request_id=payload.get('id'), input_tokens=usage.get('prompt_tokens'),
                                  output_tokens=usage.get('completion_tokens'), total_tokens=usage.get('total_tokens'))
+                    # OpenRouter reports the real charge in USD; keep it so the usage dashboard needs no price list.
+                    if isinstance(usage.get('cost'), (int, float)):
+                        entry['cost_usd'] = usage['cost']
                     choice = payload["choices"][0]
                     response_content = choice.get('message', {}).get('content')
                     entry['finish_reason'] = choice.get('finish_reason')
@@ -387,6 +423,8 @@ class OpenRouterVLM:
                         time.sleep(2 ** attempt)
                         continue
                     break
+                finally:
+                    trace.finish(entry, output=response_content if isinstance(response_content, str) else None)
         raise RuntimeError(f"OpenRouter extraction failed: {str(last_error)[:500]}")
 
     def classify(self, image_bytes: bytes) -> bool:
@@ -421,6 +459,18 @@ class OpenRouterVLM:
             empty_retry_instruction='\nRe-read the image and transcribe every visible order and size row. '
                 'Return null for individual unreadable cells; never invent orders. Explain unreadable content in warnings.',
         )
+
+    def po_header(self, image_bytes: bytes):
+        """
+        Purpose: Ask the model for only the identifiers in a PO page's header (contract, Model ID, Quality ID), a much
+        smaller job than reading the whole page. Used to tell which pages belong to a Tech Pack before extracting them.
+        Input: image_bytes - the top part of the page image.
+        Output: a POHeader; every field is None for a page with no header.
+        """
+        from .po_schema import POHeader
+        from .po_prompts import PO_HEADER_PROMPT
+        return self._request(PO_HEADER_PROMPT, image_bytes, POHeader, max_tokens=300,
+                             stage='po_header', schema_name='po_header', strict_schema=False)
 
     def locate_table_rows(self, image_bytes: bytes, workflow: str):
         """

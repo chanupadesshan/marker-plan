@@ -1,0 +1,17 @@
+import fs from 'node:fs/promises';
+import { FileBlob, SpreadsheetFile } from '@oai/artifact-tool';
+const root = 'C:/Users/chanupa.d/Documents/concord/wovens-bom-extractor';
+const book = await SpreadsheetFile.importXlsx(await FileBlob.load(`${root}/output/marker-plan-test/361061-marker-plan.xlsx`));
+const preview = await book.render({ sheetName: 'Marker plan', range: 'A1:AH47', scale: 1.5, format: 'png' });
+await fs.writeFile(`${root}/tmp/marker-export-qa/single-sheet-marker-plan.png`, new Uint8Array(await preview.arrayBuffer()));
+console.log('Rendered the single production sheet');
+const sheet = book.worksheets.getItem('Marker plan');
+sheet.getRange('F12').values = [[1]];
+book.recalculate();
+if (Number(sheet.getRange('W33').values[0][0]) !== 546) throw new Error('Cut total did not recalculate');
+if (Number(sheet.getRange('F36').values[0][0]) !== -42) throw new Error('Remaining quantity did not reflect the changed marker');
+if (Number(sheet.getRange('Z33').values[0][0]) !== 504) throw new Error('Another material total changed');
+sheet.getRange('C12').values = [[500]];
+book.recalculate();
+if (Number(sheet.getRange('X12').values[0][0]) !== 210) throw new Error('Nesting length did not calculate fabric metres');
+console.log('PASS: cut totals, per-size remaining quantities, material isolation and fabric-usage formulas recalculate correctly. Final XLSX unchanged.');

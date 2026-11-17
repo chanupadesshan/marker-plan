@@ -47,11 +47,12 @@ def material_codes(extraction):
     return {row['material_code'] for row in rows if row.get('material_code')}
 
 
-def ply_info_for(session, extraction):
+def ply_info_for(session, extraction, *, strict=False):
     """
     Purpose: For every material in an extraction, find the related plies rows and their maximum ply.
     A broken lookup (for example a missing plies table) never stops a Tech Pack from loading; it just returns nothing.
-    Input: session - a database session; extraction - the saved Tech Pack extraction as a dict.
+    Input: session - a database session; extraction - the saved Tech Pack extraction as a dict;
+    strict - propagate lookup errors when current cutting limits are required for a rerun.
     Output: a dict keyed by material code, only for codes with at least one related plies row:
     {'max_ply': the largest Column D number or None, 'matches': [{'id', 'col_c', 'col_d'}, ...]}.
     """
@@ -61,6 +62,8 @@ def ply_info_for(session, extraction):
     try:
         rows = session.scalars(select(Ply).order_by(Ply.id)).all()
     except Exception:
+        if strict:
+            raise
         session.rollback()
         return {}
     by_base = {}

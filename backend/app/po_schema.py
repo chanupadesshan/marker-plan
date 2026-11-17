@@ -29,6 +29,15 @@ class PurchaseOrder(StrictModel):
     warnings: list[str] = Field(default_factory=list)
 
 
+# Purpose: The few identifiers printed in the header of a PO page, read cheaply to decide whether the page belongs to a Tech Pack.
+# Input: contract_number, model_id and quality_id as printed (null when not printed on this page).
+# Output: a validated POHeader. This class is also sent to the model as the required reply format.
+class POHeader(StrictModel):
+    contract_number: str | None = None
+    model_id: str | None = None
+    quality_id: str | None = None
+
+
 # Purpose: What the model returns for one PO page: the kind of page and any contracts found on it.
 # Input: page_kind ('purchase_order', 'empty' or 'other'), orders and warnings.
 # Output: a validated POPageResult. Only a 'purchase_order' page may contain orders.

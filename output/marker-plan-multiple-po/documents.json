@@ -1,0 +1,299 @@
+{
+  "tech_pack": {
+    "id": "7131cbf7-5884-4ebf-aebe-7e7e8c20766d",
+    "filename": "tech-pack-1530-1310.pdf",
+    "status": "queued",
+    "error": null,
+    "page_count": null,
+    "selected_pages": [],
+    "created_at": "2026-10-27T07:23:37.499422+00:00"
+  },
+  "358449": {
+    "id": "d73e09b5-d06b-4051-b4c2-e915bbd86816",
+    "filename": "purchase-order-358449.pdf",
+    "status": "queued",
+    "error": null,
+    "page_count": null,
+    "tech_pack_id": "7131cbf7-5884-4ebf-aebe-7e7e8c20766d",
+    "created_at": "2026-10-27T07:23:37.552960+00:00"
+  },
+  "359259": {
+    "id": "a10eaa07-fd18-45a2-8dfd-7449bec768e6",
+    "filename": "purchase-order-359259.pdf",
+    "status": "queued",
+    "error": null,
+    "page_count": null,
+    "tech_pack_id": "7131cbf7-5884-4ebf-aebe-7e7e8c20766d",
+    "created_at": "2026-10-27T07:23:37.684868+00:00"
+  },
+  "plan": {
+    "id": "1ebce851-14cd-4c62-8762-e2339a8b405d",
+    "status": "queued",
+    "created_at": "2026-10-27T07:25:13.958945+00:00",
+    "started_at": null,
+    "finished_at": null,
+    "saved": true,
+    "persistence_error": null,
+    "request": {
+      "tech_pack_id": "7131cbf7-5884-4ebf-aebe-7e7e8c20766d",
+      "tech_pack_filename": "tech-pack-1530-1310.pdf",
+      "style_number": "1530",
+      "tech_pack_number": null,
+      "orders": [
+        {
+          "label": "358449",
+          "tech_pack_reference": "18693",
+          "model_id": "1530",
+          "quality_id": "1310",
+          "color_id": "9900",
+          "source_filename": "purchase-order-358449.pdf",
+          "size_rows": [
+            {
+              "size": "-C44",
+              "quantity": "54"
+            },
+            {
+              "size": "-C46",
+              "quantity": "198"
+            },
+            {
+              "size": "-C48",
+              "quantity": "360"
+            },
+            {
+              "size": "-C50",
+              "quantity": "348"
+            },
+            {
+              "size": "-C52",
+              "quantity": "378"
+            },
+            {
+              "size": "-C54",
+              "quantity": "144"
+            },
+            {
+              "size": "-C56",
+              "quantity": "90"
+            },
+            {
+              "size": "-C58",
+              "quantity": "27"
+            },
+            {
+              "size": "-D100",
+              "quantity": "18"
+            },
+            {
+              "size": "-D104",
+              "quantity": "18"
+            },
+            {
+              "size": "-D108",
+              "quantity": "9"
+            },
+            {
+              "size": "-C148",
+              "quantity": "18"
+            },
+            {
+              "size": "-C154",
+              "quantity": "9"
+            }
+          ]
+        },
+        {
+          "label": "359259",
+          "tech_pack_reference": "18693",
+          "model_id": "1530",
+          "quality_id": "1310",
+          "color_id": "9900",
+          "source_filename": "purchase-order-359259.pdf",
+          "size_rows": [
+            {
+              "size": "-C44",
+              "quantity": "36"
+            },
+            {
+              "size": "-C46",
+              "quantity": "90"
+            },
+            {
+              "size": "-C48",
+              "quantity": "216"
+            },
+            {
+              "size": "-C50",
+              "quantity": "270"
+            },
+            {
+              "size": "-C52",
+              "quantity": "126"
+            },
+            {
+              "size": "-C54",
+              "quantity": "108"
+            },
+            {
+              "size": "-C56",
+              "quantity": "36"
+            },
+            {
+              "size": "-D92",
+              "quantity": "9"
+            },
+            {
+              "size": "-D100",
+              "quantity": "9"
+            },
+            {
+              "size": "-D104",
+              "quantity": "9"
+            },
+            {
+              "size": "-D108",
+              "quantity": "9"
+            },
+            {
+              "size": "-D112",
+              "quantity": "9"
+            },
+            {
+              "size": "-C148",
+              "quantity": "9"
+            },
+            {
+              "size": "-C154",
+              "quantity": "18"
+            }
+          ]
+        }
+      ],
+      "materials": [
+        {
+          "material_code": "R1310",
+          "description": "100% cotton, canvas, 270 g/m2",
+          "placement": "Main fabric",
+          "placement_type": "Shell 1_Fabric 1_Care",
+          "composition": "100% cotton,",
+          "colorways": [
+            {
+              "code": "9900",
+              "name": "Black",
+              "material_color_code": "9900",
+              "material_color_name": "Black",
+              "fabric_reference": "Fabric 1"
+            }
+          ],
+          "page_number": 1,
+          "consumption": "2.09",
+          "unit": "m",
+          "max_plies": 75
+        },
+        {
+          "material_code": "R1948",
+          "description": "100% Polyamide, CORDURA\u00ae, 200 g/m2",
+          "placement": "Knee pocket, reinforcement in back pocket & inside of hammer holder loop",
+          "placement_type": "Fabric 2",
+          "composition": "100% Polyamide,",
+          "colorways": [
+            {
+              "code": "9900",
+              "name": "Black",
+              "material_color_code": "9904",
+              "material_color_name": "Black (contrast 15797)",
+              "fabric_reference": "Fabric 2"
+            }
+          ],
+          "page_number": 1,
+          "consumption": "0.29",
+          "unit": "m",
+          "max_plies": 50
+        }
+      ],
+      "table_length_m": "8",
+      "min_plies": 10,
+      "time_limit_seconds": 20.0
+    },
+    "sizes": [
+      "-C44",
+      "-C46",
+      "-C48",
+      "-C50",
+      "-C52",
+      "-C54",
+      "-C56",
+      "-C58",
+      "-D100",
+      "-D104",
+      "-D108",
+      "-C148",
+      "-C154",
+      "-D92",
+      "-D112"
+    ],
+    "quantities": [
+      90,
+      288,
+      576,
+      618,
+      504,
+      252,
+      126,
+      27,
+      27,
+      27,
+      18,
+      27,
+      27,
+      9,
+      9
+    ],
+    "total_quantity": 2625,
+    "warnings": [],
+    "order_labels": [
+      "358449",
+      "359259"
+    ],
+    "settings": {
+      "table_length_m": "8",
+      "min_plies": 10,
+      "time_limit_seconds": 20.0
+    },
+    "materials": [
+      {
+        "number": 1,
+        "marker_prefix": "B01-",
+        "material_code": "R1310",
+        "description": "100% cotton, canvas, 270 g/m2",
+        "placement": "Main fabric",
+        "page_number": 1,
+        "consumption": "2.09",
+        "unit": "m",
+        "consumption_m": "2.09",
+        "max_plies": 75,
+        "capacity": 3,
+        "state": "queued",
+        "live": null,
+        "result": null
+      },
+      {
+        "number": 2,
+        "marker_prefix": "B02-",
+        "material_code": "R1948",
+        "description": "100% Polyamide, CORDURA\u00ae, 200 g/m2",
+        "placement": "Knee pocket, reinforcement in back pocket & inside of hammer holder loop",
+        "page_number": 1,
+        "consumption": "0.29",
+        "unit": "m",
+        "consumption_m": "0.29",
+        "max_plies": 50,
+        "capacity": 27,
+        "state": "queued",
+        "live": null,
+        "result": null
+      }
+    ],
+    "summary": null
+  }
+}

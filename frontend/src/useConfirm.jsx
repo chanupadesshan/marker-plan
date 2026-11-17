@@ -5,7 +5,7 @@ import ConfirmDialog from './ConfirmDialog.jsx';
  * Purpose: Let a component ask the user to confirm something with an in-page dialog and wait for the answer.
  * Usage: const [confirm, dialog] = useConfirm();  if (!await confirm({ title, message })) return;  ...and render {dialog}.
  * Input: none.
- * Output: a pair [confirm, dialog]. confirm(options) opens the dialog (options: title, message, detail,
+ * Output: a pair [confirm, dialog]. confirm(options) opens the dialog (options: title, message, detail, content,
  * confirmLabel, cancelLabel, tone) and returns a promise of true (confirmed) or false (cancelled);
  * dialog is the element to render.
  */

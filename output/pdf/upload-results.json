@@ -1,0 +1,20 @@
+{
+  "tech_pack": {
+    "id": "f89c4d32-129d-47ce-8253-22047652689b",
+    "filename": "tech-pack-two-boms.pdf",
+    "status": "queued",
+    "error": null,
+    "page_count": null,
+    "selected_pages": [],
+    "created_at": "2026-10-27T01:54:17.052388+00:00"
+  },
+  "purchase_order": {
+    "id": "61d90941-59bd-4af7-a765-7c5d7a56a561",
+    "filename": "purchase-orders-two-pos.pdf",
+    "status": "queued",
+    "error": null,
+    "page_count": null,
+    "tech_pack_id": null,
+    "created_at": "2026-10-27T01:54:17.337441+00:00"
+  }
+}

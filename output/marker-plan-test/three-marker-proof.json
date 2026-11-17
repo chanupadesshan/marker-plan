@@ -1,0 +1,42 @@
+{
+  "contract": "361061",
+  "material": "R1514",
+  "consumption_m": "1.65",
+  "table_length_m": "8",
+  "capacity": 4,
+  "max_plies_per_lay": 70,
+  "min_plies": 10,
+  "sizes": [
+    "-C48",
+    "-C50",
+    "-C52",
+    "-C54",
+    "-C56",
+    "-C58",
+    "-D92",
+    "-D96",
+    "-D100",
+    "-D108",
+    "-C152"
+  ],
+  "quantities": [
+    84,
+    42,
+    84,
+    112,
+    70,
+    28,
+    14,
+    28,
+    14,
+    14,
+    14
+  ],
+  "tested_unique_markers_at_most": 3,
+  "status": "INFEASIBLE",
+  "elapsed_seconds": 0.172,
+  "weight_domain": "Every integer from 0 to 112; no demand-GCD restriction",
+  "model": "Relaxed aggregate feasibility: each marker capacity at most 4; exact quantity per size. Lay limits relaxed.",
+  "four_marker_plan_independently_validated": true,
+  "minimum_markers_proven": 4
+}

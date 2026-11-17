@@ -1,0 +1,1082 @@
+{
+  "id": "37c546cc-78d0-43ef-91da-bb43ddfa3935",
+  "status": "complete",
+  "created_at": "2026-10-27T09:57:01.255746+00:00",
+  "started_at": "2026-10-27T09:57:25.956015+00:00",
+  "finished_at": "2026-10-27T09:57:36.438986+00:00",
+  "saved": true,
+  "persistence_error": null,
+  "request": {
+    "tech_pack_id": "f89c4d32-129d-47ce-8253-22047652689b",
+    "tech_pack_filename": "tech-pack-two-boms.pdf",
+    "style_number": "1449",
+    "tech_pack_number": "16926",
+    "orders": [
+      {
+        "label": "355800",
+        "tech_pack_reference": "16926",
+        "model_id": "1449",
+        "quality_id": "1845",
+        "color_id": "8699",
+        "source_filename": "purchase-orders-two-pos.pdf",
+        "size_rows": [
+          {
+            "size": "-C44",
+            "quantity": "30"
+          },
+          {
+            "size": "-C46",
+            "quantity": "90"
+          },
+          {
+            "size": "-C48",
+            "quantity": "210"
+          },
+          {
+            "size": "-C50",
+            "quantity": "240"
+          },
+          {
+            "size": "-C52",
+            "quantity": "330"
+          },
+          {
+            "size": "-C54",
+            "quantity": "270"
+          },
+          {
+            "size": "-C56",
+            "quantity": "150"
+          },
+          {
+            "size": "-C58",
+            "quantity": "30"
+          },
+          {
+            "size": "-C60",
+            "quantity": "30"
+          },
+          {
+            "size": "-C62",
+            "quantity": "30"
+          }
+        ]
+      }
+    ],
+    "materials": [
+      {
+        "material_code": "R1845",
+        "description": "65% Polyester, 35% Cotton, plain, 175 g/m2",
+        "placement": "Main Fabric",
+        "placement_type": "Shell 1_Fabric 1_Care",
+        "composition": "65% Polyester, 35% Cotton",
+        "colorways": [
+          {
+            "code": "9900",
+            "name": "Black",
+            "material_color_code": "9900",
+            "material_color_name": "Black",
+            "fabric_reference": "Fabric 5"
+          },
+          {
+            "code": "8699",
+            "name": "Dark navy/Black",
+            "material_color_code": "8600",
+            "material_color_name": "Dark navy",
+            "fabric_reference": "Fabric 7"
+          },
+          {
+            "code": "8999",
+            "name": "Navy/Black",
+            "material_color_code": "8900",
+            "material_color_name": "Navy",
+            "fabric_reference": "Fabric 8"
+          }
+        ],
+        "page_number": 2,
+        "consumption": "0.89",
+        "unit": "m",
+        "max_plies": 120,
+        "nesting_markers": []
+      },
+      {
+        "material_code": "R1645",
+        "description": "92% polyamide, 8% elastane, double weave, 4-way stretch 230 g/m2",
+        "placement": "Gusset and back",
+        "placement_type": "Shell 2_Fabric 2_Care",
+        "composition": "92% polyamide, 8% elastane",
+        "colorways": [
+          {
+            "code": "9900",
+            "name": "Black",
+            "material_color_code": "9900",
+            "material_color_name": "Black",
+            "fabric_reference": "Fabric 5"
+          },
+          {
+            "code": "8699",
+            "name": "Dark navy/Black",
+            "material_color_code": "9900",
+            "material_color_name": "Black",
+            "fabric_reference": "Fabric 7"
+          },
+          {
+            "code": "8999",
+            "name": "Navy/Black",
+            "material_color_code": "9900",
+            "material_color_name": "Black",
+            "fabric_reference": "Fabric 8"
+          }
+        ],
+        "page_number": 2,
+        "consumption": "0.26",
+        "unit": "m",
+        "max_plies": 500,
+        "nesting_markers": []
+      },
+      {
+        "material_code": "R1845",
+        "description": "65% Polyester, 35% Cotton, plain, 175 g/m2",
+        "placement": "Back Pocket Facing",
+        "placement_type": "Fabric 1",
+        "composition": "65% Polyester, 35% Cotton",
+        "colorways": [
+          {
+            "code": "9900",
+            "name": "Black",
+            "material_color_code": "9900",
+            "material_color_name": "Black",
+            "fabric_reference": "Fabric 5"
+          },
+          {
+            "code": "8699",
+            "name": "Dark navy/Black",
+            "material_color_code": "9900",
+            "material_color_name": "Black",
+            "fabric_reference": "Fabric 7"
+          },
+          {
+            "code": "8999",
+            "name": "Navy/Black",
+            "material_color_code": "9900",
+            "material_color_name": "Black",
+            "fabric_reference": "Fabric 8"
+          }
+        ],
+        "page_number": 2,
+        "consumption": "0.04",
+        "unit": "m",
+        "max_plies": 120,
+        "nesting_markers": []
+      },
+      {
+        "material_code": "R2020",
+        "description": "80% polyester, 20% cotton, 150 g/m2",
+        "placement": "Pocket Lining",
+        "placement_type": "Lining 1",
+        "composition": "80% polyester, 20% cotton",
+        "colorways": [
+          {
+            "code": "9900",
+            "name": "Black",
+            "material_color_code": "9900",
+            "material_color_name": "Black",
+            "fabric_reference": "Fabric 5"
+          },
+          {
+            "code": "8699",
+            "name": "Dark navy/Black",
+            "material_color_code": "9900",
+            "material_color_name": "Black",
+            "fabric_reference": "Fabric 7"
+          },
+          {
+            "code": "8999",
+            "name": "Navy/Black",
+            "material_color_code": "9900",
+            "material_color_name": "Black",
+            "fabric_reference": "Fabric 8"
+          }
+        ],
+        "page_number": 2,
+        "consumption": "0.37",
+        "unit": "m",
+        "max_plies": 130,
+        "nesting_markers": []
+      }
+    ],
+    "table_length_m": "8",
+    "min_plies": 10,
+    "time_limit_seconds": 20.0
+  },
+  "sizes": [
+    "-C44",
+    "-C46",
+    "-C48",
+    "-C50",
+    "-C52",
+    "-C54",
+    "-C56",
+    "-C58",
+    "-C60",
+    "-C62"
+  ],
+  "quantities": [
+    30,
+    90,
+    210,
+    240,
+    330,
+    270,
+    150,
+    30,
+    30,
+    30
+  ],
+  "total_quantity": 1410,
+  "warnings": [],
+  "order_labels": [
+    "355800"
+  ],
+  "settings": {
+    "table_length_m": "8",
+    "min_plies": 10,
+    "time_limit_seconds": 20.0
+  },
+  "materials": [
+    {
+      "number": 1,
+      "marker_prefix": "B01-",
+      "material_code": "R1845",
+      "description": "65% Polyester, 35% Cotton, plain, 175 g/m2",
+      "placement": "Main Fabric",
+      "page_number": 2,
+      "consumption": "0.89",
+      "unit": "m",
+      "consumption_m": "0.89",
+      "max_plies": 120,
+      "capacity": 8,
+      "capacity_basis": "estimated_consumption",
+      "state": "done",
+      "live": {
+        "phase": "complete",
+        "elapsed_seconds": 0.187,
+        "marker_count": 3,
+        "lay_count": 3,
+        "marker_minimum_proven": false,
+        "status": "FEASIBLE"
+      },
+      "result": {
+        "status": "FEASIBLE",
+        "message": "Valid mixed-size plan; the best incumbent was retained and minimum counts are not proven.",
+        "marker_count": 3,
+        "optimization_scope": "consumption_capacity",
+        "one_marker_shortcut": false,
+        "lay_count": 3,
+        "secondary_optimal": false,
+        "marker_lower_bound": 2,
+        "elapsed_seconds": 0.187,
+        "validated": true,
+        "marker_minimum_proven": false,
+        "lay_minimum_proven": false,
+        "markers": [
+          {
+            "id": "B01-M01",
+            "counts": [
+              0,
+              0,
+              1,
+              2,
+              2,
+              2,
+              1,
+              0,
+              0,
+              0
+            ],
+            "sets_per_marker": 8,
+            "lay_numbers": [
+              1
+            ],
+            "lay_count": 1,
+            "total_plies": 120,
+            "sets_cut": 960
+          },
+          {
+            "id": "B01-M02",
+            "counts": [
+              0,
+              0,
+              2,
+              0,
+              3,
+              1,
+              1,
+              0,
+              0,
+              0
+            ],
+            "sets_per_marker": 7,
+            "lay_numbers": [
+              2
+            ],
+            "lay_count": 1,
+            "total_plies": 30,
+            "sets_cut": 210
+          },
+          {
+            "id": "B01-M03",
+            "counts": [
+              1,
+              3,
+              1,
+              0,
+              0,
+              0,
+              0,
+              1,
+              1,
+              1
+            ],
+            "sets_per_marker": 8,
+            "lay_numbers": [
+              3
+            ],
+            "lay_count": 1,
+            "total_plies": 30,
+            "sets_cut": 240
+          }
+        ],
+        "lays": [
+          {
+            "number": 1,
+            "marker_id": "B01-M01",
+            "counts": [
+              0,
+              0,
+              1,
+              2,
+              2,
+              2,
+              1,
+              0,
+              0,
+              0
+            ],
+            "plies": 120,
+            "sets": 960
+          },
+          {
+            "number": 2,
+            "marker_id": "B01-M02",
+            "counts": [
+              0,
+              0,
+              2,
+              0,
+              3,
+              1,
+              1,
+              0,
+              0,
+              0
+            ],
+            "plies": 30,
+            "sets": 210
+          },
+          {
+            "number": 3,
+            "marker_id": "B01-M03",
+            "counts": [
+              1,
+              3,
+              1,
+              0,
+              0,
+              0,
+              0,
+              1,
+              1,
+              1
+            ],
+            "plies": 30,
+            "sets": 240
+          }
+        ],
+        "production": [
+          {
+            "size": "-C44",
+            "required": 30,
+            "produced": 30,
+            "difference": 0
+          },
+          {
+            "size": "-C46",
+            "required": 90,
+            "produced": 90,
+            "difference": 0
+          },
+          {
+            "size": "-C48",
+            "required": 210,
+            "produced": 210,
+            "difference": 0
+          },
+          {
+            "size": "-C50",
+            "required": 240,
+            "produced": 240,
+            "difference": 0
+          },
+          {
+            "size": "-C52",
+            "required": 330,
+            "produced": 330,
+            "difference": 0
+          },
+          {
+            "size": "-C54",
+            "required": 270,
+            "produced": 270,
+            "difference": 0
+          },
+          {
+            "size": "-C56",
+            "required": 150,
+            "produced": 150,
+            "difference": 0
+          },
+          {
+            "size": "-C58",
+            "required": 30,
+            "produced": 30,
+            "difference": 0
+          },
+          {
+            "size": "-C60",
+            "required": 30,
+            "produced": 30,
+            "difference": 0
+          },
+          {
+            "size": "-C62",
+            "required": 30,
+            "produced": 30,
+            "difference": 0
+          }
+        ],
+        "progress": [
+          {
+            "phase": "building",
+            "elapsed_seconds": 0.0,
+            "marker_count": null,
+            "lay_count": null,
+            "marker_minimum_proven": false,
+            "status": "SEARCHING"
+          },
+          {
+            "phase": "markers",
+            "elapsed_seconds": 0.135,
+            "marker_count": 3,
+            "lay_count": 3,
+            "marker_minimum_proven": false,
+            "status": "SEARCHING"
+          },
+          {
+            "phase": "complete",
+            "elapsed_seconds": 0.187,
+            "marker_count": 3,
+            "lay_count": 3,
+            "marker_minimum_proven": false,
+            "status": "FEASIBLE"
+          }
+        ]
+      }
+    },
+    {
+      "number": 2,
+      "marker_prefix": "B02-",
+      "material_code": "R1645",
+      "description": "92% polyamide, 8% elastane, double weave, 4-way stretch 230 g/m2",
+      "placement": "Gusset and back",
+      "page_number": 2,
+      "consumption": "0.26",
+      "unit": "m",
+      "consumption_m": "0.26",
+      "max_plies": 500,
+      "capacity": 30,
+      "capacity_basis": "estimated_consumption",
+      "state": "done",
+      "live": {
+        "phase": "complete",
+        "elapsed_seconds": 8.405,
+        "marker_count": 2,
+        "lay_count": 2,
+        "marker_minimum_proven": false,
+        "status": "FEASIBLE"
+      },
+      "result": {
+        "status": "FEASIBLE",
+        "message": "Valid mixed-size plan; the best incumbent was retained and minimum counts are not proven.",
+        "marker_count": 2,
+        "optimization_scope": "consumption_capacity",
+        "one_marker_shortcut": false,
+        "lay_count": 2,
+        "secondary_optimal": false,
+        "marker_lower_bound": 2,
+        "elapsed_seconds": 8.405,
+        "validated": true,
+        "marker_minimum_proven": false,
+        "lay_minimum_proven": false,
+        "markers": [
+          {
+            "id": "B02-M01",
+            "counts": [
+              1,
+              0,
+              0,
+              8,
+              11,
+              9,
+              0,
+              1,
+              0,
+              0
+            ],
+            "sets_per_marker": 30,
+            "lay_numbers": [
+              1
+            ],
+            "lay_count": 1,
+            "total_plies": 30,
+            "sets_cut": 900
+          },
+          {
+            "id": "B02-M02",
+            "counts": [
+              0,
+              3,
+              7,
+              0,
+              0,
+              0,
+              5,
+              0,
+              1,
+              1
+            ],
+            "sets_per_marker": 17,
+            "lay_numbers": [
+              2
+            ],
+            "lay_count": 1,
+            "total_plies": 30,
+            "sets_cut": 510
+          }
+        ],
+        "lays": [
+          {
+            "number": 1,
+            "marker_id": "B02-M01",
+            "counts": [
+              1,
+              0,
+              0,
+              8,
+              11,
+              9,
+              0,
+              1,
+              0,
+              0
+            ],
+            "plies": 30,
+            "sets": 900
+          },
+          {
+            "number": 2,
+            "marker_id": "B02-M02",
+            "counts": [
+              0,
+              3,
+              7,
+              0,
+              0,
+              0,
+              5,
+              0,
+              1,
+              1
+            ],
+            "plies": 30,
+            "sets": 510
+          }
+        ],
+        "production": [
+          {
+            "size": "-C44",
+            "required": 30,
+            "produced": 30,
+            "difference": 0
+          },
+          {
+            "size": "-C46",
+            "required": 90,
+            "produced": 90,
+            "difference": 0
+          },
+          {
+            "size": "-C48",
+            "required": 210,
+            "produced": 210,
+            "difference": 0
+          },
+          {
+            "size": "-C50",
+            "required": 240,
+            "produced": 240,
+            "difference": 0
+          },
+          {
+            "size": "-C52",
+            "required": 330,
+            "produced": 330,
+            "difference": 0
+          },
+          {
+            "size": "-C54",
+            "required": 270,
+            "produced": 270,
+            "difference": 0
+          },
+          {
+            "size": "-C56",
+            "required": 150,
+            "produced": 150,
+            "difference": 0
+          },
+          {
+            "size": "-C58",
+            "required": 30,
+            "produced": 30,
+            "difference": 0
+          },
+          {
+            "size": "-C60",
+            "required": 30,
+            "produced": 30,
+            "difference": 0
+          },
+          {
+            "size": "-C62",
+            "required": 30,
+            "produced": 30,
+            "difference": 0
+          }
+        ],
+        "progress": [
+          {
+            "phase": "building",
+            "elapsed_seconds": 0.0,
+            "marker_count": null,
+            "lay_count": null,
+            "marker_minimum_proven": false,
+            "status": "SEARCHING"
+          },
+          {
+            "phase": "markers",
+            "elapsed_seconds": 2.984,
+            "marker_count": 2,
+            "lay_count": 2,
+            "marker_minimum_proven": false,
+            "status": "SEARCHING"
+          },
+          {
+            "phase": "complete",
+            "elapsed_seconds": 8.405,
+            "marker_count": 2,
+            "lay_count": 2,
+            "marker_minimum_proven": false,
+            "status": "FEASIBLE"
+          }
+        ]
+      }
+    },
+    {
+      "number": 3,
+      "marker_prefix": "B03-",
+      "material_code": "R1845",
+      "description": "65% Polyester, 35% Cotton, plain, 175 g/m2",
+      "placement": "Back Pocket Facing",
+      "page_number": 2,
+      "consumption": "0.04",
+      "unit": "m",
+      "consumption_m": "0.04",
+      "max_plies": 120,
+      "capacity": 200,
+      "capacity_basis": "estimated_consumption",
+      "state": "done",
+      "live": {
+        "phase": "complete",
+        "elapsed_seconds": 0.0,
+        "marker_count": 1,
+        "lay_count": 1,
+        "marker_minimum_proven": true,
+        "status": "OPTIMAL"
+      },
+      "result": {
+        "status": "OPTIMAL",
+        "message": "One marker is sufficient; marker count and lay count are proven optimal.",
+        "marker_count": 1,
+        "optimization_scope": "consumption_capacity",
+        "one_marker_shortcut": true,
+        "lay_count": 1,
+        "secondary_optimal": true,
+        "marker_lower_bound": 1,
+        "elapsed_seconds": 0.0,
+        "validated": true,
+        "marker_minimum_proven": true,
+        "lay_minimum_proven": true,
+        "markers": [
+          {
+            "id": "B03-M01",
+            "counts": [
+              3,
+              9,
+              21,
+              24,
+              33,
+              27,
+              15,
+              3,
+              3,
+              3
+            ],
+            "sets_per_marker": 141,
+            "lay_numbers": [
+              1
+            ],
+            "lay_count": 1,
+            "total_plies": 10,
+            "sets_cut": 1410
+          }
+        ],
+        "lays": [
+          {
+            "number": 1,
+            "marker_id": "B03-M01",
+            "counts": [
+              3,
+              9,
+              21,
+              24,
+              33,
+              27,
+              15,
+              3,
+              3,
+              3
+            ],
+            "plies": 10,
+            "sets": 1410
+          }
+        ],
+        "production": [
+          {
+            "size": "-C44",
+            "required": 30,
+            "produced": 30,
+            "difference": 0
+          },
+          {
+            "size": "-C46",
+            "required": 90,
+            "produced": 90,
+            "difference": 0
+          },
+          {
+            "size": "-C48",
+            "required": 210,
+            "produced": 210,
+            "difference": 0
+          },
+          {
+            "size": "-C50",
+            "required": 240,
+            "produced": 240,
+            "difference": 0
+          },
+          {
+            "size": "-C52",
+            "required": 330,
+            "produced": 330,
+            "difference": 0
+          },
+          {
+            "size": "-C54",
+            "required": 270,
+            "produced": 270,
+            "difference": 0
+          },
+          {
+            "size": "-C56",
+            "required": 150,
+            "produced": 150,
+            "difference": 0
+          },
+          {
+            "size": "-C58",
+            "required": 30,
+            "produced": 30,
+            "difference": 0
+          },
+          {
+            "size": "-C60",
+            "required": 30,
+            "produced": 30,
+            "difference": 0
+          },
+          {
+            "size": "-C62",
+            "required": 30,
+            "produced": 30,
+            "difference": 0
+          }
+        ],
+        "progress": [
+          {
+            "phase": "building",
+            "elapsed_seconds": 0.0,
+            "marker_count": null,
+            "lay_count": null,
+            "marker_minimum_proven": false,
+            "status": "SEARCHING"
+          },
+          {
+            "phase": "complete",
+            "elapsed_seconds": 0.0,
+            "marker_count": 1,
+            "lay_count": 1,
+            "marker_minimum_proven": true,
+            "status": "OPTIMAL"
+          }
+        ]
+      }
+    },
+    {
+      "number": 4,
+      "marker_prefix": "B04-",
+      "material_code": "R2020",
+      "description": "80% polyester, 20% cotton, 150 g/m2",
+      "placement": "Pocket Lining",
+      "page_number": 2,
+      "consumption": "0.37",
+      "unit": "m",
+      "consumption_m": "0.37",
+      "max_plies": 130,
+      "capacity": 21,
+      "capacity_basis": "estimated_consumption",
+      "state": "done",
+      "live": {
+        "phase": "complete",
+        "elapsed_seconds": 1.791,
+        "marker_count": 2,
+        "lay_count": 2,
+        "marker_minimum_proven": false,
+        "status": "FEASIBLE"
+      },
+      "result": {
+        "status": "FEASIBLE",
+        "message": "Valid mixed-size plan; the best incumbent was retained and minimum counts are not proven.",
+        "marker_count": 2,
+        "optimization_scope": "consumption_capacity",
+        "one_marker_shortcut": false,
+        "lay_count": 2,
+        "secondary_optimal": false,
+        "marker_lower_bound": 2,
+        "elapsed_seconds": 1.791,
+        "validated": true,
+        "marker_minimum_proven": false,
+        "lay_minimum_proven": false,
+        "markers": [
+          {
+            "id": "B04-M01",
+            "counts": [
+              0,
+              0,
+              0,
+              2,
+              5,
+              4,
+              2,
+              0,
+              0,
+              0
+            ],
+            "sets_per_marker": 13,
+            "lay_numbers": [
+              1
+            ],
+            "lay_count": 1,
+            "total_plies": 60,
+            "sets_cut": 780
+          },
+          {
+            "id": "B04-M02",
+            "counts": [
+              1,
+              3,
+              7,
+              4,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1
+            ],
+            "sets_per_marker": 21,
+            "lay_numbers": [
+              2
+            ],
+            "lay_count": 1,
+            "total_plies": 30,
+            "sets_cut": 630
+          }
+        ],
+        "lays": [
+          {
+            "number": 1,
+            "marker_id": "B04-M01",
+            "counts": [
+              0,
+              0,
+              0,
+              2,
+              5,
+              4,
+              2,
+              0,
+              0,
+              0
+            ],
+            "plies": 60,
+            "sets": 780
+          },
+          {
+            "number": 2,
+            "marker_id": "B04-M02",
+            "counts": [
+              1,
+              3,
+              7,
+              4,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1
+            ],
+            "plies": 30,
+            "sets": 630
+          }
+        ],
+        "production": [
+          {
+            "size": "-C44",
+            "required": 30,
+            "produced": 30,
+            "difference": 0
+          },
+          {
+            "size": "-C46",
+            "required": 90,
+            "produced": 90,
+            "difference": 0
+          },
+          {
+            "size": "-C48",
+            "required": 210,
+            "produced": 210,
+            "difference": 0
+          },
+          {
+            "size": "-C50",
+            "required": 240,
+            "produced": 240,
+            "difference": 0
+          },
+          {
+            "size": "-C52",
+            "required": 330,
+            "produced": 330,
+            "difference": 0
+          },
+          {
+            "size": "-C54",
+            "required": 270,
+            "produced": 270,
+            "difference": 0
+          },
+          {
+            "size": "-C56",
+            "required": 150,
+            "produced": 150,
+            "difference": 0
+          },
+          {
+            "size": "-C58",
+            "required": 30,
+            "produced": 30,
+            "difference": 0
+          },
+          {
+            "size": "-C60",
+            "required": 30,
+            "produced": 30,
+            "difference": 0
+          },
+          {
+            "size": "-C62",
+            "required": 30,
+            "produced": 30,
+            "difference": 0
+          }
+        ],
+        "progress": [
+          {
+            "phase": "building",
+            "elapsed_seconds": 0.0,
+            "marker_count": null,
+            "lay_count": null,
+            "marker_minimum_proven": false,
+            "status": "SEARCHING"
+          },
+          {
+            "phase": "markers",
+            "elapsed_seconds": 1.063,
+            "marker_count": 2,
+            "lay_count": 2,
+            "marker_minimum_proven": false,
+            "status": "SEARCHING"
+          },
+          {
+            "phase": "complete",
+            "elapsed_seconds": 1.791,
+            "marker_count": 2,
+            "lay_count": 2,
+            "marker_minimum_proven": false,
+            "status": "FEASIBLE"
+          }
+        ]
+      }
+    }
+  ],
+  "summary": {
+    "complete": true,
+    "marker_count": 8,
+    "lay_count": 8,
+    "failed": 0
+  }
+}

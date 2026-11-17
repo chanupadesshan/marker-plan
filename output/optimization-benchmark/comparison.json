@@ -1,0 +1,33 @@
+{
+  "table_length_m": 8,
+  "quantity": 2625,
+  "manual": {
+    "markers": 9,
+    "production_exact": true,
+    "third_marker_plies_reconciled": 90,
+    "third_marker_printed_total": "m",
+    "four_set_markers_fit_verified_lengths": true,
+    "plies_groups_below_minimum": [
+      9,
+      9,
+      6
+    ],
+    "satisfies_confirmed_minimum_and_only_final_exception": false
+  },
+  "previous_generated": {
+    "main_markers": 14,
+    "main_lays": 43
+  },
+  "improved": {
+    "id": "6e17d011-a7b6-4324-b084-8f7b01f1eb7a",
+    "main_markers": 9,
+    "main_lays": 16,
+    "validated": true,
+    "minimum_proven": false
+  },
+  "notes": [
+    "Manual total reconciled from remaining quantities without editing source.",
+    "Manual uses three distinct marker groups below minimum10; only one final lay exception is allowed.",
+    "New plan uses unchanged estimated capacity3. Actual four-set nesting may be entered and verified separately."
+  ]
+}

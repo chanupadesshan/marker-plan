@@ -1,0 +1,79 @@
+/* Keep native select semantics, keyboard navigation and form behaviour. */
+:is(.vp-layout .vp-frame .vp-page-content,.dialog-backdrop .dialog-card.form) select:not([multiple]):not([size]) {
+  min-height:42px;
+  padding:10px 40px 10px 14px;
+  border:1px solid #ded5eb;
+  border-radius:11px;
+  background-color:#fff;
+  color:#51425f;
+  font-size:13px;
+  font-weight:500;
+  line-height:1.5;
+  box-shadow:0 2px 4px rgba(61,39,88,.035);
+  transition:border-color .16s ease,box-shadow .16s ease,background-color .16s ease;
+}
+:is(.vp-frame,.dialog-card) select:not(:disabled):hover { border-color:#b69ad5; background-color:#fdfbff; }
+:is(.vp-frame,.dialog-card) select:focus-visible { outline:2px solid #a787db; outline-offset:3px; }
+
+/* Customizable selects progressively enhance the actual opened menu. */
+@supports (appearance:base-select) {
+  :is(.vp-frame,.dialog-card) select,
+  :is(.vp-frame,.dialog-card) select::picker(select) { appearance:base-select; }
+  :is(.vp-layout .vp-frame .vp-page-content,.dialog-backdrop .dialog-card.form) select:not([multiple]):not([size]) {
+    padding-right:14px;
+    background-image:none;
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+  :is(.vp-frame,.dialog-card) select::picker-icon {
+    color:#957cae;
+    margin-left:auto;
+    transition:rotate .18s ease;
+  }
+  :is(.vp-frame,.dialog-card) select:open::picker-icon { rotate:180deg; }
+  :is(.vp-frame,.dialog-card) select::picker(select) {
+    margin-top:7px;
+    padding:6px;
+    border:1px solid #e5dbee;
+    border-radius:13px;
+    background:#fff;
+    color:#51425f;
+    box-shadow:0 16px 40px rgba(49,29,75,.14),0 3px 10px rgba(49,29,75,.06);
+    max-height:min(340px,60vh);
+    overflow:auto;
+    scrollbar-width:thin;
+    scrollbar-color:#d9c9e9 transparent;
+    animation:dropdown-reveal .15s ease-out;
+  }
+  :is(.vp-frame,.dialog-card) select option {
+    display:flex;
+    align-items:center;
+    gap:14px;
+    min-height:40px;
+    padding:10px 12px;
+    border:0;
+    border-radius:8px;
+    background:#fff;
+    color:#665771;
+    font-size:13px;
+    line-height:1.5;
+    white-space:normal;
+    overflow-wrap:anywhere;
+    cursor:pointer;
+  }
+  :is(.vp-frame,.dialog-card) select option + option { margin-top:3px; }
+  :is(.vp-frame,.dialog-card) select option:is(:hover,:focus-visible) { background:#f7f2fc; color:#624189; outline:none; }
+  :is(.vp-frame,.dialog-card) select option:checked { background:#efe7fa; color:#6d459e; font-weight:650; }
+  :is(.vp-frame,.dialog-card) select option::checkmark { order:1; margin-left:auto; color:#9161c4; font-size:14px; }
+  :is(.vp-frame,.dialog-card) select option:disabled { opacity:.5; cursor:not-allowed; }
+}
+@keyframes dropdown-reveal { from { opacity:0; transform:translateY(-4px); } to { opacity:1; transform:translateY(0); } }
+@media(prefers-reduced-motion:reduce) {
+  :is(.vp-frame,.dialog-card) select::picker(select) { animation:none; }
+  :is(.vp-frame,.dialog-card) select::picker-icon { transition:none; }
+}
+@media(forced-colors:active) {
+  :is(.vp-frame,.dialog-card) select,:is(.vp-frame,.dialog-card) select::picker(select) { appearance:auto; }
+  :is(.vp-frame,.dialog-card) select option:checked { color:HighlightText; background:Highlight; }
+}

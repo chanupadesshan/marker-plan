@@ -1,0 +1,123 @@
+✔ the Activity log lives at /admin/audit (2.9419ms)
+✔ actions and statuses read in plain words (0.5415ms)
+✔ entries are summarised for the table (0.4429ms)
+✔ marker plan entries show their inputs and result in plain words (2.172ms)
+✔ values and times are shown safely (55.2137ms)
+✔ the log query pages and leaves out empty filters (0.7007ms)
+WebSocket server error: Port 24678 is already in use
+✔ the sign-in page has only email and password and no register form (2885.9429ms)
+✔ sign-in validation asks for a valid email and a password (1476.3574ms)
+✔ can() follows the view/edit levels and admins can do everything (1.2466ms)
+✔ the Users page lives at /admin/users (0.9165ms)
+WebSocket server error: Port 24678 is already in use
+✔ the Users page renders its heading and an Add user button (3208.2763ms)
+✔ page edits preserve source and original data, omit derived materials and rebuild colorway headers (9.6966ms)
+✔ unrelated saves preserve printed colour headings without assigned material variants (1.4136ms)
+✔ legacy drafts keep flat materials and optional document numbers (1.8786ms)
+✔ validation flags empty rows, nonpositive quantities and missing units without rejecting decimal commas (1.638ms)
+WebSocket server error: Port 24678 is already in use
+✔ review exposes Edit BOM only for permitted users and keeps technical JSON read-only (6888.3149ms)
+✔ both document previews link to a separate all-documents page with Back and all cards (3488.4247ms)
+✔ a late polling response cannot replace a newly selected document (3.227ms)
+✔ same material codes and repeated rows can be chosen independently (30.6898ms)
+✔ changed source rows and invalid keys cannot silently select another material (2.1899ms)
+✔ older extractions without page tables still supply selectable materials (0.432ms)
+✔ material search matches only codes, including partial codes and mixed case (5.2531ms)
+✔ selecting search matches retains previously selected hidden materials (0.8456ms)
+WebSocket server error: Port 24678 is already in use
+✔ Marker Plan shows checkboxes and a selected-material summary, normal review does not (7662.0674ms)
+WebSocket server error: Port 24678 is already in use
+✔ filtered Wovens rows retain their original checkbox identity and selected state (541.3269ms)
+✔ very fast solve times read as under 0.1 s instead of 0.0 s (5.8954ms)
+✔ capacity preview is exact floor(table length / consumption) in metres (1.8576ms)
+✔ plies-table ranges and several related rows become a list of allowed values (4.7374ms)
+✔ material defaults come from the BOM length and the plies table (1.8187ms)
+✔ form errors block impossible settings before the request is sent (15.7617ms)
+✔ request maps printed PO rows and each material into solver inputs (3.9192ms)
+✔ selected orders come from the confirmed selection, or from older ids (28.5422ms)
+✔ saved plan requests preserve order, fabric colour and source metadata (0.842ms)
+✔ outcomes separate marker proof from lay proof and never call a limited search optimal (15.7378ms)
+WebSocket server error: Port 24678 is already in use
+✔ settings form shows each material with its capacity and waits for a table length (6202.4425ms)
+✔ results show unique markers, their lays, and required versus produced quantities (2398.8466ms)
+✔ timeouts, infeasible orders and running materials are explained without a plan (1443.2026ms)
+✔ search finds each PO by its own Tech Pack ID across documents without a BOM or mandatory model restriction (7.1485ms)
+✔ individual POs within one PDF are matched by Tech Pack ID and remain separately selectable (3.0875ms)
+✔ single PO replaces the previous choice; multiple POs can be added and removed (1.2192ms)
+✔ PO matching normalizes Tech Pack prefixes and filters Model IDs exactly (1.1064ms)
+WebSocket server error: Port 24678 is already in use
+✔ PO selector asks for mode first and displays saved choices with edit action (4482.6559ms)
+WebSocket server error: Port 24678 is already in use
+✔ the Wovens table has a Max ply column after Qty with each material's maximum (3499.0129ms)
+WebSocket server error: Port 24678 is already in use
+✔ hovering the maximum lists every related plies row (1063.5136ms)
+WebSocket server error: Port 24678 is already in use
+✔ a material with no related row, or no value in Column D, shows a dash (791.4448ms)
+✔ the table still renders when the server sends no ply information (1138.7686ms)
+✔ the navigation shows only what each person may use (4.3515ms)
+✔ links open the right address (0.966ms)
+WebSocket server error: Port 24678 is already in use
+✔ the page frame marks the current page, shows counts and switches views without reloading (4296.5971ms)
+✔ verified nesting requires verified whole ratios within table length (5.2164ms)
+✔ the Plies dashboard has its own address (7.6912ms)
+✔ search matches id, B, C and D, every word must match, and blank keeps all rows (6.3152ms)
+✔ validation requires a whole-number B and a code in C, and keeps D optional (3.7ms)
+✔ the request body has a numeric B, trimmed text and a null for a blank D (4.4896ms)
+✔ paging cuts the list, keeps the page in range and reports the visible span (2.3622ms)
+WebSocket server error: Port 24678 is already in use
+✔ the dashboard page renders its search, add button and loading state (7174.9355ms)
+WebSocket server error: Port 24678 is already in use
+✔ the add and edit dialogs show the three fields with the right title and button (761.7885ms)
+✔ PO draft preserves repeated size rows, source evidence and printed values while submitting orders only (5.8916ms)
+✔ PO review gates editing by permission and processing state and uses simple fields instead of JSON (5172.7333ms)
+✔ contract 355800 size sum matches grouped printed totals without altering the original total (4.5748ms)
+✔ PO validation flags missing contract/size, fractional or negative quantities, empty contracts and malformed totals (2.757ms)
+✔ paired upload links PO to the saved Tech Pack (16.2204ms)
+✔ PO uploads independently when Tech Pack upload fails (27.2724ms)
+✔ PO-only and Tech Pack-only upload do not require the other file (1.1713ms)
+✔ existing PO remains accessible until a replacement uploads successfully (1.3799ms)
+WebSocket server error: Port 24678 is already in use
+✔ PO review shows only requested fields with source page links (3115.8307ms)
+WebSocket server error: Port 24678 is already in use
+✔ the initial screen renders the upload and review workspace (3937.4163ms)
+WebSocket server error: Port 24678 is already in use
+✔ Wovens tables keep one material row and separate colorway columns per page (353.8142ms)
+✔ token usage distinguishes truncation and unavailable counts (371.0956ms)
+✔ review workspace prioritizes BOM and keeps technical details closed (1169.3602ms)
+✔ saved plans have a direct page URL and the return URL selects Marker Plan (4.1174ms)
+WebSocket server error: Port 24678 is already in use
+✔ history Open is a dedicated page link and the page always has a back link while loading (3198.7733ms)
+✔ saved results offer an authenticated Excel download only for complete validated plans (3053.5596ms)
+WebSocket server error: Port 24678 is already in use
+✔ Marker Plan exposes saved history before materials or POs are selected (1179.1576ms)
+WebSocket server error: Port 24678 is already in use
+✔ plan results use neutral text and collapsed details while failed plans stay explicit (676.0435ms)
+✔ document previews show the latest five uploads without changing the source order (7.2865ms)
+✔ search matches file names, extracted identifiers and status (2.9289ms)
+✔ every search term must match, blank search keeps the list, and no match returns nothing (1.0339ms)
+✔ in-progress detection drives sidebar status polling (1.5412ms)
+WebSocket server error: Port 24678 is already in use
+✔ sidebar shows both tabs and lists extracted documents with their identifiers (2248.0665ms)
+WebSocket server error: Port 24678 is already in use
+✔ sidebar shows an empty state per tab and disables extract until a file is chosen (452.8002ms)
+WebSocket server error: Port 24678 is already in use
+✔ every list row has its own delete button, disabled while extraction is running (371.4799ms)
+WebSocket server error: Port 24678 is already in use
+✔ confirm dialog renders nothing when closed and an accessible dialog when open (382.0623ms)
+✔ one Tech Pack number finds the Tech Pack and the POs that reference it (2.1946ms)
+WebSocket server error: Port 24678 is already in use
+✔ Marker Plan starts with TP number selection and keeps document browsing in dedicated tabs (346.2112ms)
+✔ printed TP number search works with or without prefix and without Style ID (1.1779ms)
+✔ Marker Plan includes all saved Tech Packs when TP numbers are missing (0.4905ms)
+✔ the Usage dashboard has its own address (8.1378ms)
+✔ cost shows unavailable, marks estimates and keeps small amounts readable (0.9485ms)
+✔ failure rate is a percentage and a dash when nothing ran (0.5876ms)
+✔ bars scale to the busiest day and tiny days stay visible (18.6982ms)
+ℹ tests 91
+ℹ suites 0
+ℹ pass 91
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 20121.2871

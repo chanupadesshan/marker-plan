@@ -9,14 +9,16 @@ Functions:
 - render_page: Extract text and render an image of a specific page in the PDF.
 """
 import re
+from concurrent.futures import ThreadPoolExecutor
 from io import BytesIO
 import pymupdf
 from PIL import Image
 from .config import get_settings
-from .techpack_wovens import WOVENS_HEADING, NEXT_SECTION, scope_wovens_text
+from .openrouter_client import fork
+from .techpack_wovens import BOM_TITLE, NEXT_SECTION, is_fabric_heading, scope_wovens_text
 
-# match terms such as "Wovens","woven fabrics","woven fabric"
-WOVENS = re.compile(r"\b(wovens|woven\s+fabrics?)\b", re.IGNORECASE)
+# match terms such as "Wovens","woven fabrics","woven fabric", "Knits", "knitted fabrics" (both are read)
+WOVENS = re.compile(r"\b(wovens|woven\s+fabrics?|knits|knitted\s+fabrics?)\b", re.IGNORECASE)
 # match terms such as "BOM", "Bill of Materials", "Material Consumption"
 BOM = re.compile(r"\b(bom|bill\s+of\s+materials?|material\s+consumption)\b", re.IGNORECASE)
 # match terms such as "Fabric", "Materials", "Shell", "Composition", "Qty", "Quantity"
@@ -84,22 +86,56 @@ def locate_pages(pdf_bytes: bytes, vlm=None) -> tuple[list[int], int]:
                 hits.add(page_index)
             elif has_wovens or (has_bom and FABRIC.search(text)) or len(text.strip()) < 35:
                 ambiguous.append(page_index)
-        if get_settings().vision_page_classification and vlm is not None:
-            for index in ambiguous:
-                # Use a moderately sized image to locate category headings economically.
-                image = page_image(pdf[index], dpi=145)
-                vlm.current_page = index + 1
-                if vlm.classify(image):
+        if get_settings().vision_page_classification and vlm is not None and ambiguous:
+            # Use a moderately sized image to locate category headings economically. The images are rendered here, one
+            # at a time (PyMuPDF is not thread safe); the model is then asked about several pages at once.
+            images = [(index, page_image(pdf[index], dpi=145)) for index in ambiguous]
+
+            def check(item):
+                index, image = item
+                child = fork(vlm)
+                child.current_page = index + 1
+                return index, child.classify(image), child
+
+            pool = ThreadPoolExecutor(max_workers=min(get_settings().extraction_concurrency, len(images)))
+            try:
+                answers = [future.result() for future in [pool.submit(check, item) for item in images]]
+            except BaseException:
+                pool.shutdown(wait=False, cancel_futures=True)
+                raise
+            pool.shutdown()
+            for index, found, child in answers:
+                vlm.request_usage.extend(child.request_usage)
+                if found:
                     hits.add(index)
         return sorted(hits), len(pdf)
 
 
+def document_titles(pdf_bytes: bytes) -> list[tuple[str, str]]:
+    """
+    Purpose: Read every BOM page title such as '1459 - 1845 - BOM' from the PDF's text layer. One Tech Pack can hold
+    several designs, each with its own title, and a title is printed on pages the Wovens search does not pick.
+    Input: pdf_bytes - the PDF file contents.
+    Output: the distinct (style_number, design_number) pairs, in page order (empty for an image-only PDF).
+    """
+    found = {}
+    try:
+        with pymupdf.open(stream=pdf_bytes, filetype="pdf") as pdf:
+            for page in pdf:
+                for match in BOM_TITLE.finditer(page.get_text("text") or ""):
+                    found.setdefault((match[1], match[2]), None)
+    except Exception:
+        # The titles are extra evidence; an unreadable PDF fails later, in page location, with its own message.
+        return []
+    return list(found)
+
+
 def render_page(pdf_bytes: bytes, page_index: int):
     """
-    Purpose: Prepare one page for extraction: render its image, cut off everything below the
-    Wovens section when a following category heading is found, and limit the text layer the same way.
+    Purpose: Prepare one page for extraction: render its image, cut off everything below the Wovens and
+    Knits sections when a heading of another category (such as Buttons) follows, and limit the text layer the same way.
     Input: pdf_bytes - the PDF file contents; page_index - zero-based page number.
-    Output: a tuple (jpeg_bytes, wovens_text): the page image and the Wovens-scoped text.
+    Output: a tuple (jpeg_bytes, fabric_text): the page image and the text scoped to the Wovens and Knits sections.
     """
     with pymupdf.open(stream=pdf_bytes, filetype="pdf") as pdf:
         page = pdf[page_index]
@@ -108,10 +144,15 @@ def render_page(pdf_bytes: bytes, page_index: int):
         for block in page.get_text('dict')['blocks']:
             for line in block.get('lines', []):
                 label = ''.join(span['text'] for span in line['spans']).strip()
-                if WOVENS_HEADING.fullmatch(label) or NEXT_SECTION.fullmatch(label):
+                if is_fabric_heading(label) or NEXT_SECTION.fullmatch(label):
                     headings.append((line['bbox'][1], label))
         headings.sort()
-        start = next((y for y, label in headings if WOVENS_HEADING.fullmatch(label)), None)
+        start = next((y for y, label in headings if is_fabric_heading(label)), None)
         end = next((y for y, label in headings if start is not None and y > start and NEXT_SECTION.fullmatch(label)), None)
         clip = pymupdf.Rect(page.rect.x0, page.rect.y0, page.rect.x1, end) if end is not None else None
-        return page_image(page, get_settings().page_dpi, clip=clip), scope_wovens_text(text)
+        scoped = scope_wovens_text(text)
+        # The title above the Wovens heading ('1459 - 1845 - BOM') is cut off by the scoping but names the style and design.
+        title = BOM_TITLE.search(text)
+        if title and not BOM_TITLE.search(scoped):
+            scoped = f"{title[0]}\n{scoped}"
+        return page_image(page, get_settings().page_dpi, clip=clip), scoped

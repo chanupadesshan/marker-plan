@@ -1,0 +1,309 @@
+{
+  "id": "11bb9c34-edc6-47a5-8f1a-38f9a5ac7cee",
+  "status": "queued",
+  "created_at": "2026-10-27T06:48:33.259789+00:00",
+  "started_at": null,
+  "finished_at": null,
+  "saved": true,
+  "persistence_error": null,
+  "request": {
+    "tech_pack_id": "f89c4d32-129d-47ce-8253-22047652689b",
+    "tech_pack_filename": "tech-pack-two-boms.pdf",
+    "style_number": "1449",
+    "tech_pack_number": "16926",
+    "orders": [
+      {
+        "label": "355800",
+        "tech_pack_reference": "16926",
+        "model_id": "1449",
+        "quality_id": "1845",
+        "color_id": "8699",
+        "source_filename": "purchase-orders-two-pos.pdf",
+        "size_rows": [
+          {
+            "size": "-C44",
+            "quantity": "30"
+          },
+          {
+            "size": "-C46",
+            "quantity": "90"
+          },
+          {
+            "size": "-C48",
+            "quantity": "210"
+          },
+          {
+            "size": "-C50",
+            "quantity": "240"
+          },
+          {
+            "size": "-C52",
+            "quantity": "330"
+          },
+          {
+            "size": "-C54",
+            "quantity": "270"
+          },
+          {
+            "size": "-C56",
+            "quantity": "150"
+          },
+          {
+            "size": "-C58",
+            "quantity": "30"
+          },
+          {
+            "size": "-C60",
+            "quantity": "30"
+          },
+          {
+            "size": "-C62",
+            "quantity": "30"
+          }
+        ]
+      }
+    ],
+    "materials": [
+      {
+        "material_code": "R1845",
+        "description": "65% Polyester, 35% Cotton, plain, 175 g/m2",
+        "placement": "Main Fabric",
+        "placement_type": "Shell 1_Fabric 1_Care",
+        "composition": "65% Polyester, 35% Cotton",
+        "colorways": [
+          {
+            "code": "9900",
+            "name": "Black",
+            "material_color_code": "9900",
+            "material_color_name": "Black",
+            "fabric_reference": "Fabric 5"
+          },
+          {
+            "code": "8699",
+            "name": "Dark navy/Black",
+            "material_color_code": "8600",
+            "material_color_name": "Dark navy",
+            "fabric_reference": "Fabric 7"
+          },
+          {
+            "code": "8999",
+            "name": "Navy/Black",
+            "material_color_code": "8900",
+            "material_color_name": "Navy",
+            "fabric_reference": "Fabric 8"
+          }
+        ],
+        "page_number": 2,
+        "consumption": "0.89",
+        "unit": "m",
+        "max_plies": 80
+      },
+      {
+        "material_code": "R1645",
+        "description": "92% polyamide, 8% elastane, double weave, 4-way stretch 230 g/m2",
+        "placement": "Gusset and back",
+        "placement_type": "Shell 2_Fabric 2_Care",
+        "composition": "92% polyamide, 8% elastane",
+        "colorways": [
+          {
+            "code": "9900",
+            "name": "Black",
+            "material_color_code": "9900",
+            "material_color_name": "Black",
+            "fabric_reference": "Fabric 5"
+          },
+          {
+            "code": "8699",
+            "name": "Dark navy/Black",
+            "material_color_code": "9900",
+            "material_color_name": "Black",
+            "fabric_reference": "Fabric 7"
+          },
+          {
+            "code": "8999",
+            "name": "Navy/Black",
+            "material_color_code": "9900",
+            "material_color_name": "Black",
+            "fabric_reference": "Fabric 8"
+          }
+        ],
+        "page_number": 2,
+        "consumption": "0.26",
+        "unit": "m",
+        "max_plies": 500
+      },
+      {
+        "material_code": "R1845",
+        "description": "65% Polyester, 35% Cotton, plain, 175 g/m2",
+        "placement": "Back Pocket Facing",
+        "placement_type": "Fabric 1",
+        "composition": "65% Polyester, 35% Cotton",
+        "colorways": [
+          {
+            "code": "9900",
+            "name": "Black",
+            "material_color_code": "9900",
+            "material_color_name": "Black",
+            "fabric_reference": "Fabric 5"
+          },
+          {
+            "code": "8699",
+            "name": "Dark navy/Black",
+            "material_color_code": "9900",
+            "material_color_name": "Black",
+            "fabric_reference": "Fabric 7"
+          },
+          {
+            "code": "8999",
+            "name": "Navy/Black",
+            "material_color_code": "9900",
+            "material_color_name": "Black",
+            "fabric_reference": "Fabric 8"
+          }
+        ],
+        "page_number": 2,
+        "consumption": "0.04",
+        "unit": "m",
+        "max_plies": 80
+      },
+      {
+        "material_code": "R2020",
+        "description": "80% polyester, 20% cotton, 150 g/m2",
+        "placement": "Pocket Lining",
+        "placement_type": "Lining 1",
+        "composition": "80% polyester, 20% cotton",
+        "colorways": [
+          {
+            "code": "9900",
+            "name": "Black",
+            "material_color_code": "9900",
+            "material_color_name": "Black",
+            "fabric_reference": "Fabric 5"
+          },
+          {
+            "code": "8699",
+            "name": "Dark navy/Black",
+            "material_color_code": "9900",
+            "material_color_name": "Black",
+            "fabric_reference": "Fabric 7"
+          },
+          {
+            "code": "8999",
+            "name": "Navy/Black",
+            "material_color_code": "9900",
+            "material_color_name": "Black",
+            "fabric_reference": "Fabric 8"
+          }
+        ],
+        "page_number": 2,
+        "consumption": "0.37",
+        "unit": "m",
+        "max_plies": 130
+      }
+    ],
+    "table_length_m": "8",
+    "min_plies": 10,
+    "time_limit_seconds": 20.0
+  },
+  "sizes": [
+    "-C44",
+    "-C46",
+    "-C48",
+    "-C50",
+    "-C52",
+    "-C54",
+    "-C56",
+    "-C58",
+    "-C60",
+    "-C62"
+  ],
+  "quantities": [
+    30,
+    90,
+    210,
+    240,
+    330,
+    270,
+    150,
+    30,
+    30,
+    30
+  ],
+  "total_quantity": 1410,
+  "warnings": [],
+  "order_labels": [
+    "355800"
+  ],
+  "settings": {
+    "table_length_m": "8",
+    "min_plies": 10,
+    "time_limit_seconds": 20.0
+  },
+  "materials": [
+    {
+      "number": 1,
+      "marker_prefix": "B01-",
+      "material_code": "R1845",
+      "description": "65% Polyester, 35% Cotton, plain, 175 g/m2",
+      "placement": "Main Fabric",
+      "page_number": 2,
+      "consumption": "0.89",
+      "unit": "m",
+      "consumption_m": "0.89",
+      "max_plies": 80,
+      "capacity": 8,
+      "state": "queued",
+      "live": null,
+      "result": null
+    },
+    {
+      "number": 2,
+      "marker_prefix": "B02-",
+      "material_code": "R1645",
+      "description": "92% polyamide, 8% elastane, double weave, 4-way stretch 230 g/m2",
+      "placement": "Gusset and back",
+      "page_number": 2,
+      "consumption": "0.26",
+      "unit": "m",
+      "consumption_m": "0.26",
+      "max_plies": 500,
+      "capacity": 30,
+      "state": "queued",
+      "live": null,
+      "result": null
+    },
+    {
+      "number": 3,
+      "marker_prefix": "B03-",
+      "material_code": "R1845",
+      "description": "65% Polyester, 35% Cotton, plain, 175 g/m2",
+      "placement": "Back Pocket Facing",
+      "page_number": 2,
+      "consumption": "0.04",
+      "unit": "m",
+      "consumption_m": "0.04",
+      "max_plies": 80,
+      "capacity": 200,
+      "state": "queued",
+      "live": null,
+      "result": null
+    },
+    {
+      "number": 4,
+      "marker_prefix": "B04-",
+      "material_code": "R2020",
+      "description": "80% polyester, 20% cotton, 150 g/m2",
+      "placement": "Pocket Lining",
+      "page_number": 2,
+      "consumption": "0.37",
+      "unit": "m",
+      "consumption_m": "0.37",
+      "max_plies": 130,
+      "capacity": 21,
+      "state": "queued",
+      "live": null,
+      "result": null
+    }
+  ],
+  "summary": null
+}

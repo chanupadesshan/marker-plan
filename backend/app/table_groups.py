@@ -5,12 +5,19 @@ that request. Successful parent results are never retained when a parent splits.
 """
 from dataclasses import dataclass
 from io import BytesIO
+import json
 import re
 from PIL import Image, ImageDraw, ImageOps
 from .openrouter_client import OutputTokenLimitError
 from .techpack_schema import PageResult
+from .techpack_merge import canonical
 from .po_schema import POPageResult
 from .po_merge import combine_po_pages
+
+# A group that starts by copying this many (or more) consecutive rows already read from earlier groups
+# of the same page has re-read the context panel. One or two identical rows are left alone because a
+# BOM can genuinely repeat a row.
+MIN_ECHOED_ROWS = 2
 
 
 @dataclass(frozen=True)
@@ -152,6 +159,44 @@ def group_image(image_bytes, group):
         return output.getvalue()
 
 
+def _row_signature(material):
+    """
+    Purpose: A comparable fingerprint of one Tech Pack row, covering every printed field and its colorways.
+    Input: material - a Material.
+    Output: text that is equal for two rows only when all their fields match, ignoring case, spacing and punctuation.
+    """
+    data = material.model_dump(mode='json', exclude={'source_pages'})
+    data['colorways'] = [{key: canonical(value) for key, value in item.items()} for item in data['colorways']]
+    return json.dumps({key: value if key == 'colorways' else canonical(value) for key, value in data.items()}, sort_keys=True)
+
+
+def _drop_echoed_rows(result, earlier):
+    """
+    Purpose: Remove rows a group copied from the page overview instead of reading from its own crop. The model is
+    told to ignore the overview, but it sometimes lists rows that earlier groups of the page already returned,
+    which would show every one of them twice.
+    Input: result - the PageResult of the group just read; earlier - the PageResults of the page's earlier groups.
+    Output: (result, count): the result without its leading rows when they repeat, in order and in every field, a run of
+    at least MIN_ECHOED_ROWS consecutive rows from earlier groups; and how many rows were removed (0 when none).
+    """
+    seen = [_row_signature(material) for previous in earlier for material in previous.materials]
+    rows = [_row_signature(material) for material in result.materials]
+    for size in range(min(len(rows), len(seen)), MIN_ECHOED_ROWS - 1, -1):
+        if any(seen[start:start + size] == rows[:size] for start in range(len(seen) - size + 1)):
+            return result.model_copy(update={'materials': result.materials[size:]}), size
+    return result, 0
+
+
+def _number_core(value):
+    """
+    Purpose: The number inside a printed reference, so 'TP 32197', ')[32197' and '32197' compare as the same number.
+    Input: value - the reference text a group returned.
+    Output: the text from the first digit on, with spaces and case ignored (the whole text when it has no digit).
+    """
+    match = re.search(r'\d.*', value)
+    return re.sub(r'\s+', '', (match.group(0) if match else value)).casefold()
+
+
 def _combine(results, workflow, page_number):
     """
     Purpose: Merge the results of a page's row groups into one page result.
@@ -171,10 +216,18 @@ def _combine(results, workflow, page_number):
     page = PageResult(section_found=any(result.section_found for result in results))
     headers = {}
     for result in results:
+        if not page.design_number:
+            page.design_number = result.design_number
         for field in ('style_number', 'tech_pack_number'):
             current, incoming = getattr(page, field), getattr(result, field)
             if current and incoming and current != incoming:
-                raise RuntimeError(f'Conflicting {field} between row groups; review the source page')
+                # Two groups can read the same Tech Pack number differently (a garbled prefix, or the TP dropped);
+                # only different numbers are a real conflict.
+                if field != 'tech_pack_number' or _number_core(current) != _number_core(incoming):
+                    raise RuntimeError(f'Conflicting {field} between row groups; review the source page')
+                if re.match(r'\s*TP\s*\d', incoming, re.I) and not re.match(r'\s*TP\s*\d', current, re.I):
+                    setattr(page, field, incoming)
+                continue
             if incoming:
                 setattr(page, field, incoming)
         page.materials.extend(result.materials)
@@ -194,7 +247,8 @@ def extract_grouped(vlm, image_bytes, workflow, text='', *, groups_log=None, on_
     """
     Purpose: Extract one page with the model, splitting large tables into row groups. When a
     reply is cut off, that group is split in two at a row separator and retried (a layout request
-    may propose more separators). Genuine repeated rows are kept in order.
+    may propose more separators). Genuine repeated rows are kept in order; a Tech Pack group that
+    merely re-reads two or more rows already returned by earlier groups loses those repeats, with a warning.
     Input: vlm - the model client; image_bytes - the page image; workflow - 'techpack' or 'po';
     text - the page text (Tech Pack only); groups_log - a list that records each group's status;
     on_progress - callback given the combined result after each group; max_bands - bands per
@@ -231,6 +285,12 @@ def extract_grouped(vlm, image_bytes, workflow, text='', *, groups_log=None, on_
             image = group_image(image_bytes, group) if cropped else image_bytes
             # Full-page text could reintroduce rows outside the owned crop.
             result = vlm.extract(image, '' if cropped else text) if workflow == 'techpack' else vlm.extract_po(image)
+            if workflow == 'techpack' and cropped:
+                result, repeated = _drop_echoed_rows(result, results)
+                if repeated:
+                    result = result.model_copy(update={'warnings': [*result.warnings,
+                        f'Row group {identity} repeated {repeated} rows already read earlier on this page; the repeats were ignored.']})
+                    entry['ignored_repeated_rows'] = repeated
             entry.update(status='completed', result=result.model_dump(mode='json'))
             results.append(result)
             if on_progress:

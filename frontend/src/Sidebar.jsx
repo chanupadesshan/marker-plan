@@ -1,33 +1,26 @@
 import React, { useRef, useState } from 'react';
 import { FileText, FileUp, ScanText, Search, Trash2, X } from 'lucide-react';
-import { filterDocuments } from './documentSearch.js';
-
-// Upload tabs. The Marker Plan tab has no upload: it searches both document types at once.
-const TABS = {
-  techpack: { label: 'Tech Pack', uploadLabel: 'Upload Tech Pack', inputLabel: 'Choose Tech Pack PDF',
-    extractLabel: 'Extract Wovens', searchLabel: 'Search Tech Packs', placeholder: 'File, style or Tech Pack no.',
-    empty: 'No Tech Packs yet. Upload a PDF to extract its Wovens BOM.' },
-  po: { label: 'Purchase Order', uploadLabel: 'Upload PO', inputLabel: 'Choose purchase order PDF',
-    extractLabel: 'Extract PO', searchLabel: 'Search purchase orders', placeholder: 'File, contract or Tech Pack ID',
-    empty: 'No purchase orders yet. Upload a PDF to extract contracts and sizes.' },
-};
-const PLAN_LABEL = 'Marker Plan';
+import { filterDocuments, latestDocuments } from './documentSearch.js';
+import TechPackProgress from './TechPackProgress.jsx';
+import { checkLabel, designIds } from './po-link.js';
 
 /** Purpose: Make a status readable. Input: status - e.g. 'needs_review'. Output: the text with spaces, e.g. 'needs review'. */
 const statusText = status => (status || '').replaceAll('_', ' ');
 
 /**
  * Purpose: Build the small line under a document's name in the list.
- * Input: kind - 'techpack' or 'po'; item - the list entry.
- * Output: text such as 'needs review · Style 1555' for a Tech Pack, or 'approved · 33 contracts' for a PO.
+ * Input: kind - 'techpack' (a style) or 'po' (a purchase order without a Tech Pack); item - the list entry.
+ * Output: text such as 'needs review · Style 1449 · Quality ID 1845 · 2 POs' for a style, or 'approved · 33 contracts' for a PO.
  */
 function subtitle(kind, item) {
   if (kind === 'po') {
-    if (!item.contract_count) return statusText(item.status);
-    return `${statusText(item.status)} · ${item.contract_count} ${item.contract_count === 1 ? 'contract' : 'contracts'}`;
+    const contracts = item.contract_count ? `${item.contract_count} ${item.contract_count === 1 ? 'contract' : 'contracts'}` : '';
+    return [statusText(item.status), contracts, checkLabel(item.id_check), item.linked_to].filter(Boolean).join(' · ');
   }
-  const reference = item.style_number ? `Style ${item.style_number}` : item.tech_pack_number ? `TP ${item.tech_pack_number}` : '';
-  return [statusText(item.status), reference].filter(Boolean).join(' · ');
+  const reference = [item.style_number ? `Style ${item.style_number}` : item.tech_pack_number ? `TP ${item.tech_pack_number}` : '',
+    designIds(item).length ? `Quality ID${designIds(item).length > 1 ? 's' : ''} ${designIds(item).join(', ')}` : '',
+    typeof item.po_count === 'number' ? `${item.po_count} ${item.po_count === 1 ? 'PO' : 'POs'}` : ''];
+  return [statusText(item.status), ...reference].filter(Boolean).join(' · ');
 }
 
 /**
@@ -59,7 +52,7 @@ function SearchBox({ value, onChange, label, placeholder }) {
  * the delete button; onSelect(kind, id) and onDelete(kind, item): callbacks.
  * Output: the row element.
  */
-function DocumentRow({ kind, item, selected, busy, onSelect, onDelete }) {
+export function DocumentRow({ kind, item, selected, busy, onSelect, onDelete, canDelete = true }) {
   // A running extraction still writes to its row, so it cannot be deleted until it finishes.
   const running = ['queued', 'processing'].includes(item.status);
   return <div className="document-row">
@@ -70,110 +63,99 @@ function DocumentRow({ kind, item, selected, busy, onSelect, onDelete }) {
         <small><i className={`status-dot ${item.status}`}/>{subtitle(kind, item)}</small>
         {item.created_at && <time dateTime={item.created_at}>{dateLabel(item.created_at)}</time>}</span>
     </button>
-    <button type="button" className="icon-button row-delete" disabled={busy || running}
+    {canDelete && <button type="button" className="icon-button row-delete" disabled={busy || running}
       aria-label={`Delete ${item.filename}`} title={running ? 'Wait until extraction finishes to delete' : 'Delete'}
-      onClick={() => onDelete?.(kind, item)}><Trash2 size={15}/></button>
+      onClick={() => onDelete?.(kind, item)}><Trash2 size={15}/></button>}
   </div>;
 }
 
 /**
- * Purpose: The content of the Tech Pack or Purchase Order tab: choose a PDF, extract it, search the
- * extracted documents and open or delete one.
- * Input: props - kind: 'techpack' or 'po'; hidden: this tab is not active; items: that type's list;
- * selectedId: the open document; busy: an upload is running; onSelect, onUpload(kind, file), onDelete: callbacks.
- * Output: the tab panel element.
+ * Purpose: The start of Create Marker Plan: upload a Tech Pack to start a style. Saved Tech Packs are in the Tech Packs
+ * tab, and a style's purchase order is submitted inside the style.
+ * Input: props - busy: an upload is running; canUpload; onUpload(kind, file): called with the chosen PDF.
+ * Output: the panel element.
  */
-function TabPanel({ kind, hidden, items, selectedId, busy, onSelect, onUpload, onDelete }) {
-  const config = TABS[kind];
+function StylesPanel({ busy, canUpload, onUpload }) {
   const input = useRef(null);
   const [file, setFile] = useState(null);
-  const [query, setQuery] = useState('');
-  const visible = filterDocuments(items, query);
-  /** Purpose: Upload the chosen file, and clear the choice if it was accepted. Input: none. Output: a promise that finishes when done. */
+  const [uploading, setUploading] = useState(false);
+
+  /** Purpose: Upload the chosen Tech Pack, and clear the choice if it was accepted. Input: none. Output: a promise that finishes when done. */
   async function extract() {
     if (!file) return;
-    const accepted = await onUpload(kind, file);
-    if (accepted !== false) setFile(null);
+    setUploading(true);
+    try {
+      const accepted = await onUpload('techpack', file);
+      if (accepted !== false) setFile(null);
+    } finally { setUploading(false); }
   }
-  return <div role="tabpanel" id={`panel-${kind}`} aria-labelledby={`tab-${kind}`} className="side-panel" hidden={hidden}>
-    <div className={`side-upload ${file ? 'has-file' : ''}`}>
-      <input ref={input} className="visually-hidden" type="file" accept="application/pdf,.pdf" aria-label={config.inputLabel}
-        disabled={busy} onChange={event => {
-          const selected = event.target.files?.[0];
-          if (selected) setFile(selected);
-          event.target.value = '';
-        }}/>
-      <button type="button" className="side-upload-picker" disabled={busy} onClick={() => input.current?.click()}>
-        {file ? <FileText size={20}/> : <FileUp size={20}/>}
-        <span><strong title={file?.name}>{file ? file.name : config.uploadLabel}</strong>
-          <small>{file ? 'Click to change file' : 'Choose a PDF from your computer'}</small></span>
-      </button>
-      {file && <button type="button" className="icon-button" disabled={busy} aria-label={`Remove ${config.label} file`} onClick={() => setFile(null)}><X size={15}/></button>}
-    </div>
-    <button type="button" className="primary-button side-extract" disabled={!file || busy} onClick={extract}>
-      <ScanText size={16}/>{busy ? 'Uploading…' : config.extractLabel}</button>
 
-    <SearchBox value={query} onChange={setQuery} label={config.searchLabel} placeholder={config.placeholder}/>
+  return <div role="tabpanel" id="panel-styles" className="side-panel">
+    {canUpload && <>
+      <div className={`side-upload ${file ? 'has-file' : ''}`}>
+        <input ref={input} className="visually-hidden" type="file" accept="application/pdf,.pdf" aria-label="Choose Tech Pack PDF"
+          disabled={busy} onChange={event => {
+            const selected = event.target.files?.[0];
+            if (selected) setFile(selected);
+            event.target.value = '';
+          }}/>
+        <button type="button" className="side-upload-picker" disabled={busy} onClick={() => input.current?.click()}>
+          {file ? <FileText size={20}/> : <FileUp size={20}/>}
+          <span><strong title={file?.name}>{file ? file.name : 'Upload Tech Pack'}</strong>
+            <small>{file ? 'Click to change file' : 'Start a new style from its Tech Pack PDF'}</small></span>
+        </button>
+        {file && <button type="button" className="icon-button" disabled={busy} aria-label="Remove Tech Pack file" onClick={() => setFile(null)}><X size={15}/></button>}
+      </div>
+      <button type="button" className="primary-button side-extract" disabled={!file || busy} onClick={extract}>
+        <ScanText size={16}/>{busy ? 'Uploading…' : 'Extract Wovens and Knits'}</button>
+    </>}
 
-    <div className="sidebar-header"><h3>Extracted<span>{query ? `${visible.length} of ${items.length}` : items.length}</span></h3></div>
-    <div className="document-list side-list">
-      {visible.map(item => <DocumentRow key={item.id} kind={kind} item={item} selected={item.id === selectedId}
-        busy={busy} onSelect={onSelect} onDelete={onDelete}/>)}
-      {!visible.length && <p className="empty-small">{items.length ? 'No matches. Try a different file name or number.' : config.empty}</p>}
-    </div>
+    {!canUpload && <p className="side-hint">You can open saved Tech Packs from the Tech Packs tab.</p>}
+    {uploading && <TechPackProgress uploading kind="techpack"/>}
   </div>;
 }
 
 /**
- * Purpose: The content of the Marker Plan tab: one search box over every Tech Pack and purchase order,
- * with results grouped by type. It has no upload.
- * Input: props - hidden: this tab is not active; techPacks and purchaseOrders: the two lists; selected: the
- * open document id per type; busy; onSelect(kind, id) and onDelete(kind, item): callbacks.
- * Output: the tab panel element.
+ * Purpose: A library list: every Tech Pack, or every purchase order, to search, open and delete. Nothing is uploaded here;
+ * documents are added in Create Marker Plan.
+ * Input: props - kind: 'techpack' or 'po'; items: the list entries (a PO has linked_to, the style it belongs to); selectedId: the open one;
+ * busy; onSelect(kind, id), onDelete(kind, item), onBrowse(): callbacks.
+ * Output: the list element.
  */
-function PlanPanel({ hidden, techPacks, purchaseOrders, selected, busy, onSelect, onDelete }) {
+export function ArchiveList({ kind, items, selectedId, busy, onSelect, onDelete, onBrowse }) {
   const [query, setQuery] = useState('');
-  const groups = [
-    { kind: 'techpack', title: 'Tech Packs', items: filterDocuments(techPacks, query) },
-    { kind: 'po', title: 'Purchase Orders', items: filterDocuments(purchaseOrders, query) },
-  ];
-  const total = techPacks.length + purchaseOrders.length;
-  const matches = groups.reduce((sum, group) => sum + group.items.length, 0);
-  return <div role="tabpanel" id="panel-plan" aria-labelledby="tab-plan" className="side-panel" hidden={hidden}>
-    <p className="side-hint">Search every Tech Pack and purchase order at once. A Tech Pack number finds the Tech Pack and the POs that reference it.</p>
-    <SearchBox value={query} onChange={setQuery} label="Search Tech Packs and purchase orders" placeholder="File, style, contract or Tech Pack ID"/>
-    <div className="sidebar-header"><h3>Results<span>{query ? `${matches} of ${total}` : total}</span></h3></div>
-    <div className="document-list side-list">
-      {groups.filter(group => group.items.length).map(group => <section key={group.kind} className="plan-group" aria-label={group.title}>
-        <h4>{group.title}<span>{group.items.length}</span></h4>
-        {group.items.map(item => <DocumentRow key={item.id} kind={group.kind} item={item} selected={item.id === selected[group.kind]}
+  const label = kind === 'po' ? 'purchase orders' : 'Tech Packs';
+  const visible = filterDocuments(items, query);
+  const searching = Boolean(query.trim());
+  const cards = latestDocuments(visible, searching ? Infinity : 5);
+  return <section className="sidebar side-nav document-topbar" aria-label={`Saved ${label}`}>
+    <div role="tabpanel" id={`panel-${kind}`} className="side-panel">
+      <SearchBox value={query} onChange={setQuery} label={`Search ${label}`}
+        placeholder={kind === 'po' ? 'File, contract or Tech Pack' : 'File, style, Quality ID or Tech Pack no.'}/>
+      <div className="sidebar-header"><h3>Saved {label}<span>{query ? `${visible.length} of ${items.length}` : items.length}</span></h3></div>
+      <div id={`documents-${kind}`} className={`document-list side-list ${searching ? 'is-expanded' : ''}`}>
+        {cards.map(item => <DocumentRow key={item.id} kind={kind} item={item} selected={item.id === selectedId}
           busy={busy} onSelect={onSelect} onDelete={onDelete}/>)}
-      </section>)}
-      {!matches && <p className="empty-small">{total ? 'No matches. Try a different file name or number.' : 'Nothing extracted yet. Upload a Tech Pack or purchase order from its tab.'}</p>}
+        {!visible.length && <p className="empty-small">{items.length ? 'No matches. Try a different file name or number.'
+          : `No ${label} yet. Add one in Create Marker Plan.`}</p>}
+      </div>
+      {!searching && visible.length > 5 && <div className="document-list-footer">
+        <span>Showing {cards.length} of {visible.length} {label} · Latest first</span>
+        <a className="secondary-button" href={`/?tab=${kind}&view=documents`} onClick={event => {
+          if (onBrowse && !event.ctrlKey && !event.metaKey && !event.shiftKey && !event.altKey) { event.preventDefault(); onBrowse(kind); }
+        }}>Read more</a>
+      </div>}
     </div>
-  </div>;
+  </section>;
 }
 
 /**
- * Purpose: The left sidebar: the tab bar (Tech Pack, Purchase Order, Marker Plan) and all three panels,
- * which stay mounted so each keeps its own search text and chosen file.
- * Input: props - tab: the active tab ('techpack', 'po' or 'plan'); onTabChange(tab); techPacks and purchaseOrders:
- * the lists; selected: the open document id per type; busy; onSelect, onUpload, onDelete: callbacks.
+ * Purpose: The top document bar of the Create Marker Plan view.
+ * Input: props - busy: an upload is running; canUpload: may add a Tech Pack; onUpload(kind, file): called with the chosen PDF.
  * Output: the sidebar element.
  */
-export default function Sidebar({ tab, onTabChange, techPacks = [], purchaseOrders = [], selected = {}, busy = false, onSelect, onUpload, onDelete }) {
-  const lists = { techpack: techPacks, po: purchaseOrders };
-  const tabs = [...Object.entries(TABS).map(([kind, config]) => [kind, config.label, lists[kind].length]), ['plan', PLAN_LABEL, null]];
-  return <aside className="sidebar side-nav" aria-label="Documents">
-    <div role="tablist" aria-label="Document type" className="side-tabs">
-      {tabs.map(([kind, label, count]) => <button key={kind} type="button" role="tab" id={`tab-${kind}`} aria-selected={tab === kind}
-        aria-controls={`panel-${kind}`} className={tab === kind ? 'active' : ''} onClick={() => onTabChange(kind)}>
-        {label}{count !== null && <span>{count}</span>}</button>)}
-    </div>
-    {/* All panels stay mounted so each tab keeps its own search text and chosen file. */}
-    {Object.keys(TABS).map(kind => <TabPanel key={kind} kind={kind} hidden={tab !== kind} items={lists[kind]}
-      selectedId={selected[kind]} busy={busy} onSelect={onSelect} onUpload={onUpload} onDelete={onDelete}/>)}
-    <PlanPanel hidden={tab !== 'plan'} techPacks={techPacks} purchaseOrders={purchaseOrders} selected={selected}
-      busy={busy} onSelect={onSelect} onDelete={onDelete}/>
-  </aside>;
+export default function Sidebar({ busy = false, canUpload = true, onUpload }) {
+  return <section className="sidebar side-nav document-topbar" aria-label="Start a style">
+    <StylesPanel busy={busy} canUpload={canUpload} onUpload={onUpload}/>
+  </section>;
 }

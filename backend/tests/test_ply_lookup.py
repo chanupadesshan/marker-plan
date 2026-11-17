@@ -76,7 +76,7 @@ def test_a_failing_plies_lookup_never_breaks_the_tech_pack(monkeypatch):
 
 def test_the_tech_pack_response_carries_ply_info_outside_the_extraction(monkeypatch):
     doc_id = uuid4()
-    extraction = SimpleNamespace(extracted_json={'materials': [{'material_code': 'R1371'}], 'request_usage': []}, model_name='m')
+    extraction = SimpleNamespace(extracted_json={'materials': [{'material_code': 'R1371'}], 'request_usage': []}, model_name='m', raw_page_results=[])
     row = SimpleNamespace(id=doc_id, original_filename='tp.pdf', status='needs_review', error_message=None, page_count=1,
                           selected_pages=[1], created_at=None, extraction=extraction)
 

@@ -1,0 +1,219 @@
+{
+  "id": "7131cbf7-5884-4ebf-aebe-7e7e8c20766d",
+  "filename": "tech-pack-1530-1310.pdf",
+  "status": "needs_review",
+  "error": null,
+  "page_count": 1,
+  "selected_pages": [
+    1
+  ],
+  "created_at": "2026-10-27T07:23:37.499422+00:00",
+  "extraction": {
+    "category": "Wovens",
+    "warnings": [],
+    "materials": [
+      {
+        "unit": "m",
+        "quantity": "2.09",
+        "colorways": [
+          {
+            "code": "9900",
+            "name": "Black",
+            "fabric_reference": "Fabric 1",
+            "material_color_code": "9900",
+            "material_color_name": "Black"
+          }
+        ],
+        "placement": "Main fabric",
+        "composition": "100% cotton,",
+        "description": "100% cotton, canvas, 270 g/m2",
+        "source_pages": [
+          1
+        ],
+        "material_code": "R1310",
+        "developer_code": "R1310",
+        "placement_type": "Shell 1_Fabric 1_Care"
+      },
+      {
+        "unit": "m",
+        "quantity": "0.29",
+        "colorways": [
+          {
+            "code": "9900",
+            "name": "Black",
+            "fabric_reference": "Fabric 2",
+            "material_color_code": "9904",
+            "material_color_name": "Black (contrast 15797)"
+          }
+        ],
+        "placement": "Knee pocket, reinforcement in back pocket & inside of hammer holder loop",
+        "composition": "100% Polyamide,",
+        "description": "100% Polyamide, CORDURA\u00ae, 200 g/m2",
+        "source_pages": [
+          1
+        ],
+        "material_code": "R1948",
+        "developer_code": "R1948",
+        "placement_type": "Fabric 2"
+      }
+    ],
+    "page_tables": [
+      {
+        "materials": [
+          {
+            "unit": "m",
+            "quantity": "2.09",
+            "colorways": [
+              {
+                "code": "9900",
+                "name": "Black",
+                "fabric_reference": "Fabric 1",
+                "material_color_code": "9900",
+                "material_color_name": "Black"
+              }
+            ],
+            "placement": "Main fabric",
+            "composition": "100% cotton,",
+            "description": "100% cotton, canvas, 270 g/m2",
+            "source_pages": [
+              1
+            ],
+            "material_code": "R1310",
+            "developer_code": "R1310",
+            "placement_type": "Shell 1_Fabric 1_Care"
+          },
+          {
+            "unit": "m",
+            "quantity": "0.29",
+            "colorways": [
+              {
+                "code": "9900",
+                "name": "Black",
+                "fabric_reference": "Fabric 2",
+                "material_color_code": "9904",
+                "material_color_name": "Black (contrast 15797)"
+              }
+            ],
+            "placement": "Knee pocket, reinforcement in back pocket & inside of hammer holder loop",
+            "composition": "100% Polyamide,",
+            "description": "100% Polyamide, CORDURA\u00ae, 200 g/m2",
+            "source_pages": [
+              1
+            ],
+            "material_code": "R1948",
+            "developer_code": "R1948",
+            "placement_type": "Fabric 2"
+          }
+        ],
+        "page_number": 1,
+        "colorway_headers": [
+          {
+            "code": "9900",
+            "name": "Black"
+          }
+        ]
+      }
+    ],
+    "source_pages": [
+      1
+    ],
+    "style_number": "1530",
+    "request_usage": [
+      {
+        "page": 1,
+        "stage": "classification",
+        "status": "success",
+        "attempt": 1,
+        "cost_usd": 0.00046907,
+        "request_id": "gen-1793085819-EqSKzyRd6N0opKKyI390",
+        "input_tokens": 2107,
+        "output_limit": 200,
+        "total_tokens": 2121,
+        "finish_reason": "stop",
+        "output_tokens": 14
+      },
+      {
+        "page": 1,
+        "group": "1",
+        "stage": "extraction",
+        "status": "success",
+        "attempt": 1,
+        "band_end": 6,
+        "cost_usd": 0.00200041,
+        "crop_top": 0,
+        "band_start": 1,
+        "request_id": "gen-1793085824-d9LeoetUVcRkhDr22iL4",
+        "crop_bottom": 1819,
+        "input_tokens": 5581,
+        "output_limit": 6500,
+        "total_tokens": 6017,
+        "finish_reason": "stop",
+        "output_tokens": 436,
+        "row_group_mode": false
+      }
+    ],
+    "tech_pack_number": null
+  },
+  "model": "qwen/qwen3-vl-235b-a22b-instruct",
+  "request_usage": [
+    {
+      "page": 1,
+      "stage": "classification",
+      "status": "success",
+      "attempt": 1,
+      "cost_usd": 0.00046907,
+      "request_id": "gen-1793085819-EqSKzyRd6N0opKKyI390",
+      "input_tokens": 2107,
+      "output_limit": 200,
+      "total_tokens": 2121,
+      "finish_reason": "stop",
+      "output_tokens": 14
+    },
+    {
+      "page": 1,
+      "group": "1",
+      "stage": "extraction",
+      "status": "success",
+      "attempt": 1,
+      "band_end": 6,
+      "cost_usd": 0.00200041,
+      "crop_top": 0,
+      "band_start": 1,
+      "request_id": "gen-1793085824-d9LeoetUVcRkhDr22iL4",
+      "crop_bottom": 1819,
+      "input_tokens": 5581,
+      "output_limit": 6500,
+      "total_tokens": 6017,
+      "finish_reason": "stop",
+      "output_tokens": 436,
+      "row_group_mode": false
+    }
+  ],
+  "ply_info": {
+    "R1310": {
+      "max_ply": 75,
+      "matches": [
+        {
+          "id": 24,
+          "col_c": "1310",
+          "col_d": "75"
+        }
+      ]
+    },
+    "R1948": {
+      "max_ply": 50,
+      "matches": [
+        {
+          "id": 12,
+          "col_c": "1948",
+          "col_d": "40-50"
+        },
+        {
+          "id": 148,
+          "col_c": "R1948-9800",
+          "col_d": "50"
+        }
+      ]
+    }
+  }
+}

@@ -4,9 +4,7 @@ services:
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-wovens_bom}
       POSTGRES_USER: ${POSTGRES_USER:-wovens}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-local-dev-password}
-    ports:
-      - "5432:5432"
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -18,28 +16,40 @@ services:
     image: pgsty/minio:RELEASE.2026-08-04T00-00-00Z
     command: server /data --console-address ":9001"
     environment:
-      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-minioadmin}
-      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-local-dev-minio-pass}
-    ports:
-      - "9000:9000"
-      - "9001:9001"
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:?Set MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:?Set MINIO_ROOT_PASSWORD}
     volumes:
       - minio_data:/data
 
   backend:
     build: ./backend
     environment:
-      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-wovens}:${POSTGRES_PASSWORD:-local-dev-password}@postgres:5432/${POSTGRES_DB:-wovens_bom}
+      DATABASE_URL: ${DOCKER_DATABASE_URL:-}
+      POSTGRES_USER: ${POSTGRES_USER:-wovens}
       MINIO_ENDPOINT: minio:9000
-      MINIO_ACCESS_KEY: ${MINIO_ROOT_USER:-minioadmin}
-      MINIO_SECRET_KEY: ${MINIO_ROOT_PASSWORD:-local-dev-minio-pass}
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY:-}
+      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY:-}
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:?Set MINIO_ROOT_USER}
       MINIO_SECURE: "false"
       MINIO_BUCKET: ${MINIO_BUCKET:-tech-packs}
+      APP_ENV: ${APP_ENV:-production}
+      AUTH_SECRET: ${AUTH_SECRET:-local-dev-auth-secret-change-me}
+      AUTH_TOKEN_HOURS: ${AUTH_TOKEN_HOURS:-12}
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-}
+      ADMIN_NAME: ${ADMIN_NAME:-Administrator}
       OPENROUTER_API_KEY: ${OPENROUTER_API_KEY:-}
       OPENROUTER_MODEL: ${OPENROUTER_MODEL:-qwen/qwen3-vl-235b-a22b-instruct}
+      LLM_PRICE_INPUT_PER_MTOK: ${LLM_PRICE_INPUT_PER_MTOK:-}
+      LLM_PRICE_OUTPUT_PER_MTOK: ${LLM_PRICE_OUTPUT_PER_MTOK:-}
+      LANGFUSE_PUBLIC_KEY: ${LANGFUSE_PUBLIC_KEY:-}
+      LANGFUSE_SECRET_KEY: ${LANGFUSE_SECRET_KEY:-}
+      LANGFUSE_BASE_URL: ${LANGFUSE_BASE_URL:-}
+      LANGFUSE_CAPTURE_CONTENT: ${LANGFUSE_CAPTURE_CONTENT:-false}
       PAGE_DPI: ${PAGE_DPI:-220}
       MAX_UPLOAD_MB: ${MAX_UPLOAD_MB:-40}
       VISION_PAGE_CLASSIFICATION: ${VISION_PAGE_CLASSIFICATION:-true}
+      EXTRACTION_CONCURRENCY: ${EXTRACTION_CONCURRENCY:-4}
     ports:
       - "8000:8000"
     volumes:

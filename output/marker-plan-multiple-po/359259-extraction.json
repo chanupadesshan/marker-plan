@@ -1,0 +1,240 @@
+{
+  "id": "a10eaa07-fd18-45a2-8dfd-7449bec768e6",
+  "filename": "purchase-order-359259.pdf",
+  "status": "needs_review",
+  "error": null,
+  "page_count": 1,
+  "tech_pack_id": "7131cbf7-5884-4ebf-aebe-7e7e8c20766d",
+  "created_at": "2026-10-27T07:23:37.684868+00:00",
+  "extraction": {
+    "orders": [
+      {
+        "contract_number": "359259",
+        "tech_pack_reference": "18693",
+        "model_id": "1530",
+        "quality_id": "1310",
+        "color_id": "9900",
+        "total_quantity": "954",
+        "size_rows": [
+          {
+            "size": "-C44",
+            "quantity": "36",
+            "source_page": 1
+          },
+          {
+            "size": "-C46",
+            "quantity": "90",
+            "source_page": 1
+          },
+          {
+            "size": "-C48",
+            "quantity": "216",
+            "source_page": 1
+          },
+          {
+            "size": "-C50",
+            "quantity": "270",
+            "source_page": 1
+          },
+          {
+            "size": "-C52",
+            "quantity": "126",
+            "source_page": 1
+          },
+          {
+            "size": "-C54",
+            "quantity": "108",
+            "source_page": 1
+          },
+          {
+            "size": "-C56",
+            "quantity": "36",
+            "source_page": 1
+          },
+          {
+            "size": "-D92",
+            "quantity": "9",
+            "source_page": 1
+          },
+          {
+            "size": "-D100",
+            "quantity": "9",
+            "source_page": 1
+          },
+          {
+            "size": "-D104",
+            "quantity": "9",
+            "source_page": 1
+          },
+          {
+            "size": "-D108",
+            "quantity": "9",
+            "source_page": 1
+          },
+          {
+            "size": "-D112",
+            "quantity": "9",
+            "source_page": 1
+          },
+          {
+            "size": "-C148",
+            "quantity": "9",
+            "source_page": 1
+          },
+          {
+            "size": "-C154",
+            "quantity": "18",
+            "source_page": 1
+          }
+        ],
+        "source_pages": [
+          1
+        ],
+        "warnings": []
+      }
+    ],
+    "page_results": [
+      {
+        "page_number": 1,
+        "result": {
+          "page_kind": "purchase_order",
+          "orders": [
+            {
+              "contract_number": "359259",
+              "tech_pack_reference": "18693",
+              "model_id": "1530",
+              "quality_id": "1310",
+              "color_id": "9900",
+              "total_quantity": "954",
+              "size_rows": [
+                {
+                  "size": "-C44",
+                  "quantity": "36",
+                  "source_page": 1
+                },
+                {
+                  "size": "-C46",
+                  "quantity": "90",
+                  "source_page": 1
+                },
+                {
+                  "size": "-C48",
+                  "quantity": "216",
+                  "source_page": 1
+                },
+                {
+                  "size": "-C50",
+                  "quantity": "270",
+                  "source_page": 1
+                },
+                {
+                  "size": "-C52",
+                  "quantity": "126",
+                  "source_page": 1
+                },
+                {
+                  "size": "-C54",
+                  "quantity": "108",
+                  "source_page": 1
+                },
+                {
+                  "size": "-C56",
+                  "quantity": "36",
+                  "source_page": 1
+                },
+                {
+                  "size": "-D92",
+                  "quantity": "9",
+                  "source_page": 1
+                },
+                {
+                  "size": "-D100",
+                  "quantity": "9",
+                  "source_page": 1
+                },
+                {
+                  "size": "-D104",
+                  "quantity": "9",
+                  "source_page": 1
+                },
+                {
+                  "size": "-D108",
+                  "quantity": "9",
+                  "source_page": 1
+                },
+                {
+                  "size": "-D112",
+                  "quantity": "9",
+                  "source_page": 1
+                },
+                {
+                  "size": "-C148",
+                  "quantity": "9",
+                  "source_page": 1
+                },
+                {
+                  "size": "-C154",
+                  "quantity": "18",
+                  "source_page": 1
+                }
+              ],
+              "source_pages": [
+                1
+              ],
+              "warnings": []
+            }
+          ],
+          "warnings": []
+        }
+      }
+    ],
+    "request_usage": [
+      {
+        "page": 1,
+        "group": "1",
+        "stage": "po_extraction",
+        "status": "success",
+        "attempt": 1,
+        "band_end": 1,
+        "cost_usd": 0.00195014,
+        "crop_top": 0,
+        "band_start": 1,
+        "request_id": "gen-1793085819-ZbqtLw03uRX7oKOiOyfT",
+        "crop_bottom": 3034,
+        "input_tokens": 4654,
+        "output_limit": 6500,
+        "total_tokens": 5166,
+        "finish_reason": "stop",
+        "output_tokens": 512,
+        "row_group_mode": false
+      }
+    ],
+    "warnings": [
+      "Uploaded alongside a Tech Pack; business-reference matching requires review"
+    ],
+    "processing_complete": true
+  },
+  "model": "qwen/qwen3-vl-235b-a22b-instruct",
+  "request_usage": [
+    {
+      "page": 1,
+      "group": "1",
+      "stage": "po_extraction",
+      "status": "success",
+      "attempt": 1,
+      "band_end": 1,
+      "cost_usd": 0.00195014,
+      "crop_top": 0,
+      "band_start": 1,
+      "request_id": "gen-1793085819-ZbqtLw03uRX7oKOiOyfT",
+      "crop_bottom": 3034,
+      "input_tokens": 4654,
+      "output_limit": 6500,
+      "total_tokens": 5166,
+      "finish_reason": "stop",
+      "output_tokens": 512,
+      "row_group_mode": false
+    }
+  ],
+  "approval_ready": true
+}

@@ -62,6 +62,22 @@ def canonicalize_corrections(payload: DocumentExtraction) -> DocumentExtraction:
     })
 
 
+def add_titles(document: DocumentExtraction, titles: list[tuple[str, str]]) -> DocumentExtraction:
+    """
+    Purpose: Add the style and design numbers printed in every BOM page title of the PDF (read from its text layer) to
+    the extraction, because a Tech Pack can hold several designs and a title appears on pages that are not extracted.
+    Input: document - the DocumentExtraction; titles - the (style_number, design_number) pairs from document_titles().
+    Output: the same document, with design_numbers extended (title order first), design_number set only when there is exactly
+    one, and style_number filled in when it was missing.
+    """
+    designs = dict.fromkeys([*(design for _, design in titles), *document.design_numbers])
+    document.design_numbers = list(designs)
+    document.design_number = next(iter(designs)) if len(designs) == 1 else None
+    if not document.style_number and len({style for style, _ in titles}) == 1:
+        document.style_number = titles[0][0]
+    return document
+
+
 def combine_pages(results: list[tuple[int, PageResult]]) -> DocumentExtraction:
     """
     Purpose: Combine the Wovens results of several PDF pages into one document result, merging
@@ -73,7 +89,7 @@ def combine_pages(results: list[tuple[int, PageResult]]) -> DocumentExtraction:
     warnings: list[str] = []
     merged: dict[tuple, Material] = {}
     seen_codes: dict[str, set[tuple]] = {}
-    styles, tech_packs = set(), set()
+    styles, designs, tech_packs = set(), {}, set()
     pages: list[int] = []
     page_tables = []
     for page_number, page in results:
@@ -88,8 +104,13 @@ def combine_pages(results: list[tuple[int, PageResult]]) -> DocumentExtraction:
         ))
         if page.style_number:
             styles.add(page.style_number.strip())
+        if page.design_number:
+            designs.setdefault(page.design_number.strip())
         if page.tech_pack_number:
-            tech_packs.add(page.tech_pack_number.strip())
+            # Other document references (such as A-02916) are not tech-pack numbers.
+            match = re.fullmatch(r'TP\s*(\d[\w./-]*)', page.tech_pack_number.strip(), re.I)
+            if match:
+                tech_packs.add(f'TP {match[1]}')
         warnings.extend(f"Page {page_number}: {w}" for w in page.warnings)
         occurrences = {}
         for row_index, item in enumerate(page.materials):
@@ -103,8 +124,9 @@ def combine_pages(results: list[tuple[int, PageResult]]) -> DocumentExtraction:
                 warnings.append(f"Page {page_number}: missing unit for {row.material_code}")
             # Same material/code can legitimately occur at different placements or quantities.
             # Do not collapse such entries into one line.
-            key = (canonical(row.material_code), canonical(row.description),
-                   canonical(row.placement), canonical(row.quantity), canonical(row.unit))
+            key = (row.category, canonical(row.material_code), canonical(row.description),
+                   canonical(row.placement), canonical(row.quantity), canonical(row.unit),
+                   canonical(row.developer_code), canonical(row.placement_type))
             if not row.material_code:
                 # Rows without identifiers must not be merged just because fields match.
                 key = ("unidentified", page_number, row_index)
@@ -139,6 +161,8 @@ def combine_pages(results: list[tuple[int, PageResult]]) -> DocumentExtraction:
         warnings.append("No woven materials were extracted; manual review is required")
     return DocumentExtraction(
         style_number=next(iter(styles)) if len(styles) == 1 else None,
+        design_number=next(iter(designs)) if len(designs) == 1 else None,
+        design_numbers=list(designs),
         tech_pack_number=next(iter(tech_packs)) if len(tech_packs) == 1 else None,
         materials=list(merged.values()),
         source_pages=sorted(set(pages)),

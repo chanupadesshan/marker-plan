@@ -1,0 +1,758 @@
+{
+  "id": "f89c4d32-129d-47ce-8253-22047652689b",
+  "filename": "tech-pack-two-boms.pdf",
+  "status": "needs_review",
+  "error": null,
+  "page_count": 2,
+  "selected_pages": [
+    1,
+    2
+  ],
+  "created_at": "2026-10-27T01:54:17.052388+00:00",
+  "extraction": {
+    "category": "Wovens",
+    "warnings": [
+      "Page 2: TARGET panel is labeled 'Knits' and contains no Wovens rows. Extraction limited to Wovens section only per instructions.",
+      "Material R1514 appears in 2 distinct BOM rows; review grouping",
+      "Material R2020 appears in 2 distinct BOM rows; review grouping",
+      "Material R1845 appears in 2 distinct BOM rows; review grouping"
+    ],
+    "materials": [
+      {
+        "unit": "m",
+        "quantity": "1.65",
+        "colorways": [
+          {
+            "code": "8933",
+            "name": "Navy/HV yellow",
+            "fabric_reference": null,
+            "material_color_code": "8904",
+            "material_color_name": "Navy (contrast 15797)"
+          }
+        ],
+        "placement": "Body Fabric. Pocket Bag, Knee Pocket",
+        "composition": "75% cotton, 24% polyester, 1% Other fibers,",
+        "description": "75% cotton, 24% polyester, 1% Other fibers, flameretardant, antistatic, UL FR, 350 g/m2",
+        "source_pages": [
+          1
+        ],
+        "material_code": "R1514",
+        "developer_code": "R1514",
+        "placement_type": "Shell 1_Fabric 1_Care"
+      },
+      {
+        "unit": "m",
+        "quantity": "0.32",
+        "colorways": [
+          {
+            "code": "8933",
+            "name": "Navy/HV yellow",
+            "fabric_reference": null,
+            "material_color_code": "3300",
+            "material_color_name": "HV yellow"
+          }
+        ],
+        "placement": "High Visibility Areas.",
+        "composition": "75% cotton, 24% polyester, 1% Other fibers,",
+        "description": "75% cotton, 24% polyester, 1% Other fibers, flameretardant, antistatic, UL FR, 350 g/m2",
+        "source_pages": [
+          1
+        ],
+        "material_code": "R1514",
+        "developer_code": "R1514",
+        "placement_type": "Fabric 1"
+      },
+      {
+        "unit": "m",
+        "quantity": "0.12",
+        "colorways": [
+          {
+            "code": "8933",
+            "name": "Navy/HV yellow",
+            "fabric_reference": null,
+            "material_color_code": "9991",
+            "material_color_name": "Black Melange"
+          }
+        ],
+        "placement": "Knee Pocket Patch Front",
+        "composition": "39% modacrylic, 28% polyamide, 17% cotton, 15% Aramid, 1% Other fibers,",
+        "description": "39% modacrylic, 28% polyamide, 17% cotton, 15% Aramid, 1% Other fibers, flame retardant, 270 g/m2",
+        "source_pages": [
+          1
+        ],
+        "material_code": "R1548",
+        "developer_code": "R1548",
+        "placement_type": "Fabric 2"
+      },
+      {
+        "unit": "m",
+        "quantity": "0.15",
+        "colorways": [
+          {
+            "code": "8933",
+            "name": "Navy/HV yellow",
+            "fabric_reference": null,
+            "material_color_code": "9900",
+            "material_color_name": "Black"
+          }
+        ],
+        "placement": "Lining at Front Knee Patch Behind R1548",
+        "composition": "90% polyester, 10% cotton,",
+        "description": "90% polyester, 10% cotton, 100 g/m2",
+        "source_pages": [
+          1
+        ],
+        "material_code": "R2020",
+        "developer_code": "R2020",
+        "placement_type": "Lining 1"
+      },
+      {
+        "unit": "m",
+        "quantity": "0.89",
+        "colorways": [
+          {
+            "code": "9900",
+            "name": "Black",
+            "fabric_reference": "Fabric 5",
+            "material_color_code": "9900",
+            "material_color_name": "Black"
+          },
+          {
+            "code": "8699",
+            "name": "Dark navy/Black",
+            "fabric_reference": "Fabric 7",
+            "material_color_code": "8600",
+            "material_color_name": "Dark navy"
+          },
+          {
+            "code": "8999",
+            "name": "Navy/Black",
+            "fabric_reference": "Fabric 8",
+            "material_color_code": "8900",
+            "material_color_name": "Navy"
+          }
+        ],
+        "placement": "Main Fabric",
+        "composition": "65% Polyester, 35% Cotton",
+        "description": "65% Polyester, 35% Cotton, plain, 175 g/m2",
+        "source_pages": [
+          2
+        ],
+        "material_code": "R1845",
+        "developer_code": "R1845",
+        "placement_type": "Shell 1_Fabric 1_Care"
+      },
+      {
+        "unit": "m",
+        "quantity": "0.26",
+        "colorways": [
+          {
+            "code": "9900",
+            "name": "Black",
+            "fabric_reference": "Fabric 5",
+            "material_color_code": "9900",
+            "material_color_name": "Black"
+          },
+          {
+            "code": "8699",
+            "name": "Dark navy/Black",
+            "fabric_reference": "Fabric 7",
+            "material_color_code": "9900",
+            "material_color_name": "Black"
+          },
+          {
+            "code": "8999",
+            "name": "Navy/Black",
+            "fabric_reference": "Fabric 8",
+            "material_color_code": "9900",
+            "material_color_name": "Black"
+          }
+        ],
+        "placement": "Gusset and back",
+        "composition": "92% polyamide, 8% elastane",
+        "description": "92% polyamide, 8% elastane, double weave, 4-way stretch 230 g/m2",
+        "source_pages": [
+          2
+        ],
+        "material_code": "R1645",
+        "developer_code": "B-10262",
+        "placement_type": "Shell 2_Fabric 2_Care"
+      },
+      {
+        "unit": "m",
+        "quantity": "0.04",
+        "colorways": [
+          {
+            "code": "9900",
+            "name": "Black",
+            "fabric_reference": "Fabric 5",
+            "material_color_code": "9900",
+            "material_color_name": "Black"
+          },
+          {
+            "code": "8699",
+            "name": "Dark navy/Black",
+            "fabric_reference": "Fabric 7",
+            "material_color_code": "9900",
+            "material_color_name": "Black"
+          },
+          {
+            "code": "8999",
+            "name": "Navy/Black",
+            "fabric_reference": "Fabric 8",
+            "material_color_code": "9900",
+            "material_color_name": "Black"
+          }
+        ],
+        "placement": "Back Pocket Facing",
+        "composition": "65% Polyester, 35% Cotton",
+        "description": "65% Polyester, 35% Cotton, plain, 175 g/m2",
+        "source_pages": [
+          2
+        ],
+        "material_code": "R1845",
+        "developer_code": "R1845",
+        "placement_type": "Fabric 1"
+      },
+      {
+        "unit": "m",
+        "quantity": "0.37",
+        "colorways": [
+          {
+            "code": "9900",
+            "name": "Black",
+            "fabric_reference": "Fabric 5",
+            "material_color_code": "9900",
+            "material_color_name": "Black"
+          },
+          {
+            "code": "8699",
+            "name": "Dark navy/Black",
+            "fabric_reference": "Fabric 7",
+            "material_color_code": "9900",
+            "material_color_name": "Black"
+          },
+          {
+            "code": "8999",
+            "name": "Navy/Black",
+            "fabric_reference": "Fabric 8",
+            "material_color_code": "9900",
+            "material_color_name": "Black"
+          }
+        ],
+        "placement": "Pocket Lining",
+        "composition": "80% polyester, 20% cotton",
+        "description": "80% polyester, 20% cotton, 150 g/m2",
+        "source_pages": [
+          2
+        ],
+        "material_code": "R2020",
+        "developer_code": "R2020",
+        "placement_type": "Lining 1"
+      }
+    ],
+    "page_tables": [
+      {
+        "materials": [
+          {
+            "unit": "m",
+            "quantity": "1.65",
+            "colorways": [
+              {
+                "code": "8933",
+                "name": "Navy/HV yellow",
+                "fabric_reference": null,
+                "material_color_code": "8904",
+                "material_color_name": "Navy (contrast 15797)"
+              }
+            ],
+            "placement": "Body Fabric. Pocket Bag, Knee Pocket",
+            "composition": "75% cotton, 24% polyester, 1% Other fibers,",
+            "description": "75% cotton, 24% polyester, 1% Other fibers, flameretardant, antistatic, UL FR, 350 g/m2",
+            "source_pages": [
+              1
+            ],
+            "material_code": "R1514",
+            "developer_code": "R1514",
+            "placement_type": "Shell 1_Fabric 1_Care"
+          },
+          {
+            "unit": "m",
+            "quantity": "0.32",
+            "colorways": [
+              {
+                "code": "8933",
+                "name": "Navy/HV yellow",
+                "fabric_reference": null,
+                "material_color_code": "3300",
+                "material_color_name": "HV yellow"
+              }
+            ],
+            "placement": "High Visibility Areas.",
+            "composition": "75% cotton, 24% polyester, 1% Other fibers,",
+            "description": "75% cotton, 24% polyester, 1% Other fibers, flameretardant, antistatic, UL FR, 350 g/m2",
+            "source_pages": [
+              1
+            ],
+            "material_code": "R1514",
+            "developer_code": "R1514",
+            "placement_type": "Fabric 1"
+          },
+          {
+            "unit": "m",
+            "quantity": "0.12",
+            "colorways": [
+              {
+                "code": "8933",
+                "name": "Navy/HV yellow",
+                "fabric_reference": null,
+                "material_color_code": "9991",
+                "material_color_name": "Black Melange"
+              }
+            ],
+            "placement": "Knee Pocket Patch Front",
+            "composition": "39% modacrylic, 28% polyamide, 17% cotton, 15% Aramid, 1% Other fibers,",
+            "description": "39% modacrylic, 28% polyamide, 17% cotton, 15% Aramid, 1% Other fibers, flame retardant, 270 g/m2",
+            "source_pages": [
+              1
+            ],
+            "material_code": "R1548",
+            "developer_code": "R1548",
+            "placement_type": "Fabric 2"
+          },
+          {
+            "unit": "m",
+            "quantity": "0.15",
+            "colorways": [
+              {
+                "code": "8933",
+                "name": "Navy/HV yellow",
+                "fabric_reference": null,
+                "material_color_code": "9900",
+                "material_color_name": "Black"
+              }
+            ],
+            "placement": "Lining at Front Knee Patch Behind R1548",
+            "composition": "90% polyester, 10% cotton,",
+            "description": "90% polyester, 10% cotton, 100 g/m2",
+            "source_pages": [
+              1
+            ],
+            "material_code": "R2020",
+            "developer_code": "R2020",
+            "placement_type": "Lining 1"
+          }
+        ],
+        "page_number": 1,
+        "colorway_headers": [
+          {
+            "code": "8933",
+            "name": "Navy/HV yellow"
+          }
+        ]
+      },
+      {
+        "materials": [
+          {
+            "unit": "m",
+            "quantity": "0.89",
+            "colorways": [
+              {
+                "code": "9900",
+                "name": "Black",
+                "fabric_reference": "Fabric 5",
+                "material_color_code": "9900",
+                "material_color_name": "Black"
+              },
+              {
+                "code": "8699",
+                "name": "Dark navy/Black",
+                "fabric_reference": "Fabric 7",
+                "material_color_code": "8600",
+                "material_color_name": "Dark navy"
+              },
+              {
+                "code": "8999",
+                "name": "Navy/Black",
+                "fabric_reference": "Fabric 8",
+                "material_color_code": "8900",
+                "material_color_name": "Navy"
+              }
+            ],
+            "placement": "Main Fabric",
+            "composition": "65% Polyester, 35% Cotton",
+            "description": "65% Polyester, 35% Cotton, plain, 175 g/m2",
+            "source_pages": [
+              2
+            ],
+            "material_code": "R1845",
+            "developer_code": "R1845",
+            "placement_type": "Shell 1_Fabric 1_Care"
+          },
+          {
+            "unit": "m",
+            "quantity": "0.26",
+            "colorways": [
+              {
+                "code": "9900",
+                "name": "Black",
+                "fabric_reference": "Fabric 5",
+                "material_color_code": "9900",
+                "material_color_name": "Black"
+              },
+              {
+                "code": "8699",
+                "name": "Dark navy/Black",
+                "fabric_reference": "Fabric 7",
+                "material_color_code": "9900",
+                "material_color_name": "Black"
+              },
+              {
+                "code": "8999",
+                "name": "Navy/Black",
+                "fabric_reference": "Fabric 8",
+                "material_color_code": "9900",
+                "material_color_name": "Black"
+              }
+            ],
+            "placement": "Gusset and back",
+            "composition": "92% polyamide, 8% elastane",
+            "description": "92% polyamide, 8% elastane, double weave, 4-way stretch 230 g/m2",
+            "source_pages": [
+              2
+            ],
+            "material_code": "R1645",
+            "developer_code": "B-10262",
+            "placement_type": "Shell 2_Fabric 2_Care"
+          },
+          {
+            "unit": "m",
+            "quantity": "0.04",
+            "colorways": [
+              {
+                "code": "9900",
+                "name": "Black",
+                "fabric_reference": "Fabric 5",
+                "material_color_code": "9900",
+                "material_color_name": "Black"
+              },
+              {
+                "code": "8699",
+                "name": "Dark navy/Black",
+                "fabric_reference": "Fabric 7",
+                "material_color_code": "9900",
+                "material_color_name": "Black"
+              },
+              {
+                "code": "8999",
+                "name": "Navy/Black",
+                "fabric_reference": "Fabric 8",
+                "material_color_code": "9900",
+                "material_color_name": "Black"
+              }
+            ],
+            "placement": "Back Pocket Facing",
+            "composition": "65% Polyester, 35% Cotton",
+            "description": "65% Polyester, 35% Cotton, plain, 175 g/m2",
+            "source_pages": [
+              2
+            ],
+            "material_code": "R1845",
+            "developer_code": "R1845",
+            "placement_type": "Fabric 1"
+          },
+          {
+            "unit": "m",
+            "quantity": "0.37",
+            "colorways": [
+              {
+                "code": "9900",
+                "name": "Black",
+                "fabric_reference": "Fabric 5",
+                "material_color_code": "9900",
+                "material_color_name": "Black"
+              },
+              {
+                "code": "8699",
+                "name": "Dark navy/Black",
+                "fabric_reference": "Fabric 7",
+                "material_color_code": "9900",
+                "material_color_name": "Black"
+              },
+              {
+                "code": "8999",
+                "name": "Navy/Black",
+                "fabric_reference": "Fabric 8",
+                "material_color_code": "9900",
+                "material_color_name": "Black"
+              }
+            ],
+            "placement": "Pocket Lining",
+            "composition": "80% polyester, 20% cotton",
+            "description": "80% polyester, 20% cotton, 150 g/m2",
+            "source_pages": [
+              2
+            ],
+            "material_code": "R2020",
+            "developer_code": "R2020",
+            "placement_type": "Lining 1"
+          }
+        ],
+        "page_number": 2,
+        "colorway_headers": [
+          {
+            "code": "9900",
+            "name": "Black"
+          },
+          {
+            "code": "8699",
+            "name": "Dark navy/Black"
+          },
+          {
+            "code": "8999",
+            "name": "Navy/Black"
+          }
+        ]
+      }
+    ],
+    "source_pages": [
+      1,
+      2
+    ],
+    "style_number": "1449",
+    "request_usage": [
+      {
+        "page": 1,
+        "stage": "classification",
+        "status": "success",
+        "attempt": 1,
+        "cost_usd": 0.00020174,
+        "request_id": "gen-1793066062-BsIfhbi7qmeAa9BajAXV",
+        "input_tokens": 834,
+        "output_limit": 200,
+        "total_tokens": 848,
+        "finish_reason": "stop",
+        "output_tokens": 14
+      },
+      {
+        "page": 2,
+        "stage": "classification",
+        "status": "success",
+        "attempt": 1,
+        "cost_usd": 0.00028006,
+        "request_id": "gen-1793066064-qccvLaVxW6A8XXB6epol",
+        "input_tokens": 1274,
+        "output_limit": 200,
+        "total_tokens": 1288,
+        "finish_reason": "stop",
+        "output_tokens": 14
+      },
+      {
+        "page": 1,
+        "group": "1",
+        "stage": "extraction",
+        "status": "success",
+        "attempt": 1,
+        "band_end": 6,
+        "cost_usd": 0.00225236,
+        "crop_top": 0,
+        "band_start": 1,
+        "request_id": "gen-1793066067-TyzfIe3NAoYWac7ApCc1",
+        "crop_bottom": 786,
+        "input_tokens": 2646,
+        "output_limit": 6500,
+        "total_tokens": 3539,
+        "finish_reason": "stop",
+        "output_tokens": 893,
+        "row_group_mode": false
+      },
+      {
+        "page": 2,
+        "group": "1",
+        "stage": "extraction",
+        "status": "success",
+        "attempt": 1,
+        "band_end": 6,
+        "cost_usd": 0.00327278,
+        "crop_top": 0,
+        "band_start": 1,
+        "request_id": "gen-1793066086-UEL3GD79vQYb8hHK85KC",
+        "crop_bottom": 854,
+        "input_tokens": 4586,
+        "output_limit": 6500,
+        "total_tokens": 5860,
+        "finish_reason": "stop",
+        "output_tokens": 1274,
+        "row_group_mode": true
+      },
+      {
+        "page": 2,
+        "group": "2",
+        "stage": "extraction",
+        "status": "success",
+        "attempt": 1,
+        "band_end": 10,
+        "cost_usd": 0.00072931,
+        "crop_top": 854,
+        "band_start": 7,
+        "request_id": "gen-1793066110-BwpfieKqBK5eSeiCvg9k",
+        "crop_bottom": 1162,
+        "input_tokens": 3379,
+        "output_limit": 6500,
+        "total_tokens": 3457,
+        "finish_reason": "stop",
+        "output_tokens": 78,
+        "row_group_mode": true
+      }
+    ],
+    "tech_pack_number": null
+  },
+  "model": "qwen/qwen3-vl-235b-a22b-instruct",
+  "request_usage": [
+    {
+      "page": 1,
+      "stage": "classification",
+      "status": "success",
+      "attempt": 1,
+      "cost_usd": 0.00020174,
+      "request_id": "gen-1793066062-BsIfhbi7qmeAa9BajAXV",
+      "input_tokens": 834,
+      "output_limit": 200,
+      "total_tokens": 848,
+      "finish_reason": "stop",
+      "output_tokens": 14
+    },
+    {
+      "page": 2,
+      "stage": "classification",
+      "status": "success",
+      "attempt": 1,
+      "cost_usd": 0.00028006,
+      "request_id": "gen-1793066064-qccvLaVxW6A8XXB6epol",
+      "input_tokens": 1274,
+      "output_limit": 200,
+      "total_tokens": 1288,
+      "finish_reason": "stop",
+      "output_tokens": 14
+    },
+    {
+      "page": 1,
+      "group": "1",
+      "stage": "extraction",
+      "status": "success",
+      "attempt": 1,
+      "band_end": 6,
+      "cost_usd": 0.00225236,
+      "crop_top": 0,
+      "band_start": 1,
+      "request_id": "gen-1793066067-TyzfIe3NAoYWac7ApCc1",
+      "crop_bottom": 786,
+      "input_tokens": 2646,
+      "output_limit": 6500,
+      "total_tokens": 3539,
+      "finish_reason": "stop",
+      "output_tokens": 893,
+      "row_group_mode": false
+    },
+    {
+      "page": 2,
+      "group": "1",
+      "stage": "extraction",
+      "status": "success",
+      "attempt": 1,
+      "band_end": 6,
+      "cost_usd": 0.00327278,
+      "crop_top": 0,
+      "band_start": 1,
+      "request_id": "gen-1793066086-UEL3GD79vQYb8hHK85KC",
+      "crop_bottom": 854,
+      "input_tokens": 4586,
+      "output_limit": 6500,
+      "total_tokens": 5860,
+      "finish_reason": "stop",
+      "output_tokens": 1274,
+      "row_group_mode": true
+    },
+    {
+      "page": 2,
+      "group": "2",
+      "stage": "extraction",
+      "status": "success",
+      "attempt": 1,
+      "band_end": 10,
+      "cost_usd": 0.00072931,
+      "crop_top": 854,
+      "band_start": 7,
+      "request_id": "gen-1793066110-BwpfieKqBK5eSeiCvg9k",
+      "crop_bottom": 1162,
+      "input_tokens": 3379,
+      "output_limit": 6500,
+      "total_tokens": 3457,
+      "finish_reason": "stop",
+      "output_tokens": 78,
+      "row_group_mode": true
+    }
+  ],
+  "ply_info": {
+    "R1514": {
+      "max_ply": 70,
+      "matches": [
+        {
+          "id": 7,
+          "col_c": "1514",
+          "col_d": "60-70"
+        }
+      ]
+    },
+    "R1548": {
+      "max_ply": null,
+      "matches": [
+        {
+          "id": 44,
+          "col_c": "1548",
+          "col_d": null
+        }
+      ]
+    },
+    "R1645": {
+      "max_ply": 500,
+      "matches": [
+        {
+          "id": 51,
+          "col_c": "1645",
+          "col_d": "500"
+        }
+      ]
+    },
+    "R1845": {
+      "max_ply": 80,
+      "matches": [
+        {
+          "id": 5,
+          "col_c": "1845",
+          "col_d": "80"
+        },
+        {
+          "id": 145,
+          "col_c": "R1845-9800",
+          "col_d": "80"
+        }
+      ]
+    },
+    "R2020": {
+      "max_ply": 130,
+      "matches": [
+        {
+          "id": 6,
+          "col_c": "2020",
+          "col_d": "130"
+        },
+        {
+          "id": 149,
+          "col_c": "R2020-2000",
+          "col_d": "80"
+        }
+      ]
+    }
+  }
+}

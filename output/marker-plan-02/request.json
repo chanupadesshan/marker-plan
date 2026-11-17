@@ -1,0 +1,199 @@
+{
+  "tech_pack_id": "f89c4d32-129d-47ce-8253-22047652689b",
+  "tech_pack_filename": "tech-pack-two-boms.pdf",
+  "style_number": "1449",
+  "tech_pack_number": "16926",
+  "table_length_m": "8",
+  "min_plies": 10,
+  "time_limit_seconds": 20,
+  "orders": [
+    {
+      "label": "355800",
+      "tech_pack_reference": "16926",
+      "model_id": "1449",
+      "quality_id": "1845",
+      "color_id": "8699",
+      "source_filename": "purchase-orders-two-pos.pdf",
+      "size_rows": [
+        {
+          "size": "-C44",
+          "quantity": "30"
+        },
+        {
+          "size": "-C46",
+          "quantity": "90"
+        },
+        {
+          "size": "-C48",
+          "quantity": "210"
+        },
+        {
+          "size": "-C50",
+          "quantity": "240"
+        },
+        {
+          "size": "-C52",
+          "quantity": "330"
+        },
+        {
+          "size": "-C54",
+          "quantity": "270"
+        },
+        {
+          "size": "-C56",
+          "quantity": "150"
+        },
+        {
+          "size": "-C58",
+          "quantity": "30"
+        },
+        {
+          "size": "-C60",
+          "quantity": "30"
+        },
+        {
+          "size": "-C62",
+          "quantity": "30"
+        }
+      ]
+    }
+  ],
+  "materials": [
+    {
+      "material_code": "R1845",
+      "description": "65% Polyester, 35% Cotton, plain, 175 g/m2",
+      "composition": "65% Polyester, 35% Cotton",
+      "placement": "Main Fabric",
+      "placement_type": "Shell 1_Fabric 1_Care",
+      "colorways": [
+        {
+          "code": "9900",
+          "name": "Black",
+          "fabric_reference": "Fabric 5",
+          "material_color_code": "9900",
+          "material_color_name": "Black"
+        },
+        {
+          "code": "8699",
+          "name": "Dark navy/Black",
+          "fabric_reference": "Fabric 7",
+          "material_color_code": "8600",
+          "material_color_name": "Dark navy"
+        },
+        {
+          "code": "8999",
+          "name": "Navy/Black",
+          "fabric_reference": "Fabric 8",
+          "material_color_code": "8900",
+          "material_color_name": "Navy"
+        }
+      ],
+      "page_number": 2,
+      "consumption": "0.89",
+      "unit": "m",
+      "max_plies": 80
+    },
+    {
+      "material_code": "R1645",
+      "description": "92% polyamide, 8% elastane, double weave, 4-way stretch 230 g/m2",
+      "composition": "92% polyamide, 8% elastane",
+      "placement": "Gusset and back",
+      "placement_type": "Shell 2_Fabric 2_Care",
+      "colorways": [
+        {
+          "code": "9900",
+          "name": "Black",
+          "fabric_reference": "Fabric 5",
+          "material_color_code": "9900",
+          "material_color_name": "Black"
+        },
+        {
+          "code": "8699",
+          "name": "Dark navy/Black",
+          "fabric_reference": "Fabric 7",
+          "material_color_code": "9900",
+          "material_color_name": "Black"
+        },
+        {
+          "code": "8999",
+          "name": "Navy/Black",
+          "fabric_reference": "Fabric 8",
+          "material_color_code": "9900",
+          "material_color_name": "Black"
+        }
+      ],
+      "page_number": 2,
+      "consumption": "0.26",
+      "unit": "m",
+      "max_plies": 500
+    },
+    {
+      "material_code": "R1845",
+      "description": "65% Polyester, 35% Cotton, plain, 175 g/m2",
+      "composition": "65% Polyester, 35% Cotton",
+      "placement": "Back Pocket Facing",
+      "placement_type": "Fabric 1",
+      "colorways": [
+        {
+          "code": "9900",
+          "name": "Black",
+          "fabric_reference": "Fabric 5",
+          "material_color_code": "9900",
+          "material_color_name": "Black"
+        },
+        {
+          "code": "8699",
+          "name": "Dark navy/Black",
+          "fabric_reference": "Fabric 7",
+          "material_color_code": "9900",
+          "material_color_name": "Black"
+        },
+        {
+          "code": "8999",
+          "name": "Navy/Black",
+          "fabric_reference": "Fabric 8",
+          "material_color_code": "9900",
+          "material_color_name": "Black"
+        }
+      ],
+      "page_number": 2,
+      "consumption": "0.04",
+      "unit": "m",
+      "max_plies": 80
+    },
+    {
+      "material_code": "R2020",
+      "description": "80% polyester, 20% cotton, 150 g/m2",
+      "composition": "80% polyester, 20% cotton",
+      "placement": "Pocket Lining",
+      "placement_type": "Lining 1",
+      "colorways": [
+        {
+          "code": "9900",
+          "name": "Black",
+          "fabric_reference": "Fabric 5",
+          "material_color_code": "9900",
+          "material_color_name": "Black"
+        },
+        {
+          "code": "8699",
+          "name": "Dark navy/Black",
+          "fabric_reference": "Fabric 7",
+          "material_color_code": "9900",
+          "material_color_name": "Black"
+        },
+        {
+          "code": "8999",
+          "name": "Navy/Black",
+          "fabric_reference": "Fabric 8",
+          "material_color_code": "9900",
+          "material_color_name": "Black"
+        }
+      ],
+      "page_number": 2,
+      "consumption": "0.37",
+      "unit": "m",
+      "max_plies": 130
+    }
+  ]
+}

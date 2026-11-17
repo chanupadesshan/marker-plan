@@ -1,0 +1,382 @@
+[
+  {
+    "material": "1514-8904 Navy (contrast 15797)",
+    "capacity_matches": true,
+    "status": "FEASIBLE",
+    "validated": true,
+    "expected_markers": 4,
+    "actual_markers": 4,
+    "expected_lays": 4,
+    "actual_lays": 4,
+    "exact_lay_sequence_matches": true,
+    "same_combinations_and_plies": true,
+    "quantities_match": true,
+    "expected_plies": [
+      42,
+      42,
+      28,
+      14
+    ],
+    "actual_plies": [
+      42,
+      42,
+      28,
+      14
+    ],
+    "expected_lay_details": [
+      {
+        "marker": [
+          0,
+          1,
+          0,
+          2,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "plies": 42
+      },
+      {
+        "marker": [
+          2,
+          0,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "plies": 42
+      },
+      {
+        "marker": [
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0
+        ],
+        "plies": 28
+      },
+      {
+        "marker": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          1
+        ],
+        "plies": 14
+      }
+    ],
+    "actual_lay_details": [
+      {
+        "number": 1,
+        "marker_id": "B01-M01",
+        "counts": [
+          0,
+          1,
+          0,
+          2,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "plies": 42,
+        "sets": 168
+      },
+      {
+        "number": 2,
+        "marker_id": "B01-M02",
+        "counts": [
+          2,
+          0,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "plies": 42,
+        "sets": 168
+      },
+      {
+        "number": 3,
+        "marker_id": "B01-M03",
+        "counts": [
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0
+        ],
+        "plies": 28,
+        "sets": 112
+      },
+      {
+        "number": 4,
+        "marker_id": "B01-M04",
+        "counts": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          1,
+          1
+        ],
+        "plies": 14,
+        "sets": 56
+      }
+    ]
+  },
+  {
+    "material": "1514-3300 HV yellow",
+    "capacity_matches": true,
+    "status": "OPTIMAL",
+    "validated": true,
+    "expected_markers": 2,
+    "actual_markers": 2,
+    "expected_lays": 2,
+    "actual_lays": 2,
+    "exact_lay_sequence_matches": true,
+    "same_combinations_and_plies": true,
+    "quantities_match": true,
+    "expected_plies": [
+      14,
+      14
+    ],
+    "actual_plies": [
+      14,
+      14
+    ],
+    "expected_lay_details": [
+      {
+        "marker": [
+          6,
+          0,
+          6,
+          8,
+          5,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "plies": 14
+      },
+      {
+        "marker": [
+          0,
+          3,
+          0,
+          0,
+          0,
+          2,
+          1,
+          2,
+          1,
+          1,
+          1
+        ],
+        "plies": 14
+      }
+    ],
+    "actual_lay_details": [
+      {
+        "number": 1,
+        "marker_id": "B02-M01",
+        "counts": [
+          6,
+          0,
+          6,
+          8,
+          5,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "plies": 14,
+        "sets": 350
+      },
+      {
+        "number": 2,
+        "marker_id": "B02-M02",
+        "counts": [
+          0,
+          3,
+          0,
+          0,
+          0,
+          2,
+          1,
+          2,
+          1,
+          1,
+          1
+        ],
+        "plies": 14,
+        "sets": 154
+      }
+    ]
+  },
+  {
+    "material": "1548-9991 Black Melange",
+    "capacity_matches": true,
+    "status": "OPTIMAL",
+    "validated": true,
+    "expected_markers": 1,
+    "actual_markers": 1,
+    "expected_lays": 1,
+    "actual_lays": 1,
+    "exact_lay_sequence_matches": true,
+    "same_combinations_and_plies": true,
+    "quantities_match": true,
+    "expected_plies": [
+      14
+    ],
+    "actual_plies": [
+      14
+    ],
+    "expected_lay_details": [
+      {
+        "marker": [
+          6,
+          3,
+          6,
+          8,
+          5,
+          2,
+          1,
+          2,
+          1,
+          1,
+          1
+        ],
+        "plies": 14
+      }
+    ],
+    "actual_lay_details": [
+      {
+        "number": 1,
+        "marker_id": "B03-M01",
+        "counts": [
+          6,
+          3,
+          6,
+          8,
+          5,
+          2,
+          1,
+          2,
+          1,
+          1,
+          1
+        ],
+        "plies": 14,
+        "sets": 504
+      }
+    ]
+  },
+  {
+    "material": "2020-9900 Black",
+    "capacity_matches": true,
+    "status": "OPTIMAL",
+    "validated": true,
+    "expected_markers": 1,
+    "actual_markers": 1,
+    "expected_lays": 1,
+    "actual_lays": 1,
+    "exact_lay_sequence_matches": true,
+    "same_combinations_and_plies": true,
+    "quantities_match": true,
+    "expected_plies": [
+      14
+    ],
+    "actual_plies": [
+      14
+    ],
+    "expected_lay_details": [
+      {
+        "marker": [
+          6,
+          3,
+          6,
+          8,
+          5,
+          2,
+          1,
+          2,
+          1,
+          1,
+          1
+        ],
+        "plies": 14
+      }
+    ],
+    "actual_lay_details": [
+      {
+        "number": 1,
+        "marker_id": "B04-M01",
+        "counts": [
+          6,
+          3,
+          6,
+          8,
+          5,
+          2,
+          1,
+          2,
+          1,
+          1,
+          1
+        ],
+        "plies": 14,
+        "sets": 504
+      }
+    ]
+  }
+]

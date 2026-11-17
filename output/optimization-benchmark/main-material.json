@@ -1,0 +1,890 @@
+{
+  "status": "FEASIBLE",
+  "message": "Valid mixed-size plan; the best incumbent was retained and minimum counts are not proven.",
+  "marker_count": 9,
+  "optimization_scope": "consumption_capacity",
+  "one_marker_shortcut": false,
+  "lay_count": 17,
+  "secondary_optimal": false,
+  "marker_lower_bound": 5,
+  "elapsed_seconds": 20.078,
+  "validated": true,
+  "marker_minimum_proven": false,
+  "lay_minimum_proven": false,
+  "markers": [
+    {
+      "id": "B01-M01",
+      "counts": [
+        0,
+        0,
+        0,
+        3,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "sets_per_marker": 3,
+      "lay_numbers": [
+        1,
+        2,
+        3
+      ],
+      "lay_count": 3,
+      "total_plies": 206,
+      "sets_cut": 618
+    },
+    {
+      "id": "B01-M02",
+      "counts": [
+        0,
+        0,
+        3,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "sets_per_marker": 3,
+      "lay_numbers": [
+        4,
+        5,
+        6
+      ],
+      "lay_count": 3,
+      "total_plies": 192,
+      "sets_cut": 576
+    },
+    {
+      "id": "B01-M03",
+      "counts": [
+        0,
+        0,
+        0,
+        0,
+        2,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "sets_per_marker": 3,
+      "lay_numbers": [
+        7,
+        8,
+        9,
+        10
+      ],
+      "lay_count": 4,
+      "total_plies": 252,
+      "sets_cut": 756
+    },
+    {
+      "id": "B01-M04",
+      "counts": [
+        0,
+        2,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "sets_per_marker": 3,
+      "lay_numbers": [
+        11,
+        12
+      ],
+      "lay_count": 2,
+      "total_plies": 126,
+      "sets_cut": 378
+    },
+    {
+      "id": "B01-M05",
+      "counts": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        0,
+        0,
+        1,
+        0,
+        0
+      ],
+      "sets_per_marker": 3,
+      "lay_numbers": [
+        13
+      ],
+      "lay_count": 1,
+      "total_plies": 27,
+      "sets_cut": 81
+    },
+    {
+      "id": "B01-M06",
+      "counts": [
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "sets_per_marker": 2,
+      "lay_numbers": [
+        14
+      ],
+      "lay_count": 1,
+      "total_plies": 27,
+      "sets_cut": 54
+    },
+    {
+      "id": "B01-M07",
+      "counts": [
+        2,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0
+      ],
+      "sets_per_marker": 3,
+      "lay_numbers": [
+        15
+      ],
+      "lay_count": 1,
+      "total_plies": 27,
+      "sets_cut": 81
+    },
+    {
+      "id": "B01-M08",
+      "counts": [
+        2,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0
+      ],
+      "sets_per_marker": 3,
+      "lay_numbers": [
+        16
+      ],
+      "lay_count": 1,
+      "total_plies": 18,
+      "sets_cut": 54
+    },
+    {
+      "id": "B01-M09",
+      "counts": [
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1
+      ],
+      "sets_per_marker": 3,
+      "lay_numbers": [
+        17
+      ],
+      "lay_count": 1,
+      "total_plies": 9,
+      "sets_cut": 27
+    }
+  ],
+  "lays": [
+    {
+      "number": 1,
+      "marker_id": "B01-M01",
+      "counts": [
+        0,
+        0,
+        0,
+        3,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "plies": 69,
+      "sets": 207
+    },
+    {
+      "number": 2,
+      "marker_id": "B01-M01",
+      "counts": [
+        0,
+        0,
+        0,
+        3,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "plies": 69,
+      "sets": 207
+    },
+    {
+      "number": 3,
+      "marker_id": "B01-M01",
+      "counts": [
+        0,
+        0,
+        0,
+        3,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "plies": 68,
+      "sets": 204
+    },
+    {
+      "number": 4,
+      "marker_id": "B01-M02",
+      "counts": [
+        0,
+        0,
+        3,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "plies": 64,
+      "sets": 192
+    },
+    {
+      "number": 5,
+      "marker_id": "B01-M02",
+      "counts": [
+        0,
+        0,
+        3,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "plies": 64,
+      "sets": 192
+    },
+    {
+      "number": 6,
+      "marker_id": "B01-M02",
+      "counts": [
+        0,
+        0,
+        3,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "plies": 64,
+      "sets": 192
+    },
+    {
+      "number": 7,
+      "marker_id": "B01-M03",
+      "counts": [
+        0,
+        0,
+        0,
+        0,
+        2,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "plies": 63,
+      "sets": 189
+    },
+    {
+      "number": 8,
+      "marker_id": "B01-M03",
+      "counts": [
+        0,
+        0,
+        0,
+        0,
+        2,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "plies": 63,
+      "sets": 189
+    },
+    {
+      "number": 9,
+      "marker_id": "B01-M03",
+      "counts": [
+        0,
+        0,
+        0,
+        0,
+        2,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "plies": 63,
+      "sets": 189
+    },
+    {
+      "number": 10,
+      "marker_id": "B01-M03",
+      "counts": [
+        0,
+        0,
+        0,
+        0,
+        2,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "plies": 63,
+      "sets": 189
+    },
+    {
+      "number": 11,
+      "marker_id": "B01-M04",
+      "counts": [
+        0,
+        2,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "plies": 63,
+      "sets": 189
+    },
+    {
+      "number": 12,
+      "marker_id": "B01-M04",
+      "counts": [
+        0,
+        2,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "plies": 63,
+      "sets": 189
+    },
+    {
+      "number": 13,
+      "marker_id": "B01-M05",
+      "counts": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1,
+        0,
+        0,
+        1,
+        0,
+        0
+      ],
+      "plies": 27,
+      "sets": 81
+    },
+    {
+      "number": 14,
+      "marker_id": "B01-M06",
+      "counts": [
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "plies": 27,
+      "sets": 54
+    },
+    {
+      "number": 15,
+      "marker_id": "B01-M07",
+      "counts": [
+        2,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0
+      ],
+      "plies": 27,
+      "sets": 81
+    },
+    {
+      "number": 16,
+      "marker_id": "B01-M08",
+      "counts": [
+        2,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0
+      ],
+      "plies": 18,
+      "sets": 54
+    },
+    {
+      "number": 17,
+      "marker_id": "B01-M09",
+      "counts": [
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        1
+      ],
+      "plies": 9,
+      "sets": 27
+    }
+  ],
+  "production": [
+    {
+      "size": "-C44",
+      "required": 90,
+      "produced": 90,
+      "difference": 0
+    },
+    {
+      "size": "-C46",
+      "required": 288,
+      "produced": 288,
+      "difference": 0
+    },
+    {
+      "size": "-C48",
+      "required": 576,
+      "produced": 576,
+      "difference": 0
+    },
+    {
+      "size": "-C50",
+      "required": 618,
+      "produced": 618,
+      "difference": 0
+    },
+    {
+      "size": "-C52",
+      "required": 504,
+      "produced": 504,
+      "difference": 0
+    },
+    {
+      "size": "-C54",
+      "required": 252,
+      "produced": 252,
+      "difference": 0
+    },
+    {
+      "size": "-C56",
+      "required": 126,
+      "produced": 126,
+      "difference": 0
+    },
+    {
+      "size": "-C58",
+      "required": 27,
+      "produced": 27,
+      "difference": 0
+    },
+    {
+      "size": "-D100",
+      "required": 27,
+      "produced": 27,
+      "difference": 0
+    },
+    {
+      "size": "-D104",
+      "required": 27,
+      "produced": 27,
+      "difference": 0
+    },
+    {
+      "size": "-D108",
+      "required": 18,
+      "produced": 18,
+      "difference": 0
+    },
+    {
+      "size": "-C148",
+      "required": 27,
+      "produced": 27,
+      "difference": 0
+    },
+    {
+      "size": "-C154",
+      "required": 27,
+      "produced": 27,
+      "difference": 0
+    },
+    {
+      "size": "-D92",
+      "required": 9,
+      "produced": 9,
+      "difference": 0
+    },
+    {
+      "size": "-D112",
+      "required": 9,
+      "produced": 9,
+      "difference": 0
+    }
+  ],
+  "progress": [
+    {
+      "phase": "building",
+      "elapsed_seconds": 0.0,
+      "marker_count": null,
+      "lay_count": null,
+      "marker_minimum_proven": false,
+      "status": "SEARCHING"
+    },
+    {
+      "phase": "markers",
+      "elapsed_seconds": 1.063,
+      "marker_count": 14,
+      "lay_count": 43,
+      "marker_minimum_proven": false,
+      "status": "SEARCHING"
+    },
+    {
+      "phase": "markers",
+      "elapsed_seconds": 1.141,
+      "marker_count": 13,
+      "lay_count": 40,
+      "marker_minimum_proven": false,
+      "status": "SEARCHING"
+    },
+    {
+      "phase": "markers",
+      "elapsed_seconds": 1.188,
+      "marker_count": 13,
+      "lay_count": 35,
+      "marker_minimum_proven": false,
+      "status": "SEARCHING"
+    },
+    {
+      "phase": "markers",
+      "elapsed_seconds": 1.203,
+      "marker_count": 12,
+      "lay_count": 34,
+      "marker_minimum_proven": false,
+      "status": "SEARCHING"
+    },
+    {
+      "phase": "markers",
+      "elapsed_seconds": 1.406,
+      "marker_count": 12,
+      "lay_count": 30,
+      "marker_minimum_proven": false,
+      "status": "SEARCHING"
+    },
+    {
+      "phase": "markers",
+      "elapsed_seconds": 1.625,
+      "marker_count": 12,
+      "lay_count": 19,
+      "marker_minimum_proven": false,
+      "status": "SEARCHING"
+    },
+    {
+      "phase": "markers",
+      "elapsed_seconds": 2.188,
+      "marker_count": 11,
+      "lay_count": 31,
+      "marker_minimum_proven": false,
+      "status": "SEARCHING"
+    },
+    {
+      "phase": "markers",
+      "elapsed_seconds": 2.266,
+      "marker_count": 11,
+      "lay_count": 19,
+      "marker_minimum_proven": false,
+      "status": "SEARCHING"
+    },
+    {
+      "phase": "markers",
+      "elapsed_seconds": 2.75,
+      "marker_count": 11,
+      "lay_count": 17,
+      "marker_minimum_proven": false,
+      "status": "SEARCHING"
+    },
+    {
+      "phase": "markers",
+      "elapsed_seconds": 3.563,
+      "marker_count": 10,
+      "lay_count": 17,
+      "marker_minimum_proven": false,
+      "status": "SEARCHING"
+    },
+    {
+      "phase": "markers",
+      "elapsed_seconds": 17.219,
+      "marker_count": 9,
+      "lay_count": 28,
+      "marker_minimum_proven": false,
+      "status": "SEARCHING"
+    },
+    {
+      "phase": "markers",
+      "elapsed_seconds": 17.844,
+      "marker_count": 9,
+      "lay_count": 24,
+      "marker_minimum_proven": false,
+      "status": "SEARCHING"
+    },
+    {
+      "phase": "markers",
+      "elapsed_seconds": 17.953,
+      "marker_count": 9,
+      "lay_count": 20,
+      "marker_minimum_proven": false,
+      "status": "SEARCHING"
+    },
+    {
+      "phase": "markers",
+      "elapsed_seconds": 19.156,
+      "marker_count": 9,
+      "lay_count": 18,
+      "marker_minimum_proven": false,
+      "status": "SEARCHING"
+    },
+    {
+      "phase": "markers",
+      "elapsed_seconds": 19.188,
+      "marker_count": 9,
+      "lay_count": 17,
+      "marker_minimum_proven": false,
+      "status": "SEARCHING"
+    },
+    {
+      "phase": "complete",
+      "elapsed_seconds": 20.078,
+      "marker_count": 9,
+      "lay_count": 17,
+      "marker_minimum_proven": false,
+      "status": "FEASIBLE"
+    }
+  ]
+}

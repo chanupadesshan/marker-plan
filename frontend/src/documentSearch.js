@@ -4,8 +4,8 @@
  * Output: one lowercase string to search in.
  */
 export function searchText(item) {
-  return [item.filename, item.status?.replaceAll('_', ' '), item.style_number, item.tech_pack_number,
-    ...(item.contract_numbers || []), ...(item.tech_pack_references || [])]
+  return [item.filename, item.status?.replaceAll('_', ' '), item.style_number, item.design_number, ...(item.design_numbers || []), item.tech_pack_number,
+    item.linked_to, ...(item.contract_numbers || []), ...(item.tech_pack_references || [])]
     .filter(Boolean).join(' ').toLowerCase();
 }
 
@@ -23,6 +23,12 @@ export function filterDocuments(items, query) {
   });
 }
 
+/** Newest uploads first; missing dates sort last and the source list stays unchanged. */
+export function latestDocuments(items, limit = 5) {
+  const timestamp = item => Date.parse(item.created_at) || 0;
+  return [...items].sort((a, b) => timestamp(b) - timestamp(a)).slice(0, limit);
+}
+
 /**
  * Purpose: Tell whether any document is still being extracted, so the lists keep refreshing.
  * Input: items - a list of Tech Pack or PO entries.
@@ -30,4 +36,13 @@ export function filterDocuments(items, query) {
  */
 export function inProgress(items) {
   return items.some(item => ['queued', 'processing'].includes(item.status));
+}
+
+/** Keep every Tech Pack selectable, including BOM-only PDFs without a printed TP number. */
+export function filterTechPacks(items, query) {
+  const normalize = value => String(value ?? '').trim().toLowerCase()
+    .replace(/^(?:tech\s*pack|tp)[\s:#-]*/i, '').replace(/\s+/g, '');
+  const term = normalize(query);
+  return items.filter(item => !term || normalize(item.tech_pack_number).includes(term)
+    || normalize(item.filename).includes(term));
 }

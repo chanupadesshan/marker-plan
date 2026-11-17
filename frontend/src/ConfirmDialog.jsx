@@ -6,11 +6,11 @@ const ICONS = { primary: ShieldCheck, danger: Trash2 };
 /**
  * Purpose: In-page replacement for the browser's confirm box. The safe choice (Cancel) is focused for
  * destructive actions so a stray Enter cannot delete anything; Escape and a backdrop click also cancel.
- * Input: props - open (show it or not), title, message, detail (e.g. a file name), confirmLabel,
+ * Input: props - open (show it or not), title, message, detail (e.g. a file name), content (extra elements shown under the message), confirmLabel,
  * cancelLabel, tone ('primary' or 'danger'), busy (disables the buttons), onConfirm, onCancel.
  * Output: the dialog element, or nothing when open is false.
  */
-export default function ConfirmDialog({ open, title, message, detail, confirmLabel = 'Confirm', cancelLabel = 'Cancel',
+export default function ConfirmDialog({ open, title, message, detail, content, confirmLabel = 'Confirm', cancelLabel = 'Cancel',
   tone = 'primary', busy = false, onConfirm, onCancel }) {
   const card = useRef(null);
   const confirmButton = useRef(null);
@@ -44,6 +44,7 @@ export default function ConfirmDialog({ open, title, message, detail, confirmLab
       <span className="dialog-icon" aria-hidden="true"><Icon size={22}/></span>
       <h2 id="dialog-title">{title}</h2>
       <p id="dialog-message">{message}</p>
+      {content}
       {detail && <div className="dialog-detail" title={detail}>{detail}</div>}
       <div className="dialog-actions">
         <button ref={cancelButton} type="button" className="secondary-button" disabled={busy} onClick={onCancel}>{cancelLabel}</button>

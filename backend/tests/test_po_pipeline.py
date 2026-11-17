@@ -66,8 +66,12 @@ def test_failure_keeps_completed_pages_and_usage(monkeypatch, failure, completed
     po_pipeline.process_purchase_order(str(doc.id))
     assert doc.status == 'failed'
     assert doc.extraction.extracted_json['processing_complete'] is False
-    assert len(doc.extraction.extracted_json['page_results']) == completed
-    assert len(doc.extraction.extracted_json['request_usage']) == failure
+    # Pages are read side by side, so the other page may have been read before the failure was reported; a page that
+    # finished is kept, and the failed one never counts as completed.
+    kept = len(doc.extraction.extracted_json['page_results'])
+    assert completed <= kept <= completed + (1 if failure == 1 else 0)
+    assert failure <= len(doc.extraction.extracted_json['request_usage']) <= 2
+    assert [entry['status'] for entry in doc.extraction.raw_page_results if entry['page'] == failure] == ['failed']
     assert len(doc.extraction.raw_page_results) == 2
     assert 'synthetic model failure' in doc.error_message
 

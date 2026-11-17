@@ -1,0 +1,122 @@
+WebSocket server error: Port 24678 is already in use
+✔ the sign-in page has only email and password and no register form (7765.9163ms)
+WebSocket server error: Port 24678 is already in use
+✔ sign-in validation asks for a valid email and a password (3500.7128ms)
+✔ can() follows the view/edit levels and admins can do everything (1.7481ms)
+✔ the Users page lives at /admin/users (0.9875ms)
+✔ the Users page renders its heading and an Add user button (2405.6045ms)
+✔ page edits preserve source and original data, omit derived materials and rebuild colorway headers (9.6809ms)
+✔ unrelated saves preserve printed colour headings without assigned material variants (32.6712ms)
+✔ legacy drafts keep flat materials and optional document numbers (3.1444ms)
+✔ validation flags empty rows, nonpositive quantities and missing units without rejecting decimal commas (14.8845ms)
+✔ review exposes Edit BOM only for permitted users and keeps technical JSON read-only (11212.4651ms)
+✔ a late polling response cannot replace a newly selected document (3.7826ms)
+✔ same material codes and repeated rows can be chosen independently (8.2926ms)
+✔ changed source rows and invalid keys cannot silently select another material (1.7332ms)
+✔ older extractions without page tables still supply selectable materials (0.9709ms)
+✔ material search matches only codes, including partial codes and mixed case (1.2554ms)
+✔ selecting search matches retains previously selected hidden materials (1.7796ms)
+WebSocket server error: Port 24678 is already in use
+✖ Marker Plan shows checkboxes and a selected-material summary, normal review does not (13003.81ms)
+✔ filtered Wovens rows retain their original checkbox identity and selected state (816.6156ms)
+✔ very fast solve times read as under 0.1 s instead of 0.0 s (6.4327ms)
+✔ capacity preview is exact floor(table length / consumption) in metres (2.4318ms)
+✔ plies-table ranges and several related rows become a list of allowed values (8.3579ms)
+✔ material defaults come from the BOM length and the plies table (2.6247ms)
+✔ form errors block impossible settings before the request is sent (4.1671ms)
+✔ request maps printed PO rows and each material into solver inputs (2.6645ms)
+✔ selected orders come from the confirmed selection, or from older ids (2.2394ms)
+✔ saved plan requests preserve order, fabric colour and source metadata (4.876ms)
+✔ outcomes separate marker proof from lay proof and never call a limited search optimal (3.5353ms)
+WebSocket server error: Port 24678 is already in use
+✔ settings form shows each material with its capacity and waits for a table length (13261.7388ms)
+WebSocket server error: Port 24678 is already in use
+✔ results show unique markers, their lays, and required versus produced quantities (820.0138ms)
+WebSocket server error: Port 24678 is already in use
+✔ timeouts, infeasible orders and running materials are explained without a plan (722.0814ms)
+✔ search finds each PO by its own Tech Pack ID across documents without a BOM or mandatory model restriction (22.8054ms)
+✔ individual POs within one PDF are matched by Tech Pack ID and remain separately selectable (5.1106ms)
+✔ single PO replaces the previous choice; multiple POs can be added and removed (1.6694ms)
+✔ PO matching normalizes Tech Pack prefixes and filters Model IDs exactly (1.7833ms)
+WebSocket server error: Port 24678 is already in use
+✔ PO selector asks for mode first and displays saved choices with edit action (7123.6299ms)
+WebSocket server error: Port 24678 is already in use
+✔ the Wovens table has a Max ply column after Qty with each material's maximum (6383.2525ms)
+WebSocket server error: Port 24678 is already in use
+✔ hovering the maximum lists every related plies row (2376.6375ms)
+WebSocket server error: Port 24678 is already in use
+✔ a material with no related row, or no value in Column D, shows a dash (1040.9678ms)
+WebSocket server error: Port 24678 is already in use
+✔ the table still renders when the server sends no ply information (1901.1582ms)
+✔ the Plies dashboard has its own address (3.3822ms)
+✔ search matches id, B, C and D, every word must match, and blank keeps all rows (144.5478ms)
+✔ validation requires a whole-number B and a code in C, and keeps D optional (1.5727ms)
+✔ the request body has a numeric B, trimmed text and a null for a blank D (0.6436ms)
+✔ paging cuts the list, keeps the page in range and reports the visible span (1.0931ms)
+WebSocket server error: Port 24678 is already in use
+✔ the dashboard page renders its search, add button and loading state (8068.5815ms)
+WebSocket server error: Port 24678 is already in use
+✔ the add and edit dialogs show the three fields with the right title and button (2638.3807ms)
+✔ PO draft preserves repeated size rows, source evidence and printed values while submitting orders only (162.3482ms)
+WebSocket server error: Port 24678 is already in use
+✔ PO review gates editing by permission and processing state and uses simple fields instead of JSON (7646.7379ms)
+✔ contract 355800 size sum matches grouped printed totals without altering the original total (4.5218ms)
+✔ PO validation flags missing contract/size, fractional or negative quantities, empty contracts and malformed totals (1.2259ms)
+✔ paired upload links PO to the saved Tech Pack (3.7634ms)
+✔ PO uploads independently when Tech Pack upload fails (17.9541ms)
+✔ PO-only and Tech Pack-only upload do not require the other file (1.2556ms)
+✔ existing PO remains accessible until a replacement uploads successfully (93.0738ms)
+WebSocket server error: Port 24678 is already in use
+✔ PO review shows only requested fields with source page links (7612.8254ms)
+WebSocket server error: Port 24678 is already in use
+✔ the initial screen renders the upload and review workspace (10669.1886ms)
+✔ Wovens tables keep one material row and separate colorway columns per page (301.4397ms)
+✔ token usage distinguishes truncation and unavailable counts (313.8137ms)
+✔ review workspace prioritizes BOM and keeps technical details closed (1002.6008ms)
+WebSocket server error: Port 24678 is already in use
+✔ saved results offer an authenticated Excel download only for complete validated plans (6771.8467ms)
+WebSocket server error: Port 24678 is already in use
+✔ Marker Plan exposes saved history before materials or POs are selected (3160.4386ms)
+WebSocket server error: Port 24678 is already in use
+✔ plan results use neutral text and collapsed details while failed plans stay explicit (1012.0101ms)
+✔ search matches file names, extracted identifiers and status (16.7328ms)
+✔ every search term must match, blank search keeps the list, and no match returns nothing (1.0535ms)
+✔ in-progress detection drives sidebar status polling (0.6175ms)
+WebSocket server error: Port 24678 is already in use
+✔ sidebar shows both tabs and lists extracted documents with their identifiers (1406.2377ms)
+WebSocket server error: Port 24678 is already in use
+✔ sidebar shows an empty state per tab and disables extract until a file is chosen (297.0457ms)
+✔ every list row has its own delete button, disabled while extraction is running (261.5826ms)
+✔ confirm dialog renders nothing when closed and an accessible dialog when open (193.5316ms)
+✔ one Tech Pack number finds the Tech Pack and the POs that reference it (1.4402ms)
+✔ Marker Plan starts with TP number selection and keeps document browsing in dedicated tabs (290.2793ms)
+✔ printed TP number search works with or without prefix and without Style ID (3.1512ms)
+✔ Marker Plan includes all saved Tech Packs when TP numbers are missing (1.6182ms)
+✔ the Usage dashboard has its own address (6.9229ms)
+✔ cost shows unavailable, marks estimates and keeps small amounts readable (1.8977ms)
+✔ failure rate is a percentage and a dash when nothing ran (0.9228ms)
+✔ bars scale to the busiest day and tiny days stay visible (30.0539ms)
+ℹ tests 77
+ℹ suites 0
+ℹ pass 76
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 20286.6144
+
+✖ failing tests:
+
+test at tests\marker-materials.test.mjs:54:1
+✖ Marker Plan shows checkboxes and a selected-material summary, normal review does not (13003.81ms)
+  AssertionError [ERR_ASSERTION]: selected table includes Material code
+      at TestContext.<anonymous> (file:///C:/Users/chanupa.d/Documents/concord/wovens-bom-extractor/frontend/tests/marker-materials.test.mjs:74:14)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }

@@ -44,7 +44,7 @@ export default function DocumentUpload({ busy = false, onUpload }) {
         onChoose={setPO} onRemove={() => setPO(null)}/>
     </div>
     <div className="upload-panel-footer"><p>{po && techPack ? 'Both documents will be saved and processed separately.' : po ? 'Extract purchase-order contracts and size quantities.' : 'Add the related PO when available.'}</p>
-      <button type="button" className="primary-button" disabled={(!techPack && !po) || busy} onClick={() => onUpload?.({techPack, po})}><ScanText size={16}/>{busy ? 'Uploading…' : techPack && po ? 'Extract documents' : po ? 'Extract PO' : 'Extract Wovens'}</button>
+      <button type="button" className="primary-button" disabled={(!techPack && !po) || busy} onClick={() => onUpload?.({techPack, po})}><ScanText size={16}/>{busy ? 'Uploading…' : techPack && po ? 'Extract documents' : po ? 'Extract PO' : 'Extract Wovens and Knits'}</button>
     </div>
   </section>;
 }
