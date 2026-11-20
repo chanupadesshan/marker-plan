@@ -121,7 +121,6 @@ def test_untrusted_order_and_material_text_is_literal(client):
     payload = body(materials=[{'material_code': 'A' * 26 + "'Z", 'description': '=1+1', 'consumption': '2', 'max_plies': 120}])
     payload['orders'][0]['label'] = '=HYPERLINK("https://example.invalid")'
     _, response = export(client, payload); cells, _ = sheet_cells(response.content)
-    assert any('=1+1' in str(v) and f is None for v, f in cells.values())
     assert any(v == payload['orders'][0]['label'] and f is None for v, f in cells.values())
 
 
@@ -163,3 +162,17 @@ def test_export_permissions(client):
         assert protected.get(path).status_code == 403
     finally:
         app.dependency_overrides.clear()
+
+
+def test_summary_by_material_has_totals_and_consumption_formulas(client):
+    job, response = export(client)
+    cells, _ = sheet_cells(response.content)
+    summary = next(int(a[1:]) for a, (v, _) in cells.items() if a.startswith('A') and v == 'SUMMARY BY MATERIAL')
+    total = next(int(a[1:]) for a, (v, _) in cells.items() if a.startswith('A') and v == 'TOTAL CUT')
+    row = summary + 1
+    assert cells[f'F{row}'] == ('800', f'T{total}')
+    assert cells[f'H{row}'][1] == f'U{total}'
+    assert cells[f'J{row}'][1] == f'V{total}'
+    assert cells[f'L{row}'][1] == f'IF(AND(ISNUMBER(U{total}),N(T{total})>0),U{total}/T{total},"")'
+    assert cells[f'N{row}'][1] == f'IF(AND(ISNUMBER(V{total}),N(T{total})>0),V{total}/T{total},"")'
+    assert any(v and 'PREPARED BY' in v for v, _ in cells.values())

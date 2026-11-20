@@ -736,3 +736,10 @@
 #loginScreen #modalHost .btn-primary:active {
   transform: translateY(0);
 }
+
+/* Credit line under the sign-in card. */
+#loginScreen .login-powered{position:absolute;left:0;right:0;bottom:22px;text-align:center;font-size:12px;color:#7a6b86;letter-spacing:.02em;z-index:2}
+#loginScreen .login-powered strong{color:#5B2B82;font-weight:700}
+
+/* Replace the full-width top strip with a short rounded accent pill. */
+#loginScreen .login-card:before{left:36px!important;right:auto!important;top:20px!important;width:44px!important;height:5px!important;border-radius:999px!important;background:linear-gradient(90deg,#5B2B82,#F02E9C,#FF7A30)!important;background-size:100% 100%!important;animation:none!important}

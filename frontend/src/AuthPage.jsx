@@ -86,6 +86,7 @@ export default function AuthPage({ onSignedIn }) {
         <button className="btn btn-primary btn-block" type="submit" disabled={busy}><span>{busy ? 'Please wait…' : 'Sign in'}</span> <span aria-hidden="true">→</span></button>
         <div className="login-help">Need an account? Ask an administrator to create one for you.</div>
       </form>
+      <div className="login-powered">Powered by <strong>Concord IT</strong></div>
     </div>
   </div>;
 }

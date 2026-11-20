@@ -174,6 +174,7 @@ def build_marker_plan_excel(job):
     sheet.freeze_panes(first_row, ratio_start)
     sheet.repeat_rows(header, header + 2)
     row = first_row
+    fabric_totals = [[Decimal(0), Decimal(0)] for _ in materials]  # cached marker/used fabric (m) per material
     for index, (entry, source) in enumerate(materials):
         # A full orange separator identifies the material belonging to this marker group.
         for col in range(last_col + 1):
@@ -200,6 +201,16 @@ def build_marker_plan_excel(job):
                 for col, key, factor in [(1, 'width_cm', 1), (2, 'length_m', 100), (4, 'efficiency_percent', 1)]:
                     if dimensions.get(key) is not None:
                         sheet.write_number(row, col, float(Decimal(dimensions[key]) * factor), fmt(number='0.00'))
+                # Layer length = marker length + 2 cm; blank until a marker length exists.
+                marker_length = dimensions.get('length_m')
+                if marker_length:
+                    length_cm = Decimal(marker_length) * 100
+                    fabric_totals[index][0] += length_cm * lay['plies'] / 100
+                    fabric_totals[index][1] += (length_cm + 2) * lay['plies'] / 100
+                sheet.write_formula(row, 3,
+                                    f'=IF(ISNUMBER({xl_rowcol_to_cell(row,2)}),{xl_rowcol_to_cell(row,2)}+2,"")',
+                                    fmt(SEPARATOR, number='0.00'),
+                                    float(Decimal(marker_length) * 100 + 2) if marker_length is not None else '')
             else:
                 sheet.write_blank(row, lay_count_col, None, fmt())
                 sheet.write_blank(row, breakdown_col, None, fmt())
@@ -224,8 +235,8 @@ def build_marker_plan_excel(job):
                     sheet.write_formula(row, usage + offset,
                                         f'=IF(AND(ISNUMBER({length}),ISNUMBER({plies})),{length}*{plies}/100,"")',
                                         fmt(USAGE_COLORS[material_index % 4], number='0.00'),
-                                        float(Decimal(dimensions['length_m']) * lay['plies'])
-                                        if lay and material_index == index and offset == 1 and dimensions.get('length_m') else '')
+                                        float((Decimal(dimensions['length_m']) * 100 + (2 if offset == 2 else 0)) * lay['plies'] / 100)
+                                        if lay and material_index == index and dimensions.get('length_m') else '')
             row += 1
     total_row = row
     for col in range(last_col + 1):
@@ -236,8 +247,9 @@ def build_marker_plan_excel(job):
             col = usage_start + index * 3 + offset
             region = f'{xl_rowcol_to_cell(first_row,col)}:{xl_rowcol_to_cell(total_row-1,col)}'
             formula = f'=SUM({region})' if offset == 0 else f'=IF(COUNT({region})=0,"",SUM({region}))'
+            cached = sum(quantities) if offset == 0 else (float(fabric_totals[index][offset - 1]) if fabric_totals[index][offset - 1] else '')
             sheet.write_formula(row, col, formula, fmt(USAGE_COLORS[index % 4], bold=True, number='0' if offset == 0 else '0.00'),
-                                sum(quantities) if offset == 0 else '')
+                                cached)
     sheet.write_formula(row, lay_count_col,
                         f'=SUM({xl_rowcol_to_cell(first_row,lay_count_col)}:{xl_rowcol_to_cell(total_row-1,lay_count_col)})',
                         fmt(bold=True), sum(len(entry['result']['lays']) for entry, _ in materials))
@@ -253,19 +265,41 @@ def build_marker_plan_excel(job):
             formula = f'={quantity}-SUMPRODUCT({count_col}{first_row+1}:{count_col}{total_row},${ply}${first_row+1}:${ply}${total_row})'
             sheet.write_formula(row, ratio_start + offset, formula, fmt(color, bold=True), 0)
         row += 1
-    row += 1
-    sheet.merge_range(row, 0, row, last_col, 'PO NUMBERS    COLOUR    FABRIC DESCRIPTION    CUT QTY    MARKER USAGE    FABRIC USAGE    APPROVED BY',
-                      fmt(SEPARATOR, bold=True, align='left'))
+    # Per-material summary (green band): totals from the TOTAL CUT row and the two consumptions.
+    green = '00B050'
+    summary_titles = ['CUT QTY', 'MARKER FABRIC (m)', 'USED FABRIC (m)', 'MARKER CONSUMPTION', 'USED CONSUMPTION']
+    for col in range(last_col + 1):
+        sheet.write_blank(row, col, None, fmt(green))
+    sheet.merge_range(row, 0, row, 4, 'SUMMARY BY MATERIAL', fmt(green, bold=True, align='left'))
+    for position, title in enumerate(summary_titles):
+        start = ratio_start + 2 * position
+        sheet.merge_range(row, start, row, start + 1, title, fmt(green, bold=True, wrap=True))
+    sheet.set_row(row, 24)
     row += 1
     for index, (entry, source) in enumerate(materials):
-        text = f'B{index+1:02d} {labels[index]} | {source.get("description") or ""} | {source.get("placement_type") or ""} | {entry.get("placement") or ""}'
-        sheet.merge_range(row, 0, row, last_col, text, fmt(border=False, align='left', wrap=True))
-        sheet.set_row(row, 21)
+        cut, marker_fabric, used_fabric = (xl_rowcol_to_cell(total_row, usage_start + 3 * index + k) for k in range(3))
+        cached_cut = sum(quantities)
+        cached = [cached_cut, float(fabric_totals[index][0]) or '', float(fabric_totals[index][1]) or '']
+        cached += [float(fabric_totals[index][k] / cached_cut) if fabric_totals[index][k] and cached_cut else '' for k in (0, 1)]
+        formulas = [f'={cut}', f'={marker_fabric}', f'={used_fabric}',
+                    f'=IF(AND(ISNUMBER({marker_fabric}),N({cut})>0),{marker_fabric}/{cut},"")',
+                    f'=IF(AND(ISNUMBER({used_fabric}),N({cut})>0),{used_fabric}/{cut},"")']
+        for col in range(last_col + 1):
+            sheet.write_blank(row, col, None, fmt(green))
+        sheet.merge_range(row, 0, row, 1, labels[index], fmt('FFFF00', bold=True))
+        sheet.merge_range(row, 2, row, 4, source.get('placement_type') or entry.get('placement') or '',
+                          fmt(green, bold=True, align='left', wrap=True))
+        for position, formula in enumerate(formulas):
+            start = ratio_start + 2 * position
+            number = '0' if position == 0 else '0.00' if position < 3 else '0.0000'
+            sheet.merge_range(row, start, row, start + 1, '', fmt(green, bold=True, number=number))
+            sheet.write_formula(row, start, formula, fmt(green, bold=True, number=number), cached[position])
         row += 1
-    sheet.merge_range(row + 1, 0, row + 1, last_col,
-                      f'One row per unique marker. Total plies span the lays listed in the breakdown. Verified nesting dimensions are shown only where supplied; other dimensions and layer allowances remain blank. Length inputs are in cm; fabric totals are in m. Source: {request.tech_pack_filename or "saved BOM"}; plan {job["id"]}.',
-                      fmt(border=False, align='left', wrap=True))
-    sheet.set_row(row + 1, 35)
-    sheet.print_area(0, 0, row + 1, last_col)
+    for col in range(last_col + 1):
+        sheet.write_blank(row, col, None, fmt(green, border=False))
+    for start, title in [(0, 'PREPARED BY'), (2, 'CHECKED BY'), (ratio_start, 'APPROVED BY')]:
+        end = {0: 1, 2: 4, ratio_start: ratio_start + 5}[start]
+        sheet.merge_range(row, start, row, end, f'........................  {title}', fmt(green, bold=True, border=False))
+    sheet.print_area(0, 0, row, last_col)
     workbook.close()
     return buffer.getvalue()
