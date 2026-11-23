@@ -1,0 +1,53 @@
+name: CI
+
+# When should the robot run?
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  backend:
+    name: Backend tests (Python)
+    runs-on: ubuntu-latest
+    env:
+      # Without this the app thinks it is in production and demands real secrets.
+      APP_ENV: local
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12" # same as backend/Dockerfile
+          cache: pip
+          cache-dependency-path: backend/requirements.txt
+
+      - name: Install packages
+        run: pip install -r backend/requirements.txt
+
+      - name: Run tests
+        working-directory: backend
+        run: python -m pytest -q
+
+  frontend:
+    name: Frontend tests and build (Node)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22 # same as frontend/Dockerfile
+
+      - name: Install packages
+        run: npm install
+
+      - name: Run tests
+        run: npm test
+
+      - name: Check the app builds
+        run: npm run build
